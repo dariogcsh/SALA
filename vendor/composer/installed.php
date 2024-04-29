@@ -687,12 +687,12 @@
     ),
     'nikic/php-parser' => 
     array (
-      'pretty_version' => 'v4.16.0',
-      'version' => '4.16.0.0',
+      'pretty_version' => 'v4.17.1',
+      'version' => '4.17.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '19526a33fb561ef417e822e85f08a00db4059c17',
+      'reference' => 'a6303e50c90c355c7eeee2c4a8b27fe8dc8fef1d',
     ),
     'nunomaduro/collision' => 
     array (

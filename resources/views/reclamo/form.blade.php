@@ -159,6 +159,22 @@
                             </div>
                         </div>
 
+                        @if($modo == 'Modificar')
+                            <div class="form-group row">
+                                <label for="anexo" class="col-md-4 col-form-label text-md-right">{{ __('Anexo') }}</label>
+
+                                <div class="col-md-6">
+                                    <textarea id="anexo" class="form-control-textarea @error('anexo') is-invalid @enderror" name="anexo" value="{{ old('anexo') }}" autocomplete="anexo" autofocus rows="8">@isset($reclamo->anexo){{ $reclamo->anexo }}@endisset</textarea>
+
+                                    @error('anexo')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="form-group row">
                             <label for="estado" class="col-md-4 col-form-label text-md-right">{{ __('Estado') }} *</label>
 

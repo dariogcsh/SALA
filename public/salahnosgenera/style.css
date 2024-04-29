@@ -1,0 +1,9 @@
+@font-face { 
+	font-family: "JohnDeereSans.Medium";
+	src: url('JohnDeereSans.Medium.eot');
+	src: url('JohnDeereSans.Medium.eot?#iefix') format('embedded-opentype'),
+		 url('JohnDeereSans.Medium.woff') format('woff'),
+		 url('JohnDeereSans.Medium.svg#webfont') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
