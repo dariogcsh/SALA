@@ -19,6 +19,7 @@
                             <th scope="col">Etapa</th>
                             <th scope="col">Responsable</th>
                             <th scope="col">Paso</th>
+                            <th scope="col">Tipo Unidad</th>
                             <th scope="col">Orden</th>
                             <th colspan=3></th>
                             </tr>
@@ -33,6 +34,7 @@
                             <th scope="row">{{ $paso->nombreetapa }}</th>
                             <th scope="row">{{ $paso->NombPuEm }}</th>
                             <th scope="row">{{ $paso->nombre }}</th>
+                            <th scope="row">{{ $paso->tipo_unidad }}</th>
                             <th scope="row">{{ $paso->orden }}</th>
                             @can('haveaccess','paso.show')
                             <th><a href="{{ route('paso.show',$paso->id) }}" title="Detalle"><img src="{{ asset('/imagenes/config.png') }}"  height="20"></a> </th>

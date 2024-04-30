@@ -20,7 +20,7 @@ class EtapaController extends Controller
         Gate::authorize('haveaccess','etapa.index');
         Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Entrega ideal']);
         $rutavolver = route('internoconfiguracion');
-        $etapas = Etapa::orderBy('orden','asc')->paginate(20);
+        $etapas = Etapa::orderBy('tipo_unidad','asc')->orderBy('orden','asc')->paginate(20);
         return view('etapa.index', compact('etapas','rutavolver'));
     }
 
@@ -47,8 +47,9 @@ class EtapaController extends Controller
     {
         //
         request()->validate([
-            'nombre' => 'required|max:50|unique:etapas,nombre',
-            'orden' => 'required|max:50|unique:etapas,orden',
+            'nombre' => 'required',
+            'orden' => 'required',
+            'tipo_unidad'   =>  'required',
         ]);
         $etapas = Etapa::create($request->all());
         return redirect()->route('etapa.index')->with('status_success', 'Etapa creada con exito');
@@ -96,8 +97,9 @@ class EtapaController extends Controller
         //
         Gate::authorize('haveaccess','etapa.edit');
         $request->validate([
-            'nombre'          => 'required|max:50|unique:etapas,nombre,'.$etapa->id,
-            'orden'          => 'required|max:50|unique:etapas,orden,'.$etapa->id,
+            'nombre'          => 'required|max:50',
+            'orden'          => 'required|max:50',
+            'tipo_unidad'   =>  'required',
         ]);
 
         $etapa->update($request->all());

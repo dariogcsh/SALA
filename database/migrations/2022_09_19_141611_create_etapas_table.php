@@ -17,6 +17,7 @@ class CreateEtapasTable extends Migration
             $table->id();
             $table->string('nombre');
             $table->integer('orden');
+            $table->string('tipo_unidad');
             $table->timestamps();
         });
     }

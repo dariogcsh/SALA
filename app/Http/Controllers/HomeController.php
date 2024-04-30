@@ -80,6 +80,11 @@ class HomeController extends Controller
         $rutavolver = route('menuinterno');
         return view('internocx',compact('rutavolver'));
     }
+    public function internoentregas()
+    {   
+        $rutavolver = route('menuinterno');
+        return view('internoentregas',compact('rutavolver'));
+    }
     public function menuinterno()
     {   
         $rutavolver = route('home');

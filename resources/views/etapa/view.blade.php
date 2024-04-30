@@ -25,6 +25,20 @@
                                     @enderror
                                 </div>
                             </div>
+
+                            <div class="form-group row">
+                                <label for="tipo_unidad" class="col-md-4 col-form-label text-md-right">{{ __('Tipo unidad') }}</label>
+    
+                                <div class="col-md-6">
+                                    <input id="tipo_unidad" type="text" class="form-control @error('tipo_unidad') is-invalid @enderror" name="tipo_unidad" value="{{ isset($etapa->tipo_unidad)?$etapa->tipo_unidad:old('tipo_unidad') }}" disabled autocomplete="tipo_unidad" autofocus>
+    
+                                    @error('tipo_unidad')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
     
                             <div class="form-group row">
                                 <label for="orden" class="col-md-4 col-form-label text-md-right">{{ __('Orden') }}</label>

@@ -14,7 +14,7 @@
                                                     selected
                                                 @endif
                                         @endisset
-                                            >{{ $etapa->nombre }}</option>
+                                            >{{ $etapa->nombre }} - <span>{{$etapa->tipo_unidad }}</span></option>
                                     @endforeach
                                 </select>
                                 @error('id_etapa')

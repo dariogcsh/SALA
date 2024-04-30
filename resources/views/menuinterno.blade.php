@@ -53,7 +53,7 @@
                         </div>
                  
                         <div class="col-6 col-sm-4">
-                            <a href="{{ route('entrega.index') }}"><img src="/imagenes/entrega.png" class="img-fluid"  title="Entrega técnica"></a>
+                            <a href="{{ route('internoentregas') }}"><img src="/imagenes/entrega.png" class="img-fluid"  title="Entrega técnica"></a>
                             <h4 class="d-flex justify-content-center" style="text-align:center;">Entrega ideal</h4>
                             <hr>
                             <br>

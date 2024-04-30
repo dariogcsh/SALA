@@ -9,7 +9,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header"><h2>Lista de entregas unidades nuevas
+                <div class="card-header"><h2>Lista de entregas unidades usadas 
                 @can('haveaccess','entrega.create')
                 <a href="{{ route('entrega.create') }}" class="btn btn-success float-right"><b>+</b></a>
                 @endcan
@@ -53,8 +53,10 @@
                                                         ->where('id_entrega',$entrega->id)
                                                         ->orderBy('pasos.orden','desc')->first();
                                 $pasosiguiente = Paso::select('pasos.nombre','puesto_empleados.NombPuEm')
+                                                    ->join('etapas','pasos.id_etapa','=','etapas.id')
                                                     ->join('puesto_empleados','pasos.id_puesto','=','puesto_empleados.id')
-                                                    ->where('pasos.orden','>',$ultimopaso->orden)
+                                                    ->where([['pasos.orden','>',$ultimopaso->orden], 
+                                                            ['etapas.tipo_unidad', $entrega->tipo_unidad]])
                                                     ->orderBy('pasos.orden','asc')->first();
                                 $completado = $npasos / $pasostotales * 100;
                             @endphp

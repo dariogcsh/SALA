@@ -23,9 +23,10 @@ class PasoController extends Controller
             Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Entrega ideal']);
             $rutavolver = route('internoconfiguracion');
             $pasos = Paso::select('pasos.nombre','pasos.orden','pasos.id','puesto_empleados.NombPuEm',
-                                'etapas.nombre as nombreetapa')
+                                'etapas.nombre as nombreetapa','etapas.tipo_unidad')
                         ->join('etapas','pasos.id_etapa','=','etapas.id')
                         ->join('puesto_empleados','pasos.id_puesto','=','puesto_empleados.id')
+                        ->orderBy('etapas.tipo_unidad','asc')
                         ->orderBy('pasos.orden','asc')->paginate(20);
             return view('paso.index', compact('pasos','rutavolver'));
         }
@@ -40,7 +41,7 @@ class PasoController extends Controller
             Gate::authorize('haveaccess','paso.create');
             Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Entrega ideal']);
             $rutavolver = route('paso.index');
-            $etapas = Etapa::orderBy('orden','asc')->get();
+            $etapas = Etapa::orderBy('etapas.tipo_unidad','asc')->orderBy('orden','asc')->get();
             $puestos = Puesto_empleado::orderBy('NombPuEm','asc')->get();
             return view('paso.create',compact('rutavolver','etapas','puestos'));
         }
@@ -55,8 +56,8 @@ class PasoController extends Controller
         {
             //
             request()->validate([
-                'nombre' => 'required|max:150|unique:pasos,nombre',
-                'orden' => 'required|max:50|unique:pasos,orden'
+                'nombre' => 'required|max:150',
+                'orden' => 'required|max:50'
             ]);
             $pasos = Paso::create($request->all());
             return redirect()->route('paso.index')->with('status_success', 'Paso creado con exito');
@@ -91,7 +92,7 @@ class PasoController extends Controller
             Gate::authorize('haveaccess','paso.edit');
             Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Entrega ideal']);
             $rutavolver = route('paso.index');
-            $etapas = Etapa::orderBy('orden','asc')->get();
+            $etapas = Etapa::orderBy('etapas.tipo_unidad','asc')->orderBy('orden','asc')->get();
             $puestos = Puesto_empleado::orderBy('NombPuEm','asc')->get();
             return view('paso.edit',compact('rutavolver','etapas','puestos','paso'));
         }
@@ -108,8 +109,8 @@ class PasoController extends Controller
             //
             Gate::authorize('haveaccess','paso.edit');
             $request->validate([
-                'nombre'          => 'required|max:150|unique:pasos,nombre,'.$paso->id,
-                'orden'          => 'required|max:50|unique:pasos,orden,'.$paso->id,
+                'nombre'          => 'required|max:150',
+                'orden'          => 'required|max:50',
             ]);
     
             $paso->update($request->all());

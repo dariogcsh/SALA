@@ -22,6 +22,7 @@ class CreateEntregasTable extends Migration
             $table->string('modelo');
             $table->string('pin');
             $table->string('detalle',9500)->nullable();
+            $table->string('tipo_unidad');
             $table->timestamps();
 
             $table->foreign('id_organizacion')

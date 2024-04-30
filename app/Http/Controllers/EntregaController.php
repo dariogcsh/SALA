@@ -26,7 +26,7 @@ class EntregaController extends Controller
         //
         Gate::authorize('haveaccess','entrega.index');
         Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Entrega ideal']);
-        $rutavolver = route('menuinterno');
+        $rutavolver = route('internoentregas');
         $entregas = Entrega::select('entregas.id','entregas.tipo','entregas.marca','entregas.modelo','entregas.pin',
                                     'organizacions.NombOrga','sucursals.NombSucu','entregas.detalle',
                                     'etapas.nombre as nombreetapa')
@@ -36,9 +36,35 @@ class EntregaController extends Controller
                         ->join('pasos','entrega_pasos.id_paso','=','pasos.id')
                         ->join('etapas','pasos.id_etapa','=','etapas.id')
                         ->groupBy('entregas.id')
-                        ->orderBy('entregas.id','desc')->paginate(20);
-        $pasostotales = Paso::count();
+                        ->orderBy('entregas.id','desc')
+                        ->where('entregas.tipo_unidad','Nueva')->paginate(20);
+        $pasostotales = Paso::select('pasos.id')
+                        ->join('etapas','pasos.id_etapa','=','etapas.id')
+                        ->where('etapas.tipo_unidad','Nueva')->count();
         return view('entrega.index', compact('entregas','rutavolver','pasostotales'));
+    }
+
+    public function indexusado()
+    {
+        //
+        Gate::authorize('haveaccess','entrega.index');
+        Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Entrega ideal']);
+        $rutavolver = route('internoentregas');
+        $entregas = Entrega::select('entregas.id','entregas.tipo','entregas.marca','entregas.modelo','entregas.pin',
+                                    'organizacions.NombOrga','sucursals.NombSucu','entregas.detalle',
+                                    'etapas.nombre as nombreetapa')
+                        ->leftjoin('organizacions','entregas.id_organizacion','=','organizacions.id')
+                        ->join('sucursals','entregas.id_sucursal','=','sucursals.id')
+                        ->leftjoin('entrega_pasos','entregas.id','=','entrega_pasos.id_entrega')
+                        ->leftjoin('pasos','entrega_pasos.id_paso','=','pasos.id')
+                        ->leftjoin('etapas','pasos.id_etapa','=','etapas.id')
+                        ->groupBy('entregas.id')
+                        ->orderBy('entregas.id','desc')
+                        ->where('entregas.tipo_unidad','Usada')->paginate(20);
+        $pasostotales = Paso::select('pasos.id')
+                            ->join('etapas','pasos.id_etapa','=','etapas.id')
+                            ->where('etapas.tipo_unidad','Usada')->count();
+        return view('entrega.indexusado', compact('entregas','rutavolver','pasostotales'));
     }
 
     public function files($id)
@@ -120,8 +146,13 @@ class EntregaController extends Controller
         $paso = Paso::where('orden','51')->first(); 
         $entrega_paso = Entrega_paso::create(['id_entrega' => $entregas->id, 'id_paso' => $paso->id, 
                                                 'id_user' => auth()->user()->id]);
+        if($request->tipo_unidad == "Nueva"){
+            return redirect()->route('entrega.index')->with('status_success', 'Recepción creada con exito');
+        }else{
+            return redirect()->route('entrega.indexusado')->with('status_success', 'Recepción creada con exito');
+        }
         
-        return redirect()->route('entrega.index')->with('status_success', 'Recepción creada con exito');
+        
     }
 
     /**
@@ -157,7 +188,12 @@ class EntregaController extends Controller
         Gate::authorize('haveaccess','entrega.edit');
         Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Entrega ideal']);
         $rutavolver = route('entrega.index');
-        $pasos = Paso::orderBy('orden','asc')->get();
+        if($entrega->tipo_unidad == "Nueva"){
+            $pasos = Paso::orderBy('orden','asc')->get();
+        }else{
+            
+        }
+        
         $organizacions = Organizacion::orderBy('NombOrga','asc')->get();
         $sucursals = Sucursal::orderBy('id','asc')->get();
         $entrega_pasos = Entrega_paso::where('id_entrega', $entrega->id)->get();

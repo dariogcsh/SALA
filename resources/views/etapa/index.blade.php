@@ -17,6 +17,7 @@
                         <thead>
                             <tr>
                             <th scope="col">Etapa</th>
+                            <th scope="col">Tipo unidad</th>
                             <th scope="col">Orden</th>
                             <th colspan=3></th>
                             </tr>
@@ -29,6 +30,7 @@
                             <tr>
                             @endcan
                             <th scope="row">{{ $etapa->nombre }}</th>
+                            <th scope="row">{{ $etapa->tipo_unidad }}</th>
                             <th scope="row">{{ $etapa->orden }}</th>
                             @can('haveaccess','etapa.show')
                             <th><a href="{{ route('etapa.show',$etapa->id) }}" title="Detalle"><img src="{{ asset('/imagenes/config.png') }}"  height="20"></a> </th>

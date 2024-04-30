@@ -29,6 +29,7 @@ Route::get('/internosoluciones', 'HomeController@internosoluciones')->name('inte
 Route::get('/internoestadisticas', 'HomeController@internoestadisticas')->name('internoestadisticas');
 Route::get('/internoventas', 'HomeController@internoventas')->name('internoventas');
 Route::get('/internocx', 'HomeController@internocx')->name('internocx');
+Route::get('/internoentregas', 'HomeController@internoentregas')->name('internoentregas');
 Route::get('/internoservicios', 'HomeController@internoservicios')->name('internoservicios');
 Route::get('/internoconfiguracion_user', 'HomeController@internoconfiguracion_user')->name('internoconfiguracion_user');
 Route::get('/internoconfiguracion', 'HomeController@internoconfiguracion')->name('internoconfiguracion');
@@ -223,6 +224,7 @@ Route::get('mezcla/agregar/{id}', 'MezclaController@agregar')->name('mezcla.agre
 Route::post('mezcla/storeinsu', 'MezclaController@storeinsu')->name('mezcla.storeinsu');
 Route::resource('mezcla', 'MezclaController');
 Route::get('entrega/files/{id}', 'EntregaController@files')->name('entrega.files');
+Route::get('entrega/indexusado', 'EntregaController@indexusado')->name('entrega.indexusado');
 Route::post('entrega/subir', 'EntregaController@subir')->name('entrega.subir');
 Route::resource('entrega', 'EntregaController');
 Route::resource('etapa', 'EtapaController');
