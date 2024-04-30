@@ -159,7 +159,7 @@
                             </div>
                         </div>
 
-                        @if($modo == 'Modificar')
+                        @if($modo == 'modificar')
                             <div class="form-group row">
                                 <label for="anexo" class="col-md-4 col-form-label text-md-right">{{ __('Anexo') }}</label>
 
@@ -323,6 +323,20 @@
                         <br>
                         <h3>Acción correctiva</h3>
                         <hr>
+
+                        <div class="form-group row">
+                            <label for="accion_correctiva" class="col-md-4 col-form-label text-md-right">{{ __('Acción correctiva') }} </label>
+
+                            <div class="col-md-6">
+                                <textarea id="accion_correctiva" class="form-control-textarea @error('accion_correctiva') is-invalid @enderror" name="accion_correctiva" value="{{ old('accion_correctiva') }}" autocomplete="accion_correctiva" autofocus rows="8">@isset($reclamo->accion_correctiva){{ $reclamo->accion_correctiva }}@endisset</textarea>
+
+                                @error('accion_correctiva')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
 
                         <div class="form-group row">
                             <label for="id_user_correctiva" class="col-md-4 col-form-label text-md-right">{{ __('Responsable') }}</label>

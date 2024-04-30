@@ -22,7 +22,8 @@ class CreateReclamosTable extends Migration
             $table->string('hallazgo');
             $table->string('proceso');
             $table->string('nombre_cliente');
-            $table->string('descripcion',40000);
+            $table->longText('descripcion');
+            $table->longText('anexo');
             $table->string('estado');
             $table->string('causa')->nullable();
             $table->unsignedbigInteger('id_user_responsable')->nullable();

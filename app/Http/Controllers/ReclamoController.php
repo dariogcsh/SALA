@@ -285,27 +285,28 @@ class ReclamoController extends Controller
         $organizacion = Organizacion::where('id',$request->id_organizacion)->first();
         $hoy = Carbon::today();
 
+        /// ENVIO DE NOTIFICACION
+        $usersends = User::select('users.id')
+                        ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
+                        ->join('role_user','users.id','=','role_user.user_id')
+                        ->join('roles','role_user.role_id','=','roles.id')
+                        ->Where(function($query) {
+                            $query->where('puesto_empleados.NombPuEm', 'Analista de soluciones integrales')
+                                ->where('users.last_name', 'Garcia Campi');
+                        })
+                        ->orWhere(function($query) {
+                            $query->where('puesto_empleados.NombPuEm', 'Gerente posventa');
+                        })
+                        ->orWhere(function($query) {
+                            $query->where('puesto_empleados.NombPuEm', 'Gerente General');
+                        })
+                        ->orWhere(function($query) {
+                            $query->Where('puesto_empleados.NombPuEm', 'Encuastas de satisfaccion al cliente');
+                        })
+                        ->get();
+
         //Notificar usuario contingencia
         if ($request->descripcion <> $reclamo->descripcion) {
-            /// ENVIO DE NOTIFICACION
-            $usersends = User::select('users.id')
-                            ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
-                            ->join('role_user','users.id','=','role_user.user_id')
-                            ->join('roles','role_user.role_id','=','roles.id')
-                            ->Where(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Analista de soluciones integrales')
-                                    ->where('users.last_name', 'Garcia Campi');
-                            })
-                            ->orWhere(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Gerente posventa');
-                            })
-                            ->orWhere(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Gerente General');
-                            })
-                            ->orWhere(function($query) {
-                                $query->Where('puesto_empleados.NombPuEm', 'Encuastas de satisfaccion al cliente');
-                            })
-                            ->get();
 
                     foreach($usersends as $usersend){
                         $notificationData = [
@@ -315,39 +316,97 @@ class ReclamoController extends Controller
                         ];
                     $this->notificationsService->sendToUser($usersend->id, $notificationData);
                     }
+            if(isset($reclamo->id_user_contingencia)){
+            //Envio de notificacion
+                $notificationData = [
+                    'title' => 'SALA - Quejas/Reclamos',
+                    'body' => 'Se ha modificado la descripción de la queja/reclamo de '.$reclamo->nombre_cliente.' de la organización '.$organizacion->NombOrga.'.',
+                    'path' => '/reclamo/'.$reclamo->id.'',
+                ];
+                $this->notificationsService->sendToUser($request->id_user_contingencia, $notificationData);
+            }
+            if(isset($reclamo->id_user_responsable)){
+                //Envio de notificacion
+                    $notificationData = [
+                        'title' => 'SALA - Quejas/Reclamos',
+                        'body' => 'Se ha modificado la descripción de la queja/reclamo de '.$reclamo->nombre_cliente.' de la organización '.$organizacion->NombOrga.'.',
+                        'path' => '/reclamo/'.$reclamo->id.'',
+                    ];
+                    $this->notificationsService->sendToUser($request->id_user_responsable, $notificationData);
+                }
+            if(isset($reclamo->id_user_implementacion)){
+                //Envio de notificacion
+                    $notificationData = [
+                        'title' => 'SALA - Quejas/Reclamos',
+                        'body' => 'Se ha modificado la descripción de la queja/reclamo de '.$reclamo->nombre_cliente.' de la organización '.$organizacion->NombOrga.'.',
+                        'path' => '/reclamo/'.$reclamo->id.'',
+                    ];
+                    $this->notificationsService->sendToUser($request->id_user_implementacion, $notificationData);
+                }
+            if(isset($reclamo->id_user_eficiencia)){
+                //Envio de notificacion
+                    $notificationData = [
+                        'title' => 'SALA - Quejas/Reclamos',
+                        'body' => 'Se ha modificado la descripción de la queja/reclamo de '.$reclamo->nombre_cliente.' de la organización '.$organizacion->NombOrga.'.',
+                        'path' => '/reclamo/'.$reclamo->id.'',
+                    ];
+                    $this->notificationsService->sendToUser($request->id_user_eficiencia, $notificationData);
+                }
+        }
 
-         //Envio de notificacion
-            $notificationData = [
-                'title' => 'SALA - Quejas/Reclamos',
-                'body' => 'Se ha modificado la descripción de la queja/reclamo de '.$reclamo->nombre_cliente.' de la organización '.$organizacion->NombOrga.'.',
-                'path' => '/reclamo/'.$reclamo->id.'',
-            ];
-            $this->notificationsService->sendToUser($request->id_user_contingencia, $notificationData);
+        //Notificar usuario contingencia
+        if ($request->anexo <> $reclamo->anexo) {
+
+                    foreach($usersends as $usersend){
+                        $notificationData = [
+                            'title' => 'SALA - Queja/Reclamo',
+                            'body' => 'Se ha agregado un anexo a la queja/reclamo de '.$reclamo->nombre_cliente.' de la organización '.$organizacion->NombOrga.'',
+                            'path' => '/reclamo/'.$reclamo->id.'',
+                        ];
+                    $this->notificationsService->sendToUser($usersend->id, $notificationData);
+                    }
+            if(isset($reclamo->id_user_contingencia)){
+            //Envio de notificacion
+                $notificationData = [
+                    'title' => 'SALA - Quejas/Reclamos',
+                    'body' => 'Se ha modificado la descripción de la queja/reclamo de '.$reclamo->nombre_cliente.' de la organización '.$organizacion->NombOrga.'.',
+                    'path' => '/reclamo/'.$reclamo->id.'',
+                ];
+                $this->notificationsService->sendToUser($request->id_user_contingencia, $notificationData);
+            }
+            if(isset($reclamo->id_user_responsable)){
+                //Envio de notificacion
+                    $notificationData = [
+                        'title' => 'SALA - Quejas/Reclamos',
+                        'body' => 'Se ha modificado la descripción de la queja/reclamo de '.$reclamo->nombre_cliente.' de la organización '.$organizacion->NombOrga.'.',
+                        'path' => '/reclamo/'.$reclamo->id.'',
+                    ];
+                    $this->notificationsService->sendToUser($request->id_user_responsable, $notificationData);
+                }
+            if(isset($reclamo->id_user_implementacion)){
+                //Envio de notificacion
+                    $notificationData = [
+                        'title' => 'SALA - Quejas/Reclamos',
+                        'body' => 'Se ha modificado la descripción de la queja/reclamo de '.$reclamo->nombre_cliente.' de la organización '.$organizacion->NombOrga.'.',
+                        'path' => '/reclamo/'.$reclamo->id.'',
+                    ];
+                    $this->notificationsService->sendToUser($request->id_user_implementacion, $notificationData);
+                }
+            if(isset($reclamo->id_user_eficiencia)){
+                //Envio de notificacion
+                    $notificationData = [
+                        'title' => 'SALA - Quejas/Reclamos',
+                        'body' => 'Se ha modificado la descripción de la queja/reclamo de '.$reclamo->nombre_cliente.' de la organización '.$organizacion->NombOrga.'.',
+                        'path' => '/reclamo/'.$reclamo->id.'',
+                    ];
+                    $this->notificationsService->sendToUser($request->id_user_eficiencia, $notificationData);
+                }
         }
         
 
         //Notificar usuario contingencia
         if ($request->id_user_contingencia <> $reclamo->id_user_contingencia) {
-            /// ENVIO DE NOTIFICACION
-            $usersends = User::select('users.id')
-                            ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
-                            ->join('role_user','users.id','=','role_user.user_id')
-                            ->join('roles','role_user.role_id','=','roles.id')
-                            ->Where(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Analista de soluciones integrales')
-                                    ->where('users.last_name', 'Garcia Campi');
-                            })
-                            ->orWhere(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Gerente posventa');
-                            })
-                            ->orWhere(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Gerente General');
-                            })
-                            ->orWhere(function($query) {
-                                $query->Where('puesto_empleados.NombPuEm', 'Encuastas de satisfaccion al cliente');
-                            })
-                            ->get();
-
+            
                     foreach($usersends as $usersend){
                         $notificationData = [
                             'title' => 'SALA - Queja/Reclamo',
@@ -368,26 +427,7 @@ class ReclamoController extends Controller
 
         //Notificar usuario analisis de causa
         if ($request->id_user_responsable <> $reclamo->id_user_responsable) {
-            /// ENVIO DE NOTIFICACION
-            $usersends = User::select('users.id')
-                            ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
-                            ->join('role_user','users.id','=','role_user.user_id')
-                            ->join('roles','role_user.role_id','=','roles.id')
-                            ->Where(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Analista de soluciones integrales')
-                                    ->where('users.last_name', 'Garcia Campi');
-                            })
-                            ->orWhere(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Gerente posventa');
-                            })
-                            ->orWhere(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Gerente General');
-                            })
-                            ->orWhere(function($query) {
-                                $query->Where('puesto_empleados.NombPuEm', 'Encuastas de satisfaccion al cliente');
-                            })
-                            ->get();
-
+           
                     foreach($usersends as $usersend){
                         $notificationData = [
                             'title' => 'SALA - Queja/Reclamo',
@@ -409,26 +449,7 @@ class ReclamoController extends Controller
 
            //Notificar usuario verificacion de implementacion
         if ($request->id_user_implementacion <> $reclamo->id_user_implementacion) {
-            /// ENVIO DE NOTIFICACION
-            $usersends = User::select('users.id')
-                            ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
-                            ->join('role_user','users.id','=','role_user.user_id')
-                            ->join('roles','role_user.role_id','=','roles.id')
-                            ->Where(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Analista de soluciones integrales')
-                                    ->where('users.last_name', 'Garcia Campi');
-                            })
-                            ->orWhere(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Gerente posventa');
-                            })
-                            ->orWhere(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Gerente General');
-                            })
-                            ->orWhere(function($query) {
-                                $query->Where('puesto_empleados.NombPuEm', 'Encuastas de satisfaccion al cliente');
-                            })
-                            ->get();
-
+           
                     foreach($usersends as $usersend){
                         $notificationData = [
                             'title' => 'SALA - Queja/Reclamo',
@@ -449,26 +470,7 @@ class ReclamoController extends Controller
 
            //Notificar usuario medición eficiencia
         if ($request->id_user_eficiencia <> $reclamo->id_user_eficiencia) {
-            /// ENVIO DE NOTIFICACION
-            $usersends = User::select('users.id')
-                            ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
-                            ->join('role_user','users.id','=','role_user.user_id')
-                            ->join('roles','role_user.role_id','=','roles.id')
-                            ->Where(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Analista de soluciones integrales')
-                                    ->where('users.last_name', 'Garcia Campi');
-                            })
-                            ->orWhere(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Gerente posventa');
-                            })
-                            ->orWhere(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Gerente General');
-                            })
-                            ->orWhere(function($query) {
-                                $query->Where('puesto_empleados.NombPuEm', 'Encuastas de satisfaccion al cliente');
-                            })
-                            ->get();
-
+          
                     foreach($usersends as $usersend){
                         $notificationData = [
                             'title' => 'SALA - Queja/Reclamo',
@@ -500,26 +502,6 @@ class ReclamoController extends Controller
                                                             'fecha_nueva'=>$request->fecha_limite_contingencia]);
                 }
 
-                /// ENVIO DE NOTIFICACION
-                $usersends = User::select('users.id')
-                                ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
-                                ->join('role_user','users.id','=','role_user.user_id')
-                                ->join('roles','role_user.role_id','=','roles.id')
-                                ->Where(function($query) {
-                                    $query->where('puesto_empleados.NombPuEm', 'Analista de soluciones integrales')
-                                        ->where('users.last_name', 'Garcia Campi');
-                                })
-                                ->orWhere(function($query) {
-                                    $query->where('puesto_empleados.NombPuEm', 'Gerente posventa');
-                                })
-                                ->orWhere(function($query) {
-                                    $query->where('puesto_empleados.NombPuEm', 'Gerente General');
-                                })
-                                ->orWhere(function($query) {
-                                    $query->Where('puesto_empleados.NombPuEm', 'Encuastas de satisfaccion al cliente');
-                                })
-                                ->get();
-
                         foreach($usersends as $usersend){
                             $notificationData = [
                                 'title' => 'SALA - Queja/Reclamo',
@@ -539,26 +521,7 @@ class ReclamoController extends Controller
                                                             'fecha_vieja'=>$reclamo->fecha_contacto,
                                                             'fecha_nueva'=>$request->fecha_contacto]);
                 }
-                /// ENVIO DE NOTIFICACION
-                $usersends = User::select('users.id')
-                                ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
-                                ->join('role_user','users.id','=','role_user.user_id')
-                                ->join('roles','role_user.role_id','=','roles.id')
-                                ->Where(function($query) {
-                                    $query->where('puesto_empleados.NombPuEm', 'Analista de soluciones integrales')
-                                        ->where('users.last_name', 'Garcia Campi');
-                                })
-                                ->orWhere(function($query) {
-                                    $query->where('puesto_empleados.NombPuEm', 'Gerente posventa');
-                                })
-                                ->orWhere(function($query) {
-                                    $query->where('puesto_empleados.NombPuEm', 'Gerente General');
-                                })
-                                ->orWhere(function($query) {
-                                    $query->Where('puesto_empleados.NombPuEm', 'Encuastas de satisfaccion al cliente');
-                                })
-                                ->get();
-
+               
                         foreach($usersends as $usersend){
                             $notificationData = [
                                 'title' => 'SALA - Queja/Reclamo',
@@ -578,26 +541,7 @@ class ReclamoController extends Controller
                                                             'fecha_vieja'=>$reclamo->fecha_limite_correctiva,
                                                             'fecha_nueva'=>$request->fecha_limite_correctiva]);
                 }
-                /// ENVIO DE NOTIFICACION
-                $usersends = User::select('users.id')
-                                ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
-                                ->join('role_user','users.id','=','role_user.user_id')
-                                ->join('roles','role_user.role_id','=','roles.id')
-                                ->Where(function($query) {
-                                    $query->where('puesto_empleados.NombPuEm', 'Analista de soluciones integrales')
-                                        ->where('users.last_name', 'Garcia Campi');
-                                })
-                                ->orWhere(function($query) {
-                                    $query->where('puesto_empleados.NombPuEm', 'Gerente posventa');
-                                })
-                                ->orWhere(function($query) {
-                                    $query->where('puesto_empleados.NombPuEm', 'Gerente General');
-                                })
-                                ->orWhere(function($query) {
-                                    $query->Where('puesto_empleados.NombPuEm', 'Encuastas de satisfaccion al cliente');
-                                })
-                                ->get();
-
+                
                         foreach($usersends as $usersend){
                             $notificationData = [
                                 'title' => 'SALA - Queja/Reclamo',
@@ -617,26 +561,7 @@ class ReclamoController extends Controller
                                                             'fecha_vieja'=>$reclamo->fecha_implementacion,
                                                             'fecha_nueva'=>$request->fecha_implementacion]);
                 }
-                /// ENVIO DE NOTIFICACION
-                $usersends = User::select('users.id')
-                                ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
-                                ->join('role_user','users.id','=','role_user.user_id')
-                                ->join('roles','role_user.role_id','=','roles.id')
-                                ->Where(function($query) {
-                                    $query->where('puesto_empleados.NombPuEm', 'Analista de soluciones integrales')
-                                        ->where('users.last_name', 'Garcia Campi');
-                                })
-                                ->orWhere(function($query) {
-                                    $query->where('puesto_empleados.NombPuEm', 'Gerente posventa');
-                                })
-                                ->orWhere(function($query) {
-                                    $query->where('puesto_empleados.NombPuEm', 'Gerente General');
-                                })
-                                ->orWhere(function($query) {
-                                    $query->Where('puesto_empleados.NombPuEm', 'Encuastas de satisfaccion al cliente');
-                                })
-                                ->get();
-
+               
                         foreach($usersends as $usersend){
                             $notificationData = [
                                 'title' => 'SALA - Queja/Reclamo',
@@ -656,26 +581,7 @@ class ReclamoController extends Controller
                                                             'fecha_vieja'=>$reclamo->fecha_eficiencia,
                                                             'fecha_nueva'=>$request->fecha_eficiencia]);
                 }
-                /// ENVIO DE NOTIFICACION
-                $usersends = User::select('users.id')
-                                ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
-                                ->join('role_user','users.id','=','role_user.user_id')
-                                ->join('roles','role_user.role_id','=','roles.id')
-                                ->Where(function($query) {
-                                    $query->where('puesto_empleados.NombPuEm', 'Analista de soluciones integrales')
-                                        ->where('users.last_name', 'Garcia Campi');
-                                })
-                                ->orWhere(function($query) {
-                                    $query->where('puesto_empleados.NombPuEm', 'Gerente posventa');
-                                })
-                                ->orWhere(function($query) {
-                                    $query->where('puesto_empleados.NombPuEm', 'Gerente General');
-                                })
-                                ->orWhere(function($query) {
-                                    $query->Where('puesto_empleados.NombPuEm', 'Encuastas de satisfaccion al cliente');
-                                })
-                                ->get();
-
+                
                         foreach($usersends as $usersend){
                             $notificationData = [
                                 'title' => 'SALA - Queja/Reclamo',
@@ -699,26 +605,7 @@ class ReclamoController extends Controller
                 $reclamo->update(['fecha_registro_causa'=>$hoy]);
             }
             
-            /// ENVIO DE NOTIFICACION
-            $usersends = User::select('users.id')
-                            ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
-                            ->join('role_user','users.id','=','role_user.user_id')
-                            ->join('roles','role_user.role_id','=','roles.id')
-                            ->Where(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Analista de soluciones integrales')
-                                    ->where('users.last_name', 'Garcia Campi');
-                            })
-                            ->orWhere(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Gerente posventa');
-                            })
-                            ->orWhere(function($query) {
-                                $query->where('puesto_empleados.NombPuEm', 'Gerente General');
-                            })
-                            ->orWhere(function($query) {
-                                $query->Where('puesto_empleados.NombPuEm', 'Encuastas de satisfaccion al cliente');
-                            })
-                            ->get();
-
+           
                     foreach($usersends as $usersend){
                         $notificationData = [
                             'title' => 'SALA - Queja/Reclamo',
@@ -798,7 +685,7 @@ class ReclamoController extends Controller
         }
     }
     
-    $reclamo->update($request->except('fecha_registro_contingencia','fecha_registro_causa'));
+        $reclamo->update($request->except('fecha_registro_contingencia','fecha_registro_causa'));
 
         
         return redirect()->route('reclamo.index')->with('status_success', 'Reclamo modificado con exito');
