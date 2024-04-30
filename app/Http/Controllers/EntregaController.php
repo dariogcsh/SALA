@@ -151,8 +151,6 @@ class EntregaController extends Controller
         }else{
             return redirect()->route('entrega.indexusado')->with('status_success', 'Recepción creada con exito');
         }
-        
-        
     }
 
     /**
@@ -189,9 +187,17 @@ class EntregaController extends Controller
         Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Entrega ideal']);
         $rutavolver = route('entrega.index');
         if($entrega->tipo_unidad == "Nueva"){
-            $pasos = Paso::orderBy('orden','asc')->get();
+            $pasos = Paso::select('pasos.id','pasos.id_etapa','pasos.id_puesto','pasos.nombre','pasos.orden',
+                                'pasos.created_at','pasos.updated_at')
+            ->join('etapas','pasos.id_etapa','=','etapas.id')
+            ->where('etapas.tipo_unidad','Nueva')
+            ->orderBy('orden','asc')->get();
         }else{
-            
+            $pasos = Paso::select('pasos.id','pasos.id_etapa','pasos.id_puesto','pasos.nombre','pasos.orden',
+                                'pasos.created_at','pasos.updated_at')
+            ->join('etapas','pasos.id_etapa','=','etapas.id')
+            ->where('etapas.tipo_unidad','Usada')
+            ->orderBy('orden','asc')->get();
         }
         
         $organizacions = Organizacion::orderBy('NombOrga','asc')->get();
@@ -250,7 +256,12 @@ class EntregaController extends Controller
             $detalle = "";
             
         }
-        return redirect()->route('entrega.index')->with('status_success', 'Recepción modificada con exito');
+        if($request->tipo_unidad == "Nueva"){
+            return redirect()->route('entrega.index')->with('status_success', 'Recepción modificada con exito');
+        }else{
+            return redirect()->route('entrega.indexusado')->with('status_success', 'Recepción modificada con exito');
+        }
+        
     }
 
     /**
