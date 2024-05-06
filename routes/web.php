@@ -88,6 +88,7 @@ Route::post('utilidad/informeTractor', 'UtilidadController@informeTractor')->nam
 Route::get('utilidad/menu', 'UtilidadController@menu')->name('utilidad.menu');
 Route::get('utilidad/historial', 'UtilidadController@historial')->name('utilidad.historial');
 Route::get('utilidad/enviarInforme', 'UtilidadController@enviarInforme')->name('utilidad.enviarInforme');
+Route::post('utilidad/detalle_tecnologia', 'UtilidadController@detalle_tecnologia')->name('utilidad.detalle_tecnologia');
 Route::post('utilidad/detalle_carga_cabecero_ralenti', 'UtilidadController@detalle_carga_cabecero_ralenti')->name('utilidad.detalle_carga_cabecero_ralenti');
 Route::post('utilidad/detalle_tractor_ralenti', 'UtilidadController@detalle_tractor_ralenti')->name('utilidad.detalle_tractor_ralenti');
 Route::get('/utilidad/{id}', 'UtilidadController@generar')->name('utilidad.generar');

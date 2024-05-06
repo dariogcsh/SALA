@@ -119,6 +119,294 @@
                             </div>
                             <br>
 
+
+                         
+                              <div class="row">
+                                @if((!empty($mantenerauto)) OR ($maquina->combine_advisor == "SI"))
+                                  <div class="col-md-6" style="display: block">
+                                @else
+                                  <div class="col-md-6" style="display: none">
+                                @endif
+                                  <h3 style="text-align: center">Automantain (%)</h3>
+                                  <div class="row">
+                                    <div class="col-md-6" align="left" style="padding-left:5%">
+                                    
+                                    </div>
+                                    <div class="col-md-6" align="right" style="padding-right:5%">
+                                      @php $porc10 = ($objetivo_automation * 1.1 - $objetivo_automation ) @endphp
+                                      @if(($mantenerauto_p[$periodos + 1] < ($objetivo_automation + $porc10)) AND ($mantenerauto_p[$periodos + 1] > $objetivo_automation))
+                                        <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                        <img src="{{ asset('/imagenes/alertwarning.png') }}" height="20px" alt="">
+                                        <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                      @elseif($mantenerauto_p[$periodos + 1] > $objetivo_automation)
+                                        <img src="{{ asset('/imagenes/alertsuccess.png') }}" height="20px" alt="">
+                                        <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                        <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                      @else
+                                        <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                        <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                        <img src="{{ asset('/imagenes/alerterror.png') }}" height="20px" alt="">
+                                      @endif
+                                      <img src="{{ asset('/imagenes/informacion.png') }}" onclick="alert('Refiere a el porcentaje de utilización de la tecnología de mantener automáticamente. Lo que hace esta tecnología es hacer ajustes de configuración de regulación de la máquina de manera automática cada 3 minutos segun el objetivo que se le fijó.')" title="Detalle" height="30px" alt="">
+                                    </div>
+                                  </div>
+                                  <br>
+                                  <div id="chart_automation"></div>
+                                  <div class="form-group row">
+                                    <label for="detalleautomation" class="col-md-4 col-form-label text-md-right">{{ __('Detallar periodo') }}</label>
+                                      <div class="col-md-6">
+                                      <select class="detalle form-control @error('detalleautomation') is-invalid @enderror" name="detalleautomation" id="detalleautomation"  title="Seleccionar periodo" autofocus> 
+                                          <option value="">Seleccionar período</option>
+                                          @for ($i=0; $i <= $periodos; $i++)
+                                                <option value="{{ $pinicial[$i] }}/{{ $pfinal[$i] }}"><b>P{{ $i + 1}}</b>  -  {{ $pinicial[$i] }} - {{ $pfinal[$i] }}</option>
+                                          @endfor
+                                      </select>
+                                     </div>
+                                  </div>
+                                    <div class="text-center" id="carga_automation" style="display: none">
+                                      <div class="spinner-grow text-warning" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                      </div>
+                                    </div>
+                                    <div id="chart_automation_detallado" ></div>
+                                  <br>
+                                </div>
+
+                                @if((!empty($harvest)) OR ($maquina->harvest_smart == "SI"))
+                                  <div class="col-md-6" style="display: block">
+                                @else
+                                  <div class="col-md-6" style="display: none">
+                                @endif
+                                  <h3 style="text-align: center">Harvest Smart (%)</h3>
+                                  <div class="row">
+                                    <div class="col-md-6" align="left" style="padding-left:5%">
+                                    
+                                    </div>
+                                    <div class="col-md-6" align="right" style="padding-right:5%">
+                                      @php $porc10 = ($objetivo_harvest * 1.1 - $objetivo_harvest ) @endphp
+                                        @if(($harvest_p[$periodos + 1] < ($objetivo_harvest + $porc10)) AND ($harvest_p[$periodos + 1] > $objetivo_harvest))
+                                          <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                          <img src="{{ asset('/imagenes/alertwarning.png') }}" height="20px" alt="">
+                                          <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                        @elseif($harvest_p[$periodos + 1] > $objetivo_harvest)
+                                          <img src="{{ asset('/imagenes/alertsuccess.png') }}" height="20px" alt="">
+                                          <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                          <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                        @else
+                                          <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                          <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                          <img src="{{ asset('/imagenes/alerterror.png') }}" height="20px" alt="">
+                                        @endif
+                                      <img src="{{ asset('/imagenes/informacion.png') }}" onclick="alert('Refiere a la velocidad automática de cosecha. Cuando se activa la función, la máquina cosechadora va regulando automáticamente la velocidad de cosecha según la capacidad de máquina o según los niveles de perdida.')" title="Detalle" height="30px" alt="">
+                                    </div>
+                                  </div>
+                                  <br>
+                                  <div id="chart_harvest"></div>
+                                  <div class="form-group row">
+                                    <label for="detalleharvest" class="col-md-4 col-form-label text-md-right">{{ __('Detallar periodo') }}</label>
+                                      <div class="col-md-6">
+                                      <select class="detalle form-control @error('detalleharvest') is-invalid @enderror" name="detalleharvest" id="detalleharvest"  title="Seleccionar periodo" autofocus> 
+                                          <option value="">Seleccionar período</option>
+                                          @for ($i=0; $i <= $periodos; $i++)
+                                                <option value="{{ $pinicial[$i] }}/{{ $pfinal[$i] }}"><b>P{{ $i + 1}}</b>  -  {{ $pinicial[$i] }} - {{ $pfinal[$i] }}</option>
+                                          @endfor
+                                      </select>
+                                    </div>
+                                  </div>
+                                    <div class="text-center" id="carga_harvest" style="display: none">
+                                      <div class="spinner-grow text-warning" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                      </div>
+                                    </div>
+                                    <div id="chart_harvest_detallado" ></div>
+                                    <br>
+                                  </div>
+                              
+
+                                @if(($cultivo <> 'Maiz') AND ($cultivo <> 'Maíz') AND ($cultivo <> 'Girasol'))
+                                  <div class="col-md-6" style="display: block">
+                                @else
+                                  <div class="col-md-6" style="display: none">
+                                @endif
+                                  <h3 style="text-align: center">Uso velocidad automática del molinete (%)</h3>
+                                  <div class="row">
+                                    <div class="col-md-6" align="left" style="padding-left:5%">
+                                    
+                                    </div>
+                                    <div class="col-md-6" align="right" style="padding-right:5%">
+                                      @php $porc10 = ($objetivo_molinete * 1.1 - $objetivo_molinete ) @endphp
+                                        @if(($velmolinete_p[$periodos + 1] < ($objetivo_molinete + $porc10)) AND ($velmolinete_p[$periodos + 1] > $objetivo_molinete))
+                                          <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                          <img src="{{ asset('/imagenes/alertwarning.png') }}" height="20px" alt="">
+                                          <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                        @elseif($velmolinete_p[$periodos + 1] > $objetivo_molinete)
+                                          <img src="{{ asset('/imagenes/alertsuccess.png') }}" height="20px" alt="">
+                                          <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                          <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                        @else
+                                          <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                          <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                          <img src="{{ asset('/imagenes/alerterror.png') }}" height="20px" alt="">
+                                        @endif
+                                      <img src="{{ asset('/imagenes/informacion.png') }}" onclick="alert('Refiere a la velocidad automática de cosecha. Cuando se activa la función, la máquina cosechadora va regulando automáticamente la velocidad de cosecha según la capacidad de máquina o según los niveles de perdida.')" title="Detalle" height="30px" alt="">
+                                    </div>
+                                  </div>
+                                  <br>
+                                  <div id="chart_molinete"></div>
+                                  <div class="form-group row">
+                                    <label for="detallemolinete" class="col-md-4 col-form-label text-md-right">{{ __('Detallar periodo') }}</label>
+                                      <div class="col-md-6">
+                                      <select class="detalle form-control @error('detallemolinete') is-invalid @enderror" name="detallemolinete" id="detallemolinete"  title="Seleccionar periodo" autofocus> 
+                                          <option value="">Seleccionar período</option>
+                                          @for ($i=0; $i <= $periodos; $i++)
+                                                <option value="{{ $pinicial[$i] }}/{{ $pfinal[$i] }}"><b>P{{ $i + 1}}</b>  -  {{ $pinicial[$i] }} - {{ $pfinal[$i] }}</option>
+                                          @endfor
+                                      </select>
+                                    </div>
+                                  </div>
+                                    <div class="text-center" id="carga_molinete" style="display: none">
+                                      <div class="spinner-grow text-warning" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                      </div>
+                                    </div>
+                                    <div id="chart_molinete_detallado" ></div>
+                                    <br>
+                                  </div>
+                                  
+                                  @if(($maquina->ModeMaq == "S760") OR ($maquina->ModeMaq == "S770") OR ($maquina->ModeMaq == "S780") OR ($maquina->ModeMaq == "S790"))
+                                    <div class="col-md-6" style="display: block">
+                                  @else
+                                    <div class="col-md-6" style="display: none">
+                                  @endif
+                                    <h3 style="text-align: center">Uso de ajuste activo de terreno (%)</h3>
+                                    <div class="row">
+                                      <div class="col-md-6" align="left" style="padding-left:5%">
+                                      
+                                      </div>
+                                      <div class="col-md-6" align="right" style="padding-right:5%">
+                                        @php $porc10 = ($objetivo_atta * 1.1 - $objetivo_atta ) @endphp
+                                          @if(($atta_p[$periodos + 1] < ($objetivo_atta + $porc10)) AND ($atta_p[$periodos + 1] > $objetivo_atta))
+                                            <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                            <img src="{{ asset('/imagenes/alertwarning.png') }}" height="20px" alt="">
+                                            <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                          @elseif($atta_p[$periodos + 1] > $objetivo_atta)
+                                            <img src="{{ asset('/imagenes/alertsuccess.png') }}" height="20px" alt="">
+                                            <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                            <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                          @else
+                                            <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                            <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                            <img src="{{ asset('/imagenes/alerterror.png') }}" height="20px" alt="">
+                                          @endif
+                                        <img src="{{ asset('/imagenes/informacion.png') }}" onclick="alert('Refiere al ajuste automático de terreno, es decir que la máquina es capaz de hacer ajustes de apertura de zaranda y zarandon según la inclinación de la máquina para evitar pérdidas o que la máquina no despida el material inerte de manera adecuada.')" title="Detalle" height="30px" alt="">
+                                      </div>
+                                    </div>
+                                    <br>
+                                    <div id="chart_atta"></div>
+                                    <div class="form-group row">
+                                      <label for="detalleatta" class="col-md-4 col-form-label text-md-right">{{ __('Detallar periodo') }}</label>
+                                        <div class="col-md-6">
+                                        <select class="detalle form-control @error('detalleatta') is-invalid @enderror" name="detalleatta" id="detalleatta"  title="Seleccionar periodo" autofocus> 
+                                            <option value="">Seleccionar período</option>
+                                            @for ($i=0; $i <= $periodos; $i++)
+                                                  <option value="{{ $pinicial[$i] }}/{{ $pfinal[$i] }}"><b>P{{ $i + 1}}</b>  -  {{ $pinicial[$i] }} - {{ $pfinal[$i] }}</option>
+                                            @endfor
+                                        </select>
+                                      </div>
+                                    </div>
+                                      <div class="text-center" id="carga_atta" style="display: none">
+                                        <div class="spinner-grow text-warning" role="status">
+                                          <span class="sr-only">Loading...</span>
+                                        </div>
+                                      </div>
+                                      <div id="chart_atta_detallado" ></div>
+                                      <br>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                      <h3 style="text-align: center">Autotrac (%)</h3>
+                                      <div class="row">
+                                        <div class="col-md-6" align="left" style="padding-left:5%">
+                                        
+                                        </div>
+                                        <div class="col-md-6" align="right" style="padding-right:5%">
+                                          @php $porc10 = ($objetivo_autotrac * 1.1 - $objetivo_autotrac ) @endphp
+                                            @if(($autotrac_p[$periodos + 1] < ($objetivo_autotrac + $porc10)) AND ($autotrac_p[$periodos + 1] > $objetivo_autotrac))
+                                              <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                              <img src="{{ asset('/imagenes/alertwarning.png') }}" height="20px" alt="">
+                                              <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                            @elseif($autotrac_p[$periodos + 1] > $objetivo_autotrac)
+                                              <img src="{{ asset('/imagenes/alertsuccess.png') }}" height="20px" alt="">
+                                              <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                              <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                            @else
+                                              <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                              <img src="{{ asset('/imagenes/alertinformation.png') }}" height="10px" alt="">
+                                              <img src="{{ asset('/imagenes/alerterror.png') }}" height="20px" alt="">
+                                            @endif
+                                          <img src="{{ asset('/imagenes/informacion.png') }}" onclick="alert('Refiere a la utilización del piloto automático.')" title="Detalle" height="30px" alt="">
+                                        </div>
+                                      </div>
+                                      <br>
+                                      <div id="chart_autotrac"></div>
+                                      <div class="form-group row">
+                                        <label for="detalleautotrac" class="col-md-4 col-form-label text-md-right">{{ __('Detallar periodo') }}</label>
+                                          <div class="col-md-6">
+                                          <select class="detalle form-control @error('detalleautotrac') is-invalid @enderror" name="detalleautotrac" id="detalleautotrac"  title="Seleccionar periodo" autofocus> 
+                                              <option value="">Seleccionar período</option>
+                                              @for ($i=0; $i <= $periodos; $i++)
+                                                    <option value="{{ $pinicial[$i] }}/{{ $pfinal[$i] }}"><b>P{{ $i + 1}}</b>  -  {{ $pinicial[$i] }} - {{ $pfinal[$i] }}</option>
+                                              @endfor
+                                          </select>
+                                        </div>
+                                      </div>
+                                        <div class="text-center" id="carga_autotrac" style="display: none">
+                                          <div class="spinner-grow text-warning" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                          </div>
+                                        </div>
+                                        <div id="chart_autotrac_detallado" ></div>
+                                        <br>
+                                      </div>
+
+                                      @if((($maquina->ModeMaq == "S760") OR ($maquina->ModeMaq == "S770") OR ($maquina->ModeMaq == "S780") OR ($maquina->ModeMaq == "S790")) AND ($maquina->harvest_smart == "SI"))
+                                        <div class="col-md-6" style="display: block">
+                                      @else
+                                        <div class="col-md-6" style="display: none">
+                                      @endif
+                                        <h3 style="text-align: center">Maniobras automáticas (%)</h3>
+                                        <div class="row">
+                                          <div class="col-md-6" align="left" style="padding-left:5%">
+                                          
+                                          </div>
+                                          <div class="col-md-6" align="right" style="padding-right:5%">
+                                            <img src="{{ asset('/imagenes/informacion.png') }}" onclick="alert('Refiere a las maniobras automáticas que es capaz de realizar el equipo en la cabecera.')" title="Detalle" height="30px" alt="">
+                                          </div>
+                                        </div>
+                                        <br>
+                                        <div id="chart_giros"></div>
+                                        <div class="form-group row">
+                                          <label for="detallegiros" class="col-md-4 col-form-label text-md-right">{{ __('Detallar periodo') }}</label>
+                                            <div class="col-md-6">
+                                            <select class="detalle form-control @error('detallegiros') is-invalid @enderror" name="detallegiros" id="detallegiros"  title="Seleccionar periodo" autofocus> 
+                                                <option value="">Seleccionar período</option>
+                                                @for ($i=0; $i <= $periodos; $i++)
+                                                      <option value="{{ $pinicial[$i] }}/{{ $pfinal[$i] }}"><b>P{{ $i + 1}}</b>  -  {{ $pinicial[$i] }} - {{ $pfinal[$i] }}</option>
+                                                @endfor
+                                            </select>
+                                          </div>
+                                        </div>
+                                          <div class="text-center" id="carga_giros" style="display: none">
+                                            <div class="spinner-grow text-warning" role="status">
+                                              <span class="sr-only">Loading...</span>
+                                            </div>
+                                          </div>
+                                          <div id="chart_giros_detallado" ></div>
+                                          <br>
+                                        </div>
+                                </div>
+                            
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <h3 style="text-align: center">Superficie cosechada por hora (Has)</h3>
@@ -858,6 +1146,155 @@ function mostrarValor() {
         chart.draw(view, options);
 
 
+
+
+
+
+
+/////////------ Automantain-------////////
+var data = google.visualization.arrayToDataTable([
+          ["Velocidad", "{{ $maquina->ModeMaq }} (%)", "Acumulado", "Objetivo"],
+          @for ($i=0; $i <= $periodos; $i++)
+              ['{{date('d/m/Y',strtotime($pinicial[$i]))}} - {{date('d/m/Y',strtotime($pfinal[$i]))}}', 
+              {{ number_format($mantenerauto_p[$i],1) }},
+              {{ number_format($mantenerauto_p[$periodos + 1],1) }},
+              {{ number_format($objetivo_automation,1) }}],
+          @endfor
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1,
+                        { calc: "stringify",
+                          sourceColumn: 1,
+                          type: "string",
+                          role: "annotation" },
+                          2,3,
+                        ]);
+
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_automation"));
+        chart.draw(view, options);
+
+
+        /////////------ HARVEST SMART-------////////
+        var data = google.visualization.arrayToDataTable([
+          ["Velocidad", "{{ $maquina->ModeMaq }} (Lts)", "Acumulado", "Objetivo"],
+          @for ($i=0; $i <= $periodos; $i++)
+              ['{{date('d/m/Y',strtotime($pinicial[$i]))}} - {{date('d/m/Y',strtotime($pfinal[$i]))}}', 
+              {{ number_format($harvest_p[$i],1) }},
+              {{ number_format($harvest_p[$periodos + 1],1) }},
+              {{ number_format($objetivo_harvest,1) }}],
+          @endfor
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1,
+                        { calc: "stringify",
+                          sourceColumn: 1,
+                          type: "string",
+                          role: "annotation" },
+                          2,3,
+                        ]);
+
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_harvest"));
+        chart.draw(view, options);
+
+       
+
+         /////////------ VELOCIDAD DEL MOLINETE-------////////
+         var data = google.visualization.arrayToDataTable([
+          ["Velocidad", "{{ $maquina->ModeMaq }} (Lts)", "Acumulado", "Objetivo"],
+          @for ($i=0; $i <= $periodos; $i++)
+              ['{{date('d/m/Y',strtotime($pinicial[$i]))}} - {{date('d/m/Y',strtotime($pfinal[$i]))}}', 
+              {{ number_format($velmolinete_p[$i],1) }},
+              {{ number_format($velmolinete_p[$periodos + 1],1) }},
+              {{ number_format($objetivo_molinete,1) }}],
+          @endfor
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1,
+                        { calc: "stringify",
+                          sourceColumn: 1,
+                          type: "string",
+                          role: "annotation" },
+                          2,3,
+                        ]);
+
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_molinete"));
+        chart.draw(view, options);
+
+         /////////------ ATTA-------////////
+         var data = google.visualization.arrayToDataTable([
+          ["Velocidad", "{{ $maquina->ModeMaq }} (Lts)", "Acumulado", "Objetivo"],
+          @for ($i=0; $i <= $periodos; $i++)
+              ['{{date('d/m/Y',strtotime($pinicial[$i]))}} - {{date('d/m/Y',strtotime($pfinal[$i]))}}', 
+              {{ number_format($atta_p[$i],1) }},
+              {{ number_format($atta_p[$periodos + 1],1) }},
+              {{ number_format($objetivo_atta,1) }}],
+          @endfor
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1,
+                        { calc: "stringify",
+                          sourceColumn: 1,
+                          type: "string",
+                          role: "annotation" },
+                          2,3,
+                        ]);
+
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_atta"));
+        chart.draw(view, options);
+
+         /////////------ AUTOTRAC-------////////
+         var data = google.visualization.arrayToDataTable([
+          ["Velocidad", "{{ $maquina->ModeMaq }} (Lts)", "Acumulado", "Objetivo"],
+          @for ($i=0; $i <= $periodos; $i++)
+              ['{{date('d/m/Y',strtotime($pinicial[$i]))}} - {{date('d/m/Y',strtotime($pfinal[$i]))}}', 
+              {{ number_format($autotrac_p[$i],1) }},
+              {{ number_format($autotrac_p[$periodos + 1],1) }},
+              {{ number_format($objetivo_autotrac,1) }}],
+          @endfor
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1,
+                        { calc: "stringify",
+                          sourceColumn: 1,
+                          type: "string",
+                          role: "annotation" },
+                          2,3,
+                        ]);
+
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_autotrac"));
+        chart.draw(view, options);
+
+         /////////------ Giros automáticos------////////
+         var data = google.visualization.arrayToDataTable([
+          ["Velocidad", "{{ $maquina->ModeMaq }} (Lts)", "Acumulado"],
+          @for ($i=0; $i <= $periodos; $i++)
+              ['{{date('d/m/Y',strtotime($pinicial[$i]))}} - {{date('d/m/Y',strtotime($pfinal[$i]))}}', 
+              {{ number_format($autotrac_automation_p[$i],1) }},
+              {{ number_format($autotrac_automation_p[$periodos + 1],1) }}],
+          @endfor
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1,
+                        { calc: "stringify",
+                          sourceColumn: 1,
+                          type: "string",
+                          role: "annotation" },
+                          2,
+                        ]);
+
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_giros"));
+        chart.draw(view, options);
+
+
+        
+
+
         /////////------ RALENTI-------////////
         var data = google.visualization.arrayToDataTable([
           ["Velocidad", "{{ $maquina->ModeMaq }} (%)", "Acumulado", "Objetivo"],
@@ -961,6 +1398,42 @@ function mostrarValor() {
 
             $('.detalle').change(function(){
               var element_id = $(this).attr('id');
+              if (element_id == "detalleautomation"){
+                divcarga = document.getElementById("carga_automation");
+                var div_grafico = "chart_automation_detallado";
+                var path = "{{ route('utilidad.detalle_tecnologia') }}";
+              }
+              
+              if (element_id == "detalleharvest"){
+                divcarga = document.getElementById("carga_harvest");
+                var div_grafico = "chart_harvest_detallado";
+                var path = "{{ route('utilidad.detalle_tecnologia') }}";
+              }
+
+              if (element_id == "detallemolinete"){
+                divcarga = document.getElementById("carga_molinete");
+                var div_grafico = "chart_molinete_detallado";
+                var path = "{{ route('utilidad.detalle_tecnologia') }}";
+              }
+
+              if (element_id == "detalleatta"){
+                divcarga = document.getElementById("carga_atta");
+                var div_grafico = "chart_atta_detallado";
+                var path = "{{ route('utilidad.detalle_tecnologia') }}";
+              }
+
+              if (element_id == "detalleautotrac"){
+                divcarga = document.getElementById("carga_autotrac");
+                var div_grafico = "chart_autotrac_detallado";
+                var path = "{{ route('utilidad.detalle_tecnologia') }}";
+              }
+              
+              if (element_id == "detallegiros"){
+                divcarga = document.getElementById("carga_giros");
+                var div_grafico = "chart_giros_detallado";
+                var path = "{{ route('utilidad.detalle_tecnologia') }}";
+              }
+              
               if (element_id == "detallesuperficie"){
                 divcarga = document.getElementById("carga_superficie");
                 var div_grafico = "chart_superficie_detallado";

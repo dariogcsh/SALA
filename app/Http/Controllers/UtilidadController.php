@@ -526,6 +526,128 @@ class UtilidadController extends Controller
         echo json_encode($resultado);
     }
 
+    function detalle_tecnologia(Request $request)
+    {
+        $indicador = $request->get('element_id');
+        $valuefec = $request->get('value');
+        $cultivo = $request->get('cultivo');
+        $maquina = $request->get('maquina');
+        $value = explode("/", $valuefec);
+        $fechainicial = $value[0];
+        $fechafinal = $value[1];
+        
+        //Consulta de fechas
+        $sqlfechas = [['NumSMaq', $maquina], ['FecIUtil','>=',$fechainicial],['FecIUtil','<=',$fechafinal], ['CateUtil','LIKE','Tiempo en '.$cultivo.'']];
+
+        //obtengo desde la fecha mas baja
+        $fechamin = Utilidad::where($sqlfechas)
+                        ->orderBy('FecIUtil','asc')
+                        ->get();
+
+        if (empty($fechamin))
+        {
+            return redirect()->route('utilidad.index')->with('status_danger', 'No se encontraron trabajos realizados en el intervalo de fechas para el cultivo seleccionado');
+        }
+        $i=0;
+        foreach ($fechamin as $fecha)
+        {
+            $horasencultivo = Utilidad::where([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq], ['CateUtil','LIKE','%Tiempo en '.$cultivo.'%'], ['UOMUtil','hr']])->sum('ValoUtil');
+
+            if ($indicador == "detalleautomation") {
+                $automation_dia = Utilidad::where([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq], ['CateUtil','LIKE','%Mantener automáticamente%'],
+                                                    ['SeriUtil','Enc'],['UOMUtil', 'hr']])->sum('ValoUtil');
+                if($horasencultivo > 0){
+                    $automation_d[$i][1]= $fecha->FecIUtil;
+                    $automation_d[$i][0] = $automation_dia / $horasencultivo * 100;
+                }else{
+                    $automation_d[$i][1]= $fecha->FecIUtil;
+                    $automation_d[$i][0] = 0;
+                }
+            }
+
+            if ($indicador == "detalleharvest") {
+                $harvest_dia = Utilidad::where([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq], ['CateUtil','LIKE','%Harvest Smart activado%'],
+                                                    ['SeriUtil','Enc'],['UOMUtil', 'hr']])->sum('ValoUtil');
+                if($horasencultivo > 0){
+                    $harvest_d[$i][1]= $fecha->FecIUtil;
+                    $harvest_d[$i][0] = $harvest_dia / $horasencultivo * 100;
+                }else{
+                    $harvest_d[$i][1]= $fecha->FecIUtil;
+                    $harvest_d[$i][0] = 0;
+                }
+            }
+
+            if ($indicador == "detallemolinete") {
+                $molinete_dia = Utilidad::where([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq], ['CateUtil','LIKE','%Velocidad auto de molinetes%'],
+                                                    ['SeriUtil','Enc'],['UOMUtil', 'hr']])->sum('ValoUtil');
+                if($horasencultivo > 0){
+                    $molinete_d[$i][1]= $fecha->FecIUtil;
+                    $molinete_d[$i][0] = $molinete_dia / $horasencultivo * 100;
+                }else{
+                    $molinete_d[$i][1]= $fecha->FecIUtil;
+                    $molinete_d[$i][0] = 0;
+                }
+            }
+
+            if ($indicador == "detalleatta") {
+                $atta_dia = Utilidad::where([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq], ['CateUtil','LIKE','%Active Terrain Adjustment%'],
+                                                    ['SeriUtil','Enc'],['UOMUtil', 'hr']])->sum('ValoUtil');
+                if($horasencultivo > 0){
+                    $atta_d[$i][1]= $fecha->FecIUtil;
+                    $atta_d[$i][0] = $atta_dia / $horasencultivo * 100;
+                }else{
+                    $atta_d[$i][1]= $fecha->FecIUtil;
+                    $atta_d[$i][0] = 0;
+                }
+            }
+
+            if ($indicador == "detalleautotrac") {
+                $autotrac_dia = Utilidad::where([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq], ['CateUtil','AutoTrac™'],
+                                                    ['SeriUtil','Enc'],['UOMUtil', 'hr']])->sum('ValoUtil');
+                if($horasencultivo > 0){
+                    $autotrac_d[$i][1]= $fecha->FecIUtil;
+                    $autotrac_d[$i][0] = $autotrac_dia / $horasencultivo * 100;
+                }else{
+                    $autotrac_d[$i][1]= $fecha->FecIUtil;
+                    $autotrac_d[$i][0] = 0;
+                }
+            }
+
+            if ($indicador == "detallegiros") {
+                $giros_dia = Utilidad::where([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq], ['CateUtil','AutoTrac™ Turn Automation'],
+                                                    ['SeriUtil','Enc'],['UOMUtil', 'hr']])->sum('ValoUtil');
+                if($horasencultivo > 0){
+                    $giros_d[$i][1]= $fecha->FecIUtil;
+                    $giros_d[$i][0] = $giros_dia / $horasencultivo * 100;
+                }else{
+                    $giros_d[$i][1]= $fecha->FecIUtil;
+                    $giros_d[$i][0] = 0;
+                }
+            }
+            $i++;
+        }
+        if ($indicador == "detalleautomation") {
+            $resultado = $automation_d;
+        }
+        if ($indicador == "detalleharvest") {
+            $resultado = $harvest_d;
+        }
+        if ($indicador == "detallemolinete") {
+            $resultado = $molinete_d;
+        }
+        if ($indicador == "detalleatta") {
+            $resultado = $atta_d;
+        }
+        if ($indicador == "detalleautotrac") {
+            $resultado = $autotrac_d;
+        }
+        if ($indicador == "detallegiros") {
+            $resultado = $giros_d;
+        }
+        
+        echo json_encode($resultado);
+    }
+
     function detalle_carga_cabecero_ralenti(Request $request)
     {
         $indicador = $request->get('element_id');
@@ -803,7 +925,7 @@ class UtilidadController extends Controller
 
 
                 $horasencultivos[$i] = Utilidad::where([[$consulta], ['CateUtil','LIKE','%Tiempo en '.$cultivo.'%'], ['UOMUtil','hr']])->sum('ValoUtil');
-                $autotracs[$i] = Utilidad::where([[$consulta], ['CateUtil','LIKE','AutoTrac%'], ['SeriUtil','Enc'], ['UOMUtil','hr']])->sum('ValoUtil');
+                $autotracs[$i] = Utilidad::where([[$consulta], ['CateUtil','AutoTrac'], ['SeriUtil','Enc'], ['UOMUtil','hr']])->sum('ValoUtil');
                 if (($cultivo <> "maíz") OR ($cultivo <> "girasol")){
                     $velmolinetes[$i] = Utilidad::where([[$consulta], ['CateUtil','LIKE','%Velocidad auto de molinetes%'], ['SeriUtil','Enc'], ['UOMUtil','hr']])->sum('ValoUtil');
                 } else {
@@ -1904,6 +2026,107 @@ class UtilidadController extends Controller
                 }
                 */
 
+                $objetivo_automation = Objetivo::select('objetivos.objetivo')
+                                            ->join('tipoobjetivos','objetivos.id_tipoobjetivo','=','tipoobjetivos.id')
+                                            ->join('maquinas','objetivos.id_maquina','=','maquinas.id')
+                                            ->where([['maquinas.NumSMaq',$maquina->NumSMaq], 
+                                            ['tipoobjetivos.nombre','Mantener automaticamente'],
+                                            ['objetivos.ano',$anopasado], ['objetivos.establecido','Cliente'],
+                                            ['objetivos.cultivo',$cultivo]])
+                                            ->avg($valor);
+
+                if (!isset($objetivo_automation)) {
+                    $objetivo_automation = Objetivo::select('objetivos.objetivo')
+                    ->join('tipoobjetivos','objetivos.id_tipoobjetivo','=','tipoobjetivos.id')
+                    ->join('maquinas','objetivos.id_maquina','=','maquinas.id')
+                    ->where([['maquinas.NumSMaq',$maquina->NumSMaq], 
+                            ['tipoobjetivos.nombre','Mantener automaticamente'],
+                            ['objetivos.ano',$anopasado], ['objetivos.establecido','App'],
+                            ['objetivos.cultivo',$cultivo]])
+                            ->avg($valor);
+                }
+
+                $objetivo_harvest = Objetivo::select('objetivos.objetivo')
+                                            ->join('tipoobjetivos','objetivos.id_tipoobjetivo','=','tipoobjetivos.id')
+                                            ->join('maquinas','objetivos.id_maquina','=','maquinas.id')
+                                            ->where([['maquinas.NumSMaq',$maquina->NumSMaq], 
+                                            ['tipoobjetivos.nombre','Harvest Smart'],
+                                            ['objetivos.ano',$anopasado], ['objetivos.establecido','Cliente'],
+                                            ['objetivos.cultivo',$cultivo]])
+                                            ->avg($valor);
+
+                if (!isset($objetivo_harvest)) {
+                    $objetivo_harvest = Objetivo::select('objetivos.objetivo')
+                    ->join('tipoobjetivos','objetivos.id_tipoobjetivo','=','tipoobjetivos.id')
+                    ->join('maquinas','objetivos.id_maquina','=','maquinas.id')
+                    ->where([['maquinas.NumSMaq',$maquina->NumSMaq], 
+                            ['tipoobjetivos.nombre','Harvest Smart'],
+                            ['objetivos.ano',$anopasado], ['objetivos.establecido','App'],
+                            ['objetivos.cultivo',$cultivo]])
+                            ->avg($valor);
+                }
+
+                $objetivo_molinete = Objetivo::select('objetivos.objetivo')
+                                            ->join('tipoobjetivos','objetivos.id_tipoobjetivo','=','tipoobjetivos.id')
+                                            ->join('maquinas','objetivos.id_maquina','=','maquinas.id')
+                                            ->where([['maquinas.NumSMaq',$maquina->NumSMaq], 
+                                            ['tipoobjetivos.nombre','Velocidad automatica de molinete'],
+                                            ['objetivos.ano',$anopasado], ['objetivos.establecido','Cliente'],
+                                            ['objetivos.cultivo',$cultivo]])
+                                            ->avg($valor);
+
+                if (!isset($objetivo_molinete)) {
+                    $objetivo_molinete = Objetivo::select('objetivos.objetivo')
+                    ->join('tipoobjetivos','objetivos.id_tipoobjetivo','=','tipoobjetivos.id')
+                    ->join('maquinas','objetivos.id_maquina','=','maquinas.id')
+                    ->where([['maquinas.NumSMaq',$maquina->NumSMaq], 
+                            ['tipoobjetivos.nombre','Velocidad automatica de molinete'],
+                            ['objetivos.ano',$anopasado], ['objetivos.establecido','App'],
+                            ['objetivos.cultivo',$cultivo]])
+                            ->avg($valor);
+                }
+
+
+                $objetivo_atta = Objetivo::select('objetivos.objetivo')
+                                            ->join('tipoobjetivos','objetivos.id_tipoobjetivo','=','tipoobjetivos.id')
+                                            ->join('maquinas','objetivos.id_maquina','=','maquinas.id')
+                                            ->where([['maquinas.NumSMaq',$maquina->NumSMaq], 
+                                            ['tipoobjetivos.nombre','Active Terrain Adjustment'],
+                                            ['objetivos.ano',$anopasado], ['objetivos.establecido','Cliente'],
+                                            ['objetivos.cultivo',$cultivo]])
+                                            ->avg($valor);
+
+                if (!isset($objetivo_atta)) {
+                    $objetivo_atta = Objetivo::select('objetivos.objetivo')
+                    ->join('tipoobjetivos','objetivos.id_tipoobjetivo','=','tipoobjetivos.id')
+                    ->join('maquinas','objetivos.id_maquina','=','maquinas.id')
+                    ->where([['maquinas.NumSMaq',$maquina->NumSMaq], 
+                            ['tipoobjetivos.nombre','Active Terrain Adjustment'],
+                            ['objetivos.ano',$anopasado], ['objetivos.establecido','App'],
+                            ['objetivos.cultivo',$cultivo]])
+                            ->avg($valor);
+                }
+
+                $objetivo_autotrac = Objetivo::select('objetivos.objetivo')
+                                            ->join('tipoobjetivos','objetivos.id_tipoobjetivo','=','tipoobjetivos.id')
+                                            ->join('maquinas','objetivos.id_maquina','=','maquinas.id')
+                                            ->where([['maquinas.NumSMaq',$maquina->NumSMaq], 
+                                            ['tipoobjetivos.nombre','Autotrac'],
+                                            ['objetivos.ano',$anopasado], ['objetivos.establecido','Cliente'],
+                                            ['objetivos.cultivo',$cultivo]])
+                                            ->avg($valor);
+
+                if (!isset($objetivo_autotrac)) {
+                    $objetivo_autotrac = Objetivo::select('objetivos.objetivo')
+                    ->join('tipoobjetivos','objetivos.id_tipoobjetivo','=','tipoobjetivos.id')
+                    ->join('maquinas','objetivos.id_maquina','=','maquinas.id')
+                    ->where([['maquinas.NumSMaq',$maquina->NumSMaq], 
+                            ['tipoobjetivos.nombre','Autotrac'],
+                            ['objetivos.ano',$anopasado], ['objetivos.establecido','App'],
+                            ['objetivos.cultivo',$cultivo]])
+                            ->avg($valor);
+                }
+
                 $objetivoralenti = Objetivo::select('objetivos.objetivo')
                                             ->join('tipoobjetivos','objetivos.id_tipoobjetivo','=','tipoobjetivos.id')
                                             ->join('maquinas','objetivos.id_maquina','=','maquinas.id')
@@ -2031,6 +2254,20 @@ class UtilidadController extends Controller
                                                                         ,['UOMUtil', 'hr']])
                                                                         ->sum('ValoUtil');
 
+                $horasencultivohs[$i] = Utilidad::where([[$consulta], ['CateUtil','LIKE','%Tiempo en '.$cultivo.'%'], ['UOMUtil','hr']])->sum('ValoUtil');
+                $autotrachs[$i] = Utilidad::where([[$consulta], ['CateUtil','AutoTrac™'], ['SeriUtil','Enc'], ['UOMUtil','hr']])->sum('ValoUtil');
+                $autotrac_automationhs[$i] = Utilidad::where([[$consulta], ['CateUtil','AutoTrac™ Turn Automation'], ['SeriUtil','Enc'], ['UOMUtil','hr']])->sum('ValoUtil');
+                if (($cultivo <> "maíz") OR ($cultivo <> "girasol")){
+                    $velmolinetehs[$i] = Utilidad::where([[$consulta], ['CateUtil','LIKE','%Velocidad auto de molinetes%'], ['SeriUtil','Enc'], ['UOMUtil','hr']])->sum('ValoUtil');
+                } else {
+                    $velmolinetehs[$i] = 0;
+                }
+                
+                $harvesths[$i] = Utilidad::where([[$consulta], ['CateUtil','LIKE','%Harvest Smart activado%'], ['SeriUtil','Enc'], ['UOMUtil','hr']])->sum('ValoUtil');
+                $attahs[$i] = Utilidad::where([[$consulta], ['CateUtil','LIKE','%Active Terrain Adjustment%'], ['SeriUtil','Enc'], ['UOMUtil','hr']])->sum('ValoUtil');
+                $mantenerautohs[$i] = Utilidad::where([[$consulta], ['CateUtil','LIKE','%Mantener automáticamente%'], ['SeriUtil','Enc'], ['UOMUtil','hr']])->sum('ValoUtil');
+                $activeYieldhs[$i] = Utilidad::where([[$consulta], ['CateUtil','LIKE','%Active Yield%'], ['SeriUtil','Enc'], ['UOMUtil','hr']])->sum('ValoUtil');
+
                 //CONSUMOS DE COMBUSTIBLE SEGUN ESTADO: RALENTI, TRANSPORTE Y TRABAJANDO
                 $ralentilts[$i] = Utilidad::where([[$consulta], ['SeriUtil', 'Ralentí'], ['UOMUtil','l']])->sum('ValoUtil');
                 $transportelts[$i] = Utilidad::where([[$consulta], ['SeriUtil', 'Transporte'], ['UOMUtil','l']])->sum('ValoUtil');
@@ -2060,11 +2297,25 @@ class UtilidadController extends Controller
                     $ralentillena[$i] = $ralentillenahs[$i] * 100 / $totalhs[$i];
                     $ralentivacia[$i] = $ralentivaciahs[$i] * 100 / $totalhs[$i];
                     $separadordevirajes[$i] = $separadordevirajeshs[$i] * 100 / $totalhs[$i];
+                    $mantenerauto_p[$i] = $mantenerautohs[$i] * 100 / $horasencultivohs[$i];
+                    $harvest_p[$i] = $harvesths[$i] * 100 / $horasencultivohs[$i];
+                    $autotrac_p[$i] = $autotrachs[$i] * 100 / $horasencultivohs[$i];
+                    $autotrac_automation_p[$i] = $autotrac_automationhs[$i] * 100 / $horasencultivohs[$i];
+                    $velmolinete_p[$i] = $velmolinetehs[$i] * 100 / $horasencultivohs[$i];
+                    $atta_p[$i] = $attahs[$i] * 100 / $horasencultivohs[$i];
+                    $activeYield_p[$i] = $activeYieldhs[$i] * 100 / $horasencultivohs[$i];
                 } else {
                     $ralenti[$i] = 0;
                     $ralentillena[$i] = 0;
                     $ralentivacia[$i] = 0;
                     $separadordevirajes[$i] = 0;
+                    $mantenerauto_p[$i] = 0;
+                    $harvest_p[$i] = 0;
+                    $autotrac_p[$i] = 0;
+                    $autotrac_automation_p[$i] = 0;
+                    $velmolinete_p[$i] = 0;
+                    $atta_p[$i] = 0;
+                    $activeYield_p[$i] = 0;
                 }
             }//endfor
 
@@ -2237,15 +2488,15 @@ class UtilidadController extends Controller
                                         ,'horasencultivo','autotrac','autotrac_automation','velmolinete','harvest','alturaplataforma'
                                         ,'mantenerauto','trabajandolts','ralentilts','transportelts'
                                         ,'temppromhidraulico','tempmaxhidraulico','temppromrefrigerante'
-                                        ,'tempmaxrefrigerante','objetivofactor'
+                                        ,'tempmaxrefrigerante','objetivofactor','objetivo_automation','objetivo_harvest'
                                         ,'objetivoralenti','objetivoralentilleno','objetivoralentivacio'
-                                        ,'objetivoseparador','hectareas','consumocosechatotal'
-                                        ,'consumoralenti','consumoralentiobjetivo'
+                                        ,'objetivoseparador','objetivo_molinete','hectareas','consumocosechatotal'
+                                        ,'consumoralenti','consumoralentiobjetivo','objetivo_atta','objetivo_autotrac'
                                         ,'consumoralentilleno','consumoralentillenoobjetivo'
                                         ,'consumoralentivacio','consumoralentivacioobjetivo','consumoseparador'
                                         ,'consumoseparadorobjetivo','diftrilla','diahidraulicomax'
-                                        ,'diarefrigerantemax'
-                                        ,'refralenti','refralentivacio','refralentilleno'
+                                        ,'diarefrigerantemax','mantenerauto_p','harvest_p','autotrac_p','autotrac_automation_p'
+                                        ,'velmolinete_p','atta_p','activeYield_p','refralenti','refralentivacio','refralentilleno'
                                         ,'refseparadordevirajes','reffactordecarga','totalrefvelocidad'
                                         ,'totalrefsuperficie','totalrefconsumo'
                                         ,'implemento','rutavolver'));
