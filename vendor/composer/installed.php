@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'c9bc8579a3577dcfaaf42481793f44681f85c370',
+    'reference' => '38ff6b0605641ac97b06ea5256dfe51651bb48d5',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -46,6 +46,15 @@
       array (
       ),
       'reference' => '759e0eb25bcbe9d6bdcd3ef1689b0fcd8694dc0d',
+    ),
+    'composer/semver' => 
+    array (
+      'pretty_version' => '3.4.0',
+      'version' => '3.4.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '35e8d0af4486141bc745f23a29cc2091eb624a32',
     ),
     'cordoval/hamcrest-php' => 
     array (
@@ -150,6 +159,15 @@
       array (
       ),
       'reference' => '0dbf5d78455d4d6a41d186da50adc1122ec066f4',
+    ),
+    'ezyang/htmlpurifier' => 
+    array (
+      'pretty_version' => 'v4.17.0',
+      'version' => '4.17.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'bbc513d79acf6691fa9cf10f192c90dd2957f18c',
     ),
     'facade/flare-client-php' => 
     array (
@@ -566,7 +584,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'c9bc8579a3577dcfaaf42481793f44681f85c370',
+      'reference' => '38ff6b0605641ac97b06ea5256dfe51651bb48d5',
     ),
     'laravel/tinker' => 
     array (
@@ -631,6 +649,42 @@
       ),
       'reference' => 'c7f2872fb273bf493811473dafc88d60ae829f48',
     ),
+    'maatwebsite/excel' => 
+    array (
+      'pretty_version' => '3.1.55',
+      'version' => '3.1.55.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '6d9d791dcdb01a9b6fd6f48d46f0d5fff86e6260',
+    ),
+    'maennchen/zipstream-php' => 
+    array (
+      'pretty_version' => '2.1.0',
+      'version' => '2.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'c4c5803cc1f93df3d2448478ef79394a5981cc58',
+    ),
+    'markbaker/complex' => 
+    array (
+      'pretty_version' => '3.0.2',
+      'version' => '3.0.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '95c56caa1cf5c766ad6d65b6344b807c1e8405b9',
+    ),
+    'markbaker/matrix' => 
+    array (
+      'pretty_version' => '3.0.1',
+      'version' => '3.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '728434227fe21be27ff6d86621a1b13107a2562c',
+    ),
     'masterminds/html5' => 
     array (
       'pretty_version' => '2.8.1',
@@ -676,6 +730,15 @@
       ),
       'reference' => '7284c22080590fb39f2ffa3e9057f10a4ddd0e0c',
     ),
+    'myclabs/php-enum' => 
+    array (
+      'pretty_version' => '1.7.7',
+      'version' => '1.7.7.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'd178027d1e679832db9f38248fcc7200647dc2b7',
+    ),
     'nesbot/carbon' => 
     array (
       'pretty_version' => '2.68.1',
@@ -687,12 +750,12 @@
     ),
     'nikic/php-parser' => 
     array (
-      'pretty_version' => 'v4.17.1',
-      'version' => '4.17.1.0',
+      'pretty_version' => 'v4.16.0',
+      'version' => '4.16.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'a6303e50c90c355c7eeee2c4a8b27fe8dc8fef1d',
+      'reference' => '19526a33fb561ef417e822e85f08a00db4059c17',
     ),
     'nunomaduro/collision' => 
     array (
@@ -747,6 +810,15 @@
       array (
       ),
       'reference' => '76876c6cf3080bcb6f249d7d59705108166a6685',
+    ),
+    'phpoffice/phpspreadsheet' => 
+    array (
+      'pretty_version' => '1.19.0',
+      'version' => '1.19.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'a9ab55bfae02eecffb3df669a2e19ba0e2f04bbf',
     ),
     'phpoption/phpoption' => 
     array (
@@ -860,6 +932,24 @@
       array (
         0 => '1.0',
       ),
+    ),
+    'psr/http-client' => 
+    array (
+      'pretty_version' => '1.0.3',
+      'version' => '1.0.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'bb5906edc1c324c9a05aa0873d40117941e5fa90',
+    ),
+    'psr/http-factory' => 
+    array (
+      'pretty_version' => '1.0.2',
+      'version' => '1.0.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'e616d01114759c4c489f93b099585439f795fe35',
     ),
     'psr/http-message' => 
     array (

@@ -182,7 +182,8 @@ return [
         // Firebase
         Kreait\Laravel\Firebase\ServiceProvider::class,
 
-        //Generador PDF DomPDF
+        //Importar/Exportar Excel
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         
 
     ],
@@ -238,6 +239,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         //'Curl' => Ixudra\Curl\Facades\Curl::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
     ],
 

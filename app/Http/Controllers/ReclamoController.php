@@ -35,7 +35,7 @@ class ReclamoController extends Controller
         $rutavolver = route('internocx');
         $reclamos = Reclamo::select('reclamos.id','organizacions.NombOrga','sucursals.NombSucu','reclamos.nombre_cliente',
                                     'reclamos.descripcion','reclamos.estado','fecha_registro_causa','fecha_contacto',
-                                    'fecha_limite_contingencia','fecha_registro_contingencia')
+                                    'fecha_limite_contingencia','fecha_registro_contingencia','reclamos.fecha')
                             ->join('organizacions','reclamos.id_organizacion','=','organizacions.id')
                             ->join('sucursals','reclamos.id_sucursal','=','sucursals.id')
                             ->orderBy('reclamos.id','desc')->paginate(20);

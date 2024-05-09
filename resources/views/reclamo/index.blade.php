@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
@@ -17,6 +17,7 @@
                         <thead>
                             <tr>
                             <th scope="col">#</th>
+                            <th scope="col">Fecha hallazgo</th>
                             <th scope="col"></th>
                             <th scope="col">Sucursal</th>
                             <th scope="col">Organización</th>
@@ -34,6 +35,7 @@
                                 <tr>
                             @endcan
                             <th scope="row">{{ $reclamo->id }}</th>
+                            <th scope="row">{{ date("d/m/Y",strtotime($reclamo->fecha)) }}</th>
                             @if((($reclamo->fecha_limite_contingencia <> NULL) AND ($reclamo->fecha_limite_contingencia < $hoy) AND ($reclamo->fecha_registro_contingencia == NULL) AND ($reclamo->estado <> "Cerrada") AND ($reclamo->estado <> "Eficaz")) OR (($reclamo->fecha_causa <> NULL) AND ($reclamo->fecha_causa < $hoy) AND ($reclamo->fecha_registro_causa == NULL) AND ($reclamo->estado <> "Cerrada") AND ($reclamo->estado <> "Eficaz")))
                                 @if(!isset($fecha_registro_contingencia))
                                     <th><img src="{{ asset('/imagenes/arojo.png') }}"  height="20"></th>
@@ -54,7 +56,7 @@
                             <th scope="row">{{ $reclamo->NombSucu }}</th>
                             <th scope="row">{{ $reclamo->NombOrga }}</th>
                             <th scope="row">{{ $reclamo->nombre_cliente }}</th>
-                            <th scope="row">{{ $reclamo->descripcion }}</th>
+                            <th scope="row">{{ substr($reclamo->descripcion,0,120) }}...</th>
                             <th scope="row">{{ $reclamo->estado }}</th>
                             @can('haveaccess','reclamo.show')
                             <th><a href="{{ route('reclamo.show',$reclamo->id) }}" title="Detalle"><img src="{{ asset('/imagenes/config.png') }}"  height="20"></a> </th>

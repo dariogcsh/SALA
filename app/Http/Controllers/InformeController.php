@@ -180,6 +180,8 @@ class InformeController extends Controller
     {
         //
         Gate::authorize('haveaccess','informe.create');
+        $informe = informe::create($request->all()); 
+        
         $id_orga = Mail::select('mails.UserMail','organizacions.NombOrga')
                         ->join('organizacions','mails.OrgaMail','=','organizacions.id')
                         ->where('organizacions.CodiOrga',$request->CodiOrga)
@@ -217,7 +219,7 @@ class InformeController extends Controller
             }
         }
           
-        $informe = informe::create($request->all()); 
+        
         echo('El informe se ha generado correctamente');
         //return view('utilidad.enviarInforme')->with('status_success', 'El informe se ha generado correctamente');
   

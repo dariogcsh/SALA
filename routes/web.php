@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CosechaController;
 
 
 /*
@@ -284,7 +285,7 @@ Route::resource('reclamo', 'ReclamoController');
 Route::post('noticia/like_noticia', 'NoticiaController@like_noticia')->name('noticia.like_noticia');
 Route::resource('noticia', 'NoticiaController');
 Route::resource('cambio_fecha_cx', 'CambioFechaCxController');
-
-
-
+// Definir una ruta POST para importar el archivo Excel
+Route::post('/importar', [CosechaController::class, 'importar']);
+Route::resource('cosecha', 'CosechaController');
 
