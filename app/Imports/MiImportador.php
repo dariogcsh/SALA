@@ -6,6 +6,7 @@ use App\cosecha;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Illuminate\Support\Collection;
+use Carbon\Carbon;
 
 class MiImportador implements ToCollection, WithChunkReading
 {
@@ -28,8 +29,8 @@ class MiImportador implements ToCollection, WithChunkReading
             'humedad' => $row[10],
             'rendimiento' => $row[11],
             'combustible' => $row[12],
-            'inicio' => $row[13],
-            'fin' => $row[14],
+            'inicio' => Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[13])),
+            'fin' => Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[14])),
             ];
         }
         // Insertar en lotes
