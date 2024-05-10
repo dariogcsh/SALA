@@ -405,6 +405,77 @@
                                           <br>
                                         </div>
                                 </div>
+
+
+                              <div class="row">
+                                <div class="col-md-6">
+                                    <h3 style="text-align: center">Rendimiento por hectárea (t/ha)</h3>
+                                    <!-- Si esta cerca de alcanzar el objetivo, figura circulo amarillo, si no llega al objetivo se muestra circulo rojo y si no circulo verde -->
+                                    <div class="row">
+                                      <div class="col-md-6" align="left" style="padding-left:5%">
+                                       
+                                      </div>
+                                      <div class="col-md-6" align="right" style="padding-right:5%">
+                                        <img src="{{ asset('/imagenes/informacion.png') }}" onclick="alert('Refiere a la cantidad de hectáreas que realiza la máquina por cada hora de trabajo. Para mejorar este indicador se debe analizar la velocidad de trabajo, junto con el factor de carga de motor y variables de terreno y cultivo que limiten el incremento de velocidad.')" title="Detalle" height="30px" alt="">
+                                      </div>
+                                    </div>
+                                    <br>
+                                    <!-- fin de condicional -->
+                                    <div id="chart_tporha"></div>
+                                    <div class="form-group row">
+                                      <label for="detalletporha" class="col-md-4 col-form-label text-md-right">{{ __('Detallar periodo') }}</label>
+                                        <div class="col-md-6">
+                                        <select class="detalle form-control @error('detalletporha') is-invalid @enderror" name="detalletporha" id="detalletporha"  title="Seleccionar periodo" autofocus> 
+                                            <option value="">Seleccionar período</option>
+                                            @for ($i=0; $i <= $periodos; $i++)
+                                                  <option value="{{ $pinicial[$i] }}/{{ $pfinal[$i] }}"><b>P{{ $i + 1}}</b>  -  {{ $pinicial[$i] }} - {{ $pfinal[$i] }}</option>
+                                            @endfor
+                                        </select>
+                                       </div>
+                                    </div>
+                                      <div class="text-center" id="carga_tporha" style="display: none">
+                                        <div class="spinner-grow text-warning" role="status">
+                                          <span class="sr-only">Loading...</span>
+                                        </div>
+                                      </div>
+                                      <div id="chart_tporha_detallado" ></div>
+                                    <br>
+                                  </div>
+
+                                  <div class="col-md-6">
+                                    <h3 style="text-align: center">Consumo de combustible por tonelada (Lts/t)</h3>
+                                    <!-- Si esta cerca de alcanzar el objetivo, figura circulo amarillo, si no llega al objetivo se muestra circulo rojo y si no circulo verde -->
+                                    <div class="row">
+                                      <div class="col-md-6" align="left" style="padding-left:5%">
+                                      
+                                      </div>
+                                      <div class="col-md-6" align="right" style="padding-right:5%">
+                                        <img src="{{ asset('/imagenes/informacion.png') }}" onclick="alert('Refiere a la cantidad de hectáreas que realiza la máquina por cada hora de trabajo. Para mejorar este indicador se debe analizar la velocidad de trabajo, junto con el factor de carga de motor y variables de terreno y cultivo que limiten el incremento de velocidad.')" title="Detalle" height="30px" alt="">
+                                      </div>
+                                    </div>
+                                    <br>
+                                    <!-- fin de condicional -->
+                                    <div id="chart_lport"></div>
+                                    <div class="form-group row">
+                                      <label for="detallelport" class="col-md-4 col-form-label text-md-right">{{ __('Detallar periodo') }}</label>
+                                        <div class="col-md-6">
+                                        <select class="detalle form-control @error('detallelport') is-invalid @enderror" name="detallelport" id="detallelport"  title="Seleccionar periodo" autofocus> 
+                                            <option value="">Seleccionar período</option>
+                                            @for ($i=0; $i <= $periodos; $i++)
+                                                  <option value="{{ $pinicial[$i] }}/{{ $pfinal[$i] }}"><b>P{{ $i + 1}}</b>  -  {{ $pinicial[$i] }} - {{ $pfinal[$i] }}</option>
+                                            @endfor
+                                        </select>
+                                       </div>
+                                    </div>
+                                      <div class="text-center" id="carga_lport" style="display: none">
+                                        <div class="spinner-grow text-warning" role="status">
+                                          <span class="sr-only">Loading...</span>
+                                        </div>
+                                      </div>
+                                      <div id="chart_lport_detallado" ></div>
+                                    <br>
+                                  </div>
+                              </div>
                             
 
                             <div class="row">
@@ -1098,6 +1169,50 @@ function mostrarValor() {
         chart.draw(view, options);
 
 
+         /////////------ TONELADAS POR HA-------////////
+         var data = google.visualization.arrayToDataTable([
+          ["Velocidad", "{{ $maquina->ModeMaq }} (Lts)", "Acumulado"],
+          @for ($i=0; $i <= $periodos; $i++)
+              ['{{date('d/m/Y',strtotime($pinicial[$i]))}} - {{date('d/m/Y',strtotime($pfinal[$i]))}}', 
+              {{ number_format($tporha[$i],1) }},
+              {{ number_format($tporha[$periodos + 1],1) }}],
+          @endfor
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1,
+                        { calc: "stringify",
+                          sourceColumn: 1,
+                          type: "string",
+                          role: "annotation" },
+                          2,
+                        ]);
+
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_tporha"));
+        chart.draw(view, options);
+
+        /////////------ TONELADAS POR LITRO-------////////
+        var data = google.visualization.arrayToDataTable([
+          ["Velocidad", "{{ $maquina->ModeMaq }} (Lts)", "Acumulado"],
+          @for ($i=0; $i <= $periodos; $i++)
+              ['{{date('d/m/Y',strtotime($pinicial[$i]))}} - {{date('d/m/Y',strtotime($pfinal[$i]))}}', 
+              {{ number_format($lport[$i],1) }},
+              {{ number_format($lport[$periodos + 1],1) }}],
+          @endfor
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1,
+                        { calc: "stringify",
+                          sourceColumn: 1,
+                          type: "string",
+                          role: "annotation" },
+                          2,
+                        ]);
+
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_lport"));
+        chart.draw(view, options);
+
 
           /////////------ VELOCIDAD-------////////
         var data = google.visualization.arrayToDataTable([
@@ -1432,6 +1547,18 @@ var data = google.visualization.arrayToDataTable([
                 divcarga = document.getElementById("carga_giros");
                 var div_grafico = "chart_giros_detallado";
                 var path = "{{ route('utilidad.detalle_tecnologia') }}";
+              }
+
+              if (element_id == "detalletporha"){
+                divcarga = document.getElementById("carga_tporha");
+                var div_grafico = "chart_tporha_detallado";
+                var path = "{{ route('utilidad.detalle_tporha_lport') }}";
+              }
+
+              if (element_id == "detallelport"){
+                divcarga = document.getElementById("carga_lport");
+                var div_grafico = "chart_lport_detallado";
+                var path = "{{ route('utilidad.detalle_tporha_lport') }}";
               }
               
               if (element_id == "detallesuperficie"){

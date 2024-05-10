@@ -76,6 +76,7 @@ Route::post('utilidad/fetchidmaq', 'UtilidadController@fetchidmaq')->name('utili
 Route::post('utilidad/verificaTipoMaquina', 'UtilidadController@verificaTipoMaquina')->name('utilidad.verificaTipoMaquina');
 Route::post('utilidad/verificaTipoMaquinaApero', 'UtilidadController@verificaTipoMaquinaApero')->name('utilidad.verificaTipoMaquinaApero');
 Route::post('utilidad/cargaImplemento', 'UtilidadController@cargaImplemento')->name('utilidad.cargaImplemento');
+Route::post('utilidad/detalle_tporha_lport', 'UtilidadController@detalle_tporha_lport')->name('utilidad.detalle_tporha_lport');
 Route::post('utilidad/detalle_superficie_consumo_vel', 'UtilidadController@detalle_superficie_consumo_vel')->name('utilidad.detalle_superficie_consumo_vel');
 Route::post('utilidad/detalle_superficie_consumo_vel_tractor', 'UtilidadController@detalle_superficie_consumo_vel_tractor')->name('utilidad.detalle_superficie_consumo_vel_tractor');
 Route::post('utilidad/detalle_superficie_consumo_vel_tractor_acarreo', 'UtilidadController@detalle_superficie_consumo_vel_tractor_acarreo')->name('utilidad.detalle_superficie_consumo_vel_tractor_acarreo');

@@ -8,6 +8,7 @@ use App\maquina;
 use App\organizacion;
 use App\objetivo;
 use App\informe;
+use App\cosecha;
 //use PDF;
 use Carbon\Carbon;
 use App\interaccion;
@@ -643,6 +644,70 @@ class UtilidadController extends Controller
         }
         if ($indicador == "detallegiros") {
             $resultado = $giros_d;
+        }
+        
+        echo json_encode($resultado);
+    }
+
+    function detalle_tporha_lport(Request $request)
+    {
+        $indicador = $request->get('element_id');
+        $valuefec = $request->get('value');
+        $cultivo = $request->get('cultivo');
+        $maquina = $request->get('maquina');
+        $value = explode("/", $valuefec);
+        $fechainicial = $value[0];
+        $fechafinal = $value[1];
+        
+        //Consulta de fechas
+        $sqlfechas = [['pin', $maquina], ['inicio','>=',$fechainicial],['inicio','<=',$fechafinal], ['cultivo',$cultivo]];
+
+        //obtengo desde la fecha mas baja
+        $fechamin = Cosecha::where($sqlfechas)
+                        ->groupBy('inicio')
+                        ->orderBy('inicio','asc')
+                        ->get();
+
+        if (empty($fechamin))
+        {
+            return redirect()->route('utilidad.index')->with('status_danger', 'No se encontraron trabajos realizados en el intervalo de fechas para el cultivo seleccionado');
+        }
+        $i=0;
+        foreach ($fechamin as $fecha)
+        {
+            //Indicadores de productividad (t/ha y t/l)
+
+            if ($indicador == "detalletporha") {
+                $has = Cosecha::where([['pin', $maquina], ['inicio',$fecha->inicio], ['cultivo',$cultivo]])->sum('superficie');
+                $rendimiento = Cosecha::where([['pin', $maquina], ['inicio',$fecha->inicio], ['cultivo',$cultivo]])->sum('rendimiento');
+                if(($has > 0) AND ($rendimiento > 0)){
+                    $tporha_d[$i][1] = $fecha->inicio;
+                    $tporha_d[$i][0] = $rendimiento / $has;
+                }else{
+                    $tporha_d[$i][1] = $fecha->inicio;
+                    $tporha_d[$i][0] = 0;
+                }
+            }
+
+            if ($indicador == "detallelport") {
+                $rendimiento = Cosecha::where([['pin', $maquina], ['inicio',$fecha->inicio], ['cultivo',$cultivo]])->sum('rendimiento');
+                $combustible = Cosecha::where([['pin', $maquina], ['inicio',$fecha->inicio], ['cultivo',$cultivo]])->sum('combustible');
+                if(($combustible > 0) AND ($rendimiento > 0)){
+                    $lport_d[$i][1] = $fecha->inicio;
+                    $lport_d[$i][0] = $combustible / $rendimiento;
+                }else{
+                    $lport_d[$i][1] = $fecha->inicio;
+                    $lport_d[$i][0] = 0;
+                }
+            }
+
+            $i++;
+        }
+        if ($indicador == "detalletporha") {
+            $resultado = $tporha_d;
+        }
+        if ($indicador == "detallelport") {
+            $resultado = $lport_d;
         }
         
         echo json_encode($resultado);
@@ -2219,6 +2284,8 @@ class UtilidadController extends Controller
                     }
                 $consulta = [['NumSMaq', $maquina->NumSMaq], ['FecIUtil','>=',$pinicial[$i]],
                 ['FecIUtil','<=', $pfinal[$i]]];
+                $consulta_productividad = [['pin',$maquina->NumSMaq],['inicio','>=',$pinicial[$i]],['inicio','<=',$pfinal[$i]],
+                ['cultivo',$cultivo]];
                 }
                 
                 //Consulta promedio de velocidad promedio, consumo y factor de carga del motor
@@ -2267,6 +2334,24 @@ class UtilidadController extends Controller
                 $attahs[$i] = Utilidad::where([[$consulta], ['CateUtil','LIKE','%Active Terrain Adjustment%'], ['SeriUtil','Enc'], ['UOMUtil','hr']])->sum('ValoUtil');
                 $mantenerautohs[$i] = Utilidad::where([[$consulta], ['CateUtil','LIKE','%Mantener automáticamente%'], ['SeriUtil','Enc'], ['UOMUtil','hr']])->sum('ValoUtil');
                 $activeYieldhs[$i] = Utilidad::where([[$consulta], ['CateUtil','LIKE','%Active Yield%'], ['SeriUtil','Enc'], ['UOMUtil','hr']])->sum('ValoUtil');
+
+          
+                //Indicadores de productividad (t/ha y t/l)
+                $has = Cosecha::where($consulta_productividad)->sum('superficie');
+                $rendimiento = Cosecha::where($consulta_productividad)->sum('rendimiento');
+                $combustible = Cosecha::where($consulta_productividad)->sum('combustible');
+
+                if(($has > 0) AND ($rendimiento > 0)){
+                    $tporha[$i] = $rendimiento / $has;
+                }else{
+                    $tporha[$i] = 0;
+                }
+
+                if(($rendimiento > 0) AND ($combustible > 0)){
+                    $lport[$i] = $combustible / $rendimiento;
+                }else{
+                    $lport[$i] = 0;
+                }
 
                 //CONSUMOS DE COMBUSTIBLE SEGUN ESTADO: RALENTI, TRANSPORTE Y TRABAJANDO
                 $ralentilts[$i] = Utilidad::where([[$consulta], ['SeriUtil', 'Ralentí'], ['UOMUtil','l']])->sum('ValoUtil');
@@ -2497,7 +2582,7 @@ class UtilidadController extends Controller
                                         ,'consumoseparadorobjetivo','diftrilla','diahidraulicomax'
                                         ,'diarefrigerantemax','mantenerauto_p','harvest_p','autotrac_p','autotrac_automation_p'
                                         ,'velmolinete_p','atta_p','activeYield_p','refralenti','refralentivacio','refralentilleno'
-                                        ,'refseparadordevirajes','reffactordecarga','totalrefvelocidad'
+                                        ,'refseparadordevirajes','reffactordecarga','totalrefvelocidad','tporha','lport'
                                         ,'totalrefsuperficie','totalrefconsumo'
                                         ,'implemento','rutavolver'));
     }
