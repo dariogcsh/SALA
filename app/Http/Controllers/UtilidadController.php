@@ -2000,6 +2000,8 @@ class UtilidadController extends Controller
                     
                 $consulta = [['NumSMaq', $maquina->NumSMaq], ['FecIUtil','>=',$horasdetrillainicial->FecIUtil],
                             ['FecIUtil','<=',$horasdetrillafinal->FecIUtil]];
+                $consulta_productividad = [['pin',$maquina->NumSMaq],['inicio','>=',$horasdetrillainicial->FecIUtil],['inicio','<=',$horasdetrillafinal->FecIUtil],
+                            ['cultivo',$cultivo]];
 
                 $acumcosechahs = Utilidad::where([[$consulta], ['SeriUtil','Cosecha'],['UOMUtil', 'hr']])
                             ->sum('ValoUtil');
