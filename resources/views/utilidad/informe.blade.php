@@ -415,14 +415,14 @@
 
                               <div class="row">
                                 <div class="col-md-6">
-                                    <h3 style="text-align: center">Rendimiento por hectárea (t/ha)</h3>
+                                    <h3 style="text-align: center">Rendimiento por hectárea (Tn/Ha)</h3>
                                     <!-- Si esta cerca de alcanzar el objetivo, figura circulo amarillo, si no llega al objetivo se muestra circulo rojo y si no circulo verde -->
                                     <div class="row">
                                       <div class="col-md-6" align="left" style="padding-left:5%">
                                        
                                       </div>
                                       <div class="col-md-6" align="right" style="padding-right:5%">
-                                        <img src="{{ asset('/imagenes/informacion.png') }}" onclick="alert('Refiere a la cantidad de hectáreas que realiza la máquina por cada hora de trabajo. Para mejorar este indicador se debe analizar la velocidad de trabajo, junto con el factor de carga de motor y variables de terreno y cultivo que limiten el incremento de velocidad.')" title="Detalle" height="30px" alt="">
+                                        <img src="{{ asset('/imagenes/informacion.png') }}" onclick="alert('Refiere la productividad que tiene la máquina en toneladas por hectárea.')" title="Detalle" height="30px" alt="">
                                       </div>
                                     </div>
                                     <br>
@@ -449,7 +449,7 @@
                                   </div>
 
                                   <div class="col-md-6">
-                                    <h3 style="text-align: center">Consumo de combustible por tonelada (Lts/t)</h3>
+                                    <h3 style="text-align: center">Consumo de combustible por tonelada (Lts/Tn)</h3>
                                     <!-- Si esta cerca de alcanzar el objetivo, figura circulo amarillo, si no llega al objetivo se muestra circulo rojo y si no circulo verde -->
                                     <div class="row">
                                       <div class="col-md-6" align="left" style="padding-left:5%">

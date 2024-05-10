@@ -71,6 +71,34 @@
 
                             <div class="row">
                                 <div class="col-md-6">
+                                    <h3 style="text-align: center">Rendimiento por hectárea (Tn/Ha)</h3>
+                                    <!-- Si esta cerca de alcanzar el objetivo, figura circulo amarillo, si no llega al objetivo se muestra circulo rojo y si no circulo verde -->
+                                    <div class="row">
+                                      <div class="col-md-12" align="right" style="padding-right:5%">
+                                        <img src="{{ asset('/imagenes/informacion.png') }}" onclick="alert('Refiere la productividad que tiene la máquina en toneladas por hectárea.')" title="Detalle" height="30px" alt="">
+                                      </div>
+                                    </div>
+                                    <br>
+                                    <!-- fin de condicional -->
+                                    <div id="chart_tporha"></div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <h3 style="text-align: center">Consumo por tonelada (Lts/Tn)</h3>
+                                    <!-- Si esta cerca de alcanzar el objetivo, figura circulo amarillo, si no llega al objetivo se muestra circulo rojo y si no circulo verde -->
+                                    <div class="row">
+                                      <div class="col-md-12" align="right" style="padding-right:5%">
+                                        <img src="{{ asset('/imagenes/informacion.png') }}" onclick="alert('Refiere al consumo de combustible (en litros) por cada tonelada de cultivo cosechado.')" title="Detalle" height="30px" alt="">
+                                      </div>
+                                    </div>
+                                    <br>
+                                    <!-- fin de condicional -->
+                                    <div id="chart_lport"></div>
+                                </div>
+                            </div>
+<br>
+                            <div class="row">
+                                <div class="col-md-6">
                                     <h3 style="text-align: center">Superficie cosechada por hora (Has)</h3>
                                     <!-- Si esta cerca de alcanzar el objetivo, figura circulo amarillo, si no llega al objetivo se muestra circulo rojo y si no circulo verde -->
                                     <div class="row">
@@ -373,6 +401,73 @@ $(window).resize(function(){
         };
 
         var chart = new google.visualization.ColumnChart(document.getElementById("chart_superficie"));
+        chart.draw(view, options);
+
+        /////////------ TONELADAS POR HECTAREA-------////////
+        var data = google.visualization.arrayToDataTable([leyenda,
+        ['{{date('d/m/Y',strtotime($finicio))}} - {{date('d/m/Y',strtotime($ffin))}}',
+            @if (!empty($maq[0]))
+                {{ number_format($tporha[0],1) }},
+            @endif
+            @if (!empty($maq[1]))
+                {{ number_format($tporha[1],1) }},
+            @endif
+            @if (!empty($maq[2]))
+                {{ number_format($tporha[2],1) }},
+            @endif
+            @if (!empty($maq[3]))
+                {{ number_format($tporha[3],1) }},
+            @endif
+            @if (!empty($maq[4]))
+                {{ number_format($tporha[4],1) }},
+            @endif
+            @if (!empty($maq[5]))
+                {{ number_format($tporha[5],1) }},
+            @endif
+            @if (!empty($maq[6]))
+                {{ number_format($tporha[6],1) }},
+            @endif
+            ],
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns(columnas);
+
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_tporha"));
+        chart.draw(view, options);
+
+
+        /////////------ CONSUMO DE COMBUSTIBLE POR TONELADA COSECHADA-------////////
+        var data = google.visualization.arrayToDataTable([leyenda,
+        ['{{date('d/m/Y',strtotime($finicio))}} - {{date('d/m/Y',strtotime($ffin))}}',
+            @if (!empty($maq[0]))
+                {{ number_format($lport[0],1) }},
+            @endif
+            @if (!empty($maq[1]))
+                {{ number_format($lport[1],1) }},
+            @endif
+            @if (!empty($maq[2]))
+                {{ number_format($lport[2],1) }},
+            @endif
+            @if (!empty($maq[3]))
+                {{ number_format($lport[3],1) }},
+            @endif
+            @if (!empty($maq[4]))
+                {{ number_format($lport[4],1) }},
+            @endif
+            @if (!empty($maq[5]))
+                {{ number_format($lport[5],1) }},
+            @endif
+            @if (!empty($maq[6]))
+                {{ number_format($lport[6],1) }},
+            @endif
+            ],
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns(columnas);
+
+        var chart = new google.visualization.ColumnChart(document.getElementById("chart_lport"));
         chart.draw(view, options);
 
 

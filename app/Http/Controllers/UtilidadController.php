@@ -956,6 +956,8 @@ class UtilidadController extends Controller
                     
                 $consulta = [['NumSMaq', $maq[$i]->NumSMaq], ['FecIUtil','>=',$horasdetrillainicial[$i]->FecIUtil],
                             ['FecIUtil','<=',$horasdetrillafinal[$i]->FecIUtil]];
+                $consulta_productividad = [['pin',$maq[$i]->NumSMaq],['inicio','>=',$horasdetrillainicial[$i]->FecIUtil],['inicio','<=',$horasdetrillafinal[$i]->FecIUtil],
+                            ['cultivo',$cultivo]];
 
                 
                 //Consulta promedio de velocidad promedio, consumo y factor de carga del motor
@@ -990,6 +992,23 @@ class UtilidadController extends Controller
                 $separadordevirajeshs[$i] = Utilidad::where([[$consulta], ['SeriUtil','Separador de virajes en cabecero engranado']
                                                                         ,['UOMUtil', 'hr']])
                                                     ->sum('ValoUtil');
+
+                //Indicadores de productividad (t/ha y t/l)
+                $has = Cosecha::where($consulta_productividad)->sum('superficie');
+                $rendimiento = Cosecha::where($consulta_productividad)->sum('rendimiento');
+                $combustible = Cosecha::where($consulta_productividad)->sum('combustible');
+
+                if(($has > 0) AND ($rendimiento > 0)){
+                    $tporha[$i] = $rendimiento / $has;
+                }else{
+                    $tporha[$i] = 0;
+                }
+
+                if(($rendimiento > 0) AND ($combustible > 0)){
+                    $lport[$i] = $combustible / $rendimiento;
+                }else{
+                    $lport[$i] = 0;
+                }
 
 
                 $horasencultivos[$i] = Utilidad::where([[$consulta], ['CateUtil','LIKE','%Tiempo en '.$cultivo.'%'], ['UOMUtil','hr']])->sum('ValoUtil');
@@ -1060,7 +1079,7 @@ class UtilidadController extends Controller
                                         'ralentillena','ralentivacia','separadordevirajes','horasdetrillainicial',
                                         'horasdetrillafinal','trabajandolts','ralentilts','transportelts','diftrilla',
                                         'autotrac','velmolinete','harvest','alturaplataforma','mantenerauto','implemento',
-                                        'rutavolver','cantidad','ffin','finicio','maq')); 
+                                        'rutavolver','cantidad','ffin','finicio','maq','tporha','lport')); 
         }
 
 
