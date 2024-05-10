@@ -930,9 +930,12 @@ class UtilidadController extends Controller
                                                 ['FecIUtil','<=', $ffin]])
                                             ->orderBy('ValoUtil','desc')->first();
         
-        
-        //Calculo diferencia entre hs de trilla final y hs de trilla inicial para saber cuanto trillo acumulado
-        $diftrilla[$m] = $horasdetrillafinal[$m]->ValoUtil - $horasdetrillainicial[$m]->ValoUtil;
+        if((isset($horasdetrillainicial[$m])) OR (isset($horasdetrillafinal[$m]))){
+            //Calculo diferencia entre hs de trilla final y hs de trilla inicial para saber cuanto trillo acumulado
+            $diftrilla[$m] = $horasdetrillafinal[$m]->ValoUtil - $horasdetrillainicial[$m]->ValoUtil;
+        }else{
+            $diftrilla[$m] = 0;
+        }
 
         //definimos el ancho de plataforma segun el cultivo
         if (($cultivo == "maíz") OR ($cultivo == "girasol")){
