@@ -117,9 +117,12 @@
                                 </tbody>
                                 </table>
                             </div>
-                            <br>
+                            
 
 
+                          <br>
+                          <div class="title-segmento"><h5>TECNOLOGÍAS</h5></div>
+                          <br>
                          
                               <div class="row">
                                 @if((!empty($mantenerauto)) OR ($maquina->combine_advisor == "SI"))
@@ -406,6 +409,9 @@
                                         </div>
                                 </div>
 
+                                <br>
+                                <div class="title-segmento"><h5>PRODUCTIVIDAD Y CONSUMOS</h5></div>
+                                <br>
 
                               <div class="row">
                                 <div class="col-md-6">
@@ -621,6 +627,10 @@
                                     <br>
                                 </div>
                             </div>
+
+                            <br>
+                            <div class="title-segmento"><h5>USO SEGÚN EL ESTADO</h5></div>
+                            <br>
                             <div class="row">
                                 <div class="col-md-6">
                                     <h3 style="text-align: center">Ralenti (%)</h3>
