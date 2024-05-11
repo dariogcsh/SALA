@@ -29,6 +29,14 @@
                                         <label class="form-check-label" for="Precios">Lista de precios</label>
                                     </div>
                                     <div class="form-check form-check-inline">
+                                        @if ($subirpdf->ventastipo == "Usados")
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="usados" value="usados" checked>
+                                        @else
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="usados" value="usados">
+                                        @endif
+                                        <label class="form-check-label" for="Usados">Usados</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
                                         @if ($subirpdf->ventastipo == "Varios")
                                             <input class="form-check-input" type="radio" name="inlineRadioOptions" id="varios" value="Varios" checked>
                                         @else
@@ -50,6 +58,10 @@
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="precios" onchange="handleChange(this);" value="Precios" checked>
                                         <label class="form-check-label" for="Precios">Precios</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="usados" onchange="handleChange(this);" value="usados">
+                                        <label class="form-check-label" for="Usados">Usados</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="varios" onchange="handleChange(this);" value="Varios">

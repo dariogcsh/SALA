@@ -44,6 +44,17 @@ class SubirpdfController extends Controller
         return view('subirpdf.indexvarios', compact('subirpdfs','rutavolver'));
     }
 
+    public function indexusados()
+    {
+        //
+        Gate::authorize('haveaccess','subirpdf.index');
+        Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Ventas']);
+        $rutavolver = route('subirpdf.menu');
+        $subirpdfs = Subirpdf::where('ventastipo','usados')
+                            ->orderBy('id','desc')->paginate(20);
+        return view('subirpdf.indexusados', compact('subirpdfs','rutavolver'));
+    }
+
     public function indexams()
     {
         //
@@ -122,9 +133,12 @@ class SubirpdfController extends Controller
         }elseif ($radioopt == "Varios"){
             $archivo = "varios";
             $ruta = "/subirpdf/indexvarios";
-        }else {
+        }elseif ($radioopt == "ams"){
             $archivo = "AMS";
             $ruta = "/subirpdf/indexams";
+        }else{
+            $archivo = "Usados";
+            $ruta = "/subirpdf/indexusados";
         }
                     
 

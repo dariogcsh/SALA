@@ -78,6 +78,9 @@
                             </select>
                         </form>
                     </div>
+                    <div class="form-group col-md-2">
+                        <a class="btn btn-block btn-secondary" href="{{ route('subirpdf.indexusados') }}">Formulario de usados</a>
+                    </div>
                 </div>
                 <br>
                     <div class="table-responsive-md">

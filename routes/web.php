@@ -251,6 +251,7 @@ Route::resource('lote', 'LoteController');
 Route::resource('cliente', 'ClienteController');
 Route::resource('granja', 'GranjaController');
 Route::get('subirpdf/menu', 'SubirpdfController@menu')->name('subirpdf.menu');
+Route::get('subirpdf/indexusados', 'SubirpdfController@indexusados')->name('subirpdf.indexusados');
 Route::get('subirpdf/indexvarios', 'SubirpdfController@indexvarios')->name('subirpdf.indexvarios');
 Route::get('subirpdf/indexams', 'SubirpdfController@indexams')->name('subirpdf.indexams');
 Route::resource('subirpdf', 'SubirpdfController');
