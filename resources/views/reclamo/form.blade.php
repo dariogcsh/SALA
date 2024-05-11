@@ -23,6 +23,11 @@
                                     </span>
                                 @enderror
                             </div>
+                            @can('haveaccess','organizacion.create')
+                            <div class="col-md-2">
+                                <a href="{{ route('organizacion.create') }}" title="Crear organización nueva" class="btn btn-warning float-left" onclick="return confirm('¿Desea ccrear una organización nueva y salir del formulario de registro de queja/reclamo?');"><b>+</b></a>
+                            </div>
+                            @endcan
                         </div>
 
                         <div class="form-group row">

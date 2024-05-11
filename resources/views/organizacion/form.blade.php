@@ -4,7 +4,7 @@
                             <label for="CodiOrga" class="col-md-4 col-form-label text-md-right">{{ __('Codigo') }} de organizacion en Centro de Operaciones</label>
 
                             <div class="col-md-6">
-                                <input id="CodiOrga" type="number" class="form-control @error('CodiOrga') is-invalid @enderror" name="CodiOrga" value="{{ isset($organizacion->CodiOrga)?$organizacion->CodiOrga:old('CodiOrga') }}" autocomplete="CodiOrga" autofocus>
+                                <input id="CodiOrga" type="number" class="form-control @error('CodiOrga') is-invalid @enderror" name="CodiOrga" value="{{ isset($organizacion->CodiOrga)?$organizacion->CodiOrga:old('CodiOrga') }}" autocomplete="CodiOrga" autofocus placeholder="Opcional">
 
                                 @error('CodiOrga')
                                     <span class="invalid-feedback" role="alert">
