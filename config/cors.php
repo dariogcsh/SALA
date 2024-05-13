@@ -24,7 +24,8 @@ return [
         'mobile/login',
         'reparacion/solicitudes/pdf/*',
         'reparacion/tareas/campo/pdf/*',
-        'reparacion/tareas/taller/pdf/*'
+        'reparacion/tareas/taller/pdf/*',
+        'usado/pdf/*'
     ],
 
     'allowed_methods' => ['*'],

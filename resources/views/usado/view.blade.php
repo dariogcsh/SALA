@@ -25,7 +25,7 @@
             <div class="card">
                 <div class="card-header"><h3>{{ $usado->marca }} - {{ $usado->modelo }}
                     <a id="download" class="btn btn-success float-right" href={{ route('usado.usado_pdf',$usado->id) }}><i class="fa fa-download"></i></a>
-                    </h3></div>
+                </h3></div>
 
                 <div class="card-body">
                       <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
@@ -466,6 +466,16 @@
 @endsection
 @section('script')
 <script type="text/javascript">
+document.getElementById("download").addEventListener("click", function(){
+        const id = {!! json_encode($usado->id) !!} 
+        const type = "tareas/taller";
+        const name = `usado_${id}`
+        var messageObj = { action: "downloadPDF", id, type, name };
+        var stringifiedMessageObj = JSON.stringify(messageObj);
+        if(typeof webkit != "undefined"){
+            webkit.messageHandlers.cordova_iab.postMessage(stringifiedMessageObj);
+        }
+    }, false);
 function reservar() {
     overlay.style.display = "block";
   loader.style.display = "block";
