@@ -21,3 +21,14 @@
     </div>
 </div>
 @endsection
+@section('script')
+<script type="text/javascript">
+
+$( document ).ready(function() {
+    //Es para el formato de select multiple
+    $("#id_user").multipleSelect({
+                        filter: true
+    });
+});
+</script>
+@endsection

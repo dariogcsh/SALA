@@ -222,6 +222,54 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label for="id_user" class="col-md-4 col-form-label text-md-right">{{ __('Responsable') }}</label>
+
+                            <div class="col-md-6">
+                                <select class="form-control @error('id_user') is-invalid @enderror" multiple id="id_user" name="id_user[]" autofocus>
+                                    @isset($usuarios_responsables)
+                                    @php 
+                                    
+                                    //array para guardar los users que ya esten asignados en la tarea
+                                    $arrtec[] = ""; 
+                                    $i=0;
+                                    @endphp
+                                        @foreach($usuarios as $usuario)
+                                            @foreach($usuarios_responsables as $responsable)
+                                                @if($usuario->id == $responsable->id_user)
+                                                    <option class="{{ $usuario->id }}" value="{{ $usuario->id }}" selected>{{ $usuario->name }} {{ $usuario->last_name }}</option>
+                                                    @php 
+                                                    //guardo el/los usuario que ya esta asignado en la tarea en un array
+                                                    $arrtec[$i] = $usuario->id;
+                                                    $i++; 
+                                                    @endphp
+                                                @endif
+                                            @endforeach
+                                            <!--Comparo si el usuario del foreach esta dentro del array, caso contrario se asigna el option-->
+                                            @if(!in_array($usuario->id, $arrtec))
+                                                <option class="{{ $usuario->id }}" value="{{ $usuario->id }}">{{ $usuario->name }} {{ $usuario->last_name }}</option>
+                                            @endif
+                                            @php 
+                                            //Vuelvo i a 0 ya que hay una nueva iteracion
+                                            $i = 0; 
+                                            @endphp
+                                        @endforeach
+                                    @else
+                                        @isset($usuarios)
+                                            @foreach($usuarios as $usuario)
+                                                <option class="{{ $usuario->id }}" value="{{ $usuario->id }}">{{ $usuario->name }} {{ $usuario->last_name }}</option>
+                                            @endforeach
+                                        @endisset
+                                    @endisset
+                                </select>
+                                @error('id_user')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-success">

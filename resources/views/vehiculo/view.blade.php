@@ -208,6 +208,29 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row">
+                                <label for="id_user" class="col-md-4 col-form-label text-md-right">{{ __('Responsables') }} </label>
+    
+                                <div class="col-md-6">
+                                    <label class="form-control-textarea @error('id_user') is-invalid @enderror"  id="id_user" name="id_user" disabled>
+                                        @foreach ($usuarios as $usuario)
+                                            @isset($usuarios_responsables)
+                                                @foreach($usuarios_responsables as $user_responsable)
+                                                    @if($usuario->id == $user_responsable->id_user)
+                                                        {{ $usuario->name }} {{ $usuario->last_name }} - 
+                                                    @endif
+                                                @endforeach   
+                                            @endisset
+                                        @endforeach
+                                    </label>
+                                    @error('id_user')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
 
                             <hr>
                             <div class="row">
