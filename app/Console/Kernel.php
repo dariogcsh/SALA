@@ -50,7 +50,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('recordatorio:evento')->dailyAt('8:00');
         $schedule->command('definir:objetivo')->dailyAt('2:00');
         $schedule->command('usado:disponible')->dailyAt('8:30');
-        $schedule->command('actualizar:vehiculos')->dailyAt('10:00');
+        //$schedule->command('actualizar:vehiculos')->dailyAt('10:00');
         $schedule->command('reclamo:vencido')->dailyAt('8:45');
         $schedule->command('reclamo:notificacion')->dailyAt('8:45');
 

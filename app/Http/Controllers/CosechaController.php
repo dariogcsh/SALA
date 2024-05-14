@@ -24,7 +24,6 @@ class CosechaController extends Controller
         $fecha_hoy = Carbon::today();
         $año = $fecha_hoy->format('Y');
         Cosecha::where([['inicio','>=',$año.'-01-01'],['inicio','<=',$año.'-12-31']])->delete();
-        Cosecha::truncate();
         Excel::import(new MiImportador, $archivo);
         return redirect()->route('internosoluciones')->with('status_success', 'Datos importados correctamente');
     }
