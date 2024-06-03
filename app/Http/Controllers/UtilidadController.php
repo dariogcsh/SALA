@@ -748,20 +748,30 @@ class UtilidadController extends Controller
                                     ['UOMUtil', 'hr']])->sum('ValoUtil');
             $transporte = Utilidad::where([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq], ['SeriUtil','Transporte'],
                                     ['UOMUtil', 'hr']])->sum('ValoUtil');
-            $ralenti = Utilidad::where([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq], ['SeriUtil','Ralentí'],
-                                    ['UOMUtil', 'hr']])->sum('ValoUtil');
+            $ralenti = Utilidad::where([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq], ['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano lleno'],
+                                    ['UOMUtil', 'hr']])
+                                ->orwhere([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq], ['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano lleno'],
+                                        ['UOMUtil', 'hr']])
+                                ->orwhere([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq], ['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno'],
+                                        ['UOMUtil', 'hr']])
+                                    ->orwhere([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq], ['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno'],
+                                            ['UOMUtil', 'hr']])->sum('ValoUtil');
 
             $hrtotal = $trabajando + $transporte + $ralenti;
             $ralenti_total = $ralenti / $hrtotal * 100;
 
             if ($indicador == "detalleralentilleno") {
-                $ralenti_tllena = Utilidad::where([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq], ['SeriUtil','Ralentí con depósito de grano lleno'],
+                $ralenti_tllena = Utilidad::where([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq],['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano lleno'],
+                                    ['UOMUtil', 'hr']])
+                                    ->orwhere([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq],['CateUtil','Utilización de la máquina'], ['SeriUtil','Ralentí con depósito de grano lleno'],
                                     ['UOMUtil', 'hr']])->sum('ValoUtil');
                 $ralenti_lleno[$i][1] = $fecha->FecIUtil;
                 $ralenti_lleno[$i][0] = $ralenti_tllena / $hrtotal * 100;
             }
             if ($indicador == "detalleralentivacio") {
-                $ralenti_tvacia = Utilidad::where([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq], ['SeriUtil','Ralentí con depósito de grano no lleno'],
+                $ralenti_tvacia = Utilidad::where([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq],['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno'],
+                                    ['UOMUtil', 'hr']])
+                                    ->orwhere([['FecIUtil', $fecha->FecIUtil], ['NumSMaq', $fecha->NumSMaq],['CateUtil','Utilización de la máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno'],
                                     ['UOMUtil', 'hr']])->sum('ValoUtil');
                 $ralenti_vacio[$i][1] = $fecha->FecIUtil;
                 $ralenti_vacio[$i][0] = $ralenti_tvacia / $hrtotal * 100;
@@ -977,15 +987,22 @@ class UtilidadController extends Controller
                 $transportehs[$i] = Utilidad::where([[$consulta], ['SeriUtil','Transporte'],['UOMUtil', 'hr']])
                                         ->sum('ValoUtil');
                         
-                $ralentihs[$i] = Utilidad::where([[$consulta], ['SeriUtil','Ralentí'],['UOMUtil', 'hr']])
+                $ralentihs[$i] = Utilidad::where([[$consulta], ['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano lleno'],['UOMUtil', 'hr']])
+                                        ->orwhere([[$consulta], ['CateUtil','Utilización de la máquina'], ['SeriUtil','Ralentí con depósito de grano lleno'],['UOMUtil', 'hr']])
+                                        ->orwhere([[$consulta], ['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno'],['UOMUtil', 'hr']])
+                                        ->orwhere([[$consulta], ['CateUtil','Utilización de la máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno'],['UOMUtil', 'hr']])
                                         ->sum('ValoUtil');
 
                 //Consulta ralenti con tolva llena y con tolva vacia
-                $ralentillenahs[$i] = Utilidad::where([[$consulta], ['SeriUtil','Ralentí con depósito de grano lleno']
+                $ralentillenahs[$i] = Utilidad::where([[$consulta],['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano lleno']
+                                                                ,['UOMUtil', 'hr']])
+                                                ->orwhere([[$consulta],['CateUtil','Utilización de la máquina'], ['SeriUtil','Ralentí con depósito de grano lleno']
                                                                 ,['UOMUtil', 'hr']])
                                                 ->sum('ValoUtil');
 
-                $ralentivaciahs[$i] = Utilidad::where([[$consulta], ['SeriUtil','Ralentí con depósito de grano no lleno']
+                $ralentivaciahs[$i] = Utilidad::where([[$consulta],['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno']
+                                                                ,['UOMUtil', 'hr']])
+                                                ->orwhere([[$consulta],['CateUtil','Utilización de la máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno']
                                                                 ,['UOMUtil', 'hr']])
                                                 ->sum('ValoUtil');
 
@@ -1037,11 +1054,15 @@ class UtilidadController extends Controller
                 }
 
                 //CONSUMOS DE COMBUSTIBLE SEGUN ESTADO: RALENTI, TRANSPORTE Y TRABAJANDO
-                $ralentilts[$i] = Utilidad::where([[$consulta], ['SeriUtil', 'Ralentí'], ['UOMUtil','l']])->sum('ValoUtil');
+                $ralentilts[$i] = Utilidad::where([[$consulta],['CateUtil','Utilización de máquina'], ['SeriUtil', 'Ralentí con depósito de grano lleno'], ['UOMUtil','l']])
+                                        ->orwhere([[$consulta],['CateUtil','Utilización de la máquina'], ['SeriUtil', 'Ralentí con depósito de grano lleno'], ['UOMUtil','l']])
+                                        ->orwhere([[$consulta],['CateUtil','Utilización de máquina'], ['SeriUtil', 'Ralentí con depósito de grano no lleno'], ['UOMUtil','l']])
+                                        ->orwhere([[$consulta],['CateUtil','Utilización de la máquina'], ['SeriUtil', 'Ralentí con depósito de grano no lleno'], ['UOMUtil','l']])
+                                        ->sum('ValoUtil');
                 $transportelts[$i] = Utilidad::where([[$consulta], ['SeriUtil', 'Transporte'], ['UOMUtil','l']])->sum('ValoUtil');
                 $trabajandolts[$i] = Utilidad::where([[$consulta], ['SeriUtil', 'Trabajando'], ['UOMUtil','l']])->sum('ValoUtil');
-                $ralentillenolts[$i] = Utilidad::where([[$consulta], ['SeriUtil', 'Ralentí con depósito de grano lleno'], ['UOMUtil','l']])->sum('ValoUtil');
-                $ralentivaciolts[$i] = Utilidad::where([[$consulta], ['SeriUtil', 'Ralentí con depósito de grano no lleno'], ['UOMUtil','l']])->sum('ValoUtil');
+                $ralentillenolts[$i] = Utilidad::where([[$consulta],['CateUtil','Utilización de máquina'], ['SeriUtil', 'Ralentí con depósito de grano lleno'], ['UOMUtil','l']])->orwhere([[$consulta],['CateUtil','Utilización de la máquina'], ['SeriUtil', 'Ralentí con depósito de grano lleno'], ['UOMUtil','l']])->sum('ValoUtil');
+                $ralentivaciolts[$i] = Utilidad::where([[$consulta],['CateUtil','Utilización de máquina'], ['SeriUtil', 'Ralentí con depósito de grano no lleno'], ['UOMUtil','l']])->orwhere([[$consulta],['CateUtil','Utilización de la máquina'], ['SeriUtil', 'Ralentí con depósito de grano no lleno'], ['UOMUtil','l']])->sum('ValoUtil');
                 $separadorlts[$i] = Utilidad::where([[$consulta], ['SeriUtil', 'Separador de virajes en cabecero engranado'], ['UOMUtil','l']])->sum('ValoUtil');
                 
                 
@@ -2329,21 +2350,30 @@ class UtilidadController extends Controller
                 $transportehs[$i] = Utilidad::where([[$consulta], ['SeriUtil','Transporte'],['UOMUtil', 'hr']])
                                         ->sum('ValoUtil');
                         
-                $ralentihs[$i] = Utilidad::where([[$consulta], ['SeriUtil','Ralentí'],['UOMUtil', 'hr']])
+                $ralentihs[$i] = Utilidad::where([[$consulta],['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano lleno'],['UOMUtil', 'hr']])
+                                        ->orwhere([[$consulta],['CateUtil','Utilización de la máquina'], ['SeriUtil','Ralentí con depósito de grano lleno'],['UOMUtil', 'hr']])
+                                        ->orwhere([[$consulta],['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno'],['UOMUtil', 'hr']])
+                                        ->orwhere([[$consulta],['CateUtil','Utilización de la máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno'],['UOMUtil', 'hr']])
                                         ->sum('ValoUtil');
 
                 //Consulta ralenti con tolva llena y con tolva vacia
-                $ralentillenahs[$i] = Utilidad::where([[$consulta], ['SeriUtil','Ralentí con depósito de grano lleno']
+                $ralentillenahs[$i] = Utilidad::where([[$consulta],['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano lleno']
                                                                 ,['UOMUtil', 'hr']])
-                                                                ->sum('ValoUtil');
+                                                ->orwhere([[$consulta],['CateUtil','Utilización de la máquina'], ['SeriUtil','Ralentí con depósito de grano lleno']
+                                                                ,['UOMUtil', 'hr']])
+                                                ->sum('ValoUtil');
 
-                $ralentivaciahs[$i] = Utilidad::where([[$consulta], ['SeriUtil','Ralentí con depósito de grano no lleno']
+                $ralentivaciahs[$i] = Utilidad::where([[$consulta],['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno']
                                                                 ,['UOMUtil', 'hr']])
-                                                                ->sum('ValoUtil');
+                                                ->orwhere([[$consulta],['CateUtil','Utilización de la máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno']
+                                                                ,['UOMUtil', 'hr']])
+                                                ->sum('ValoUtil');
 
                 $separadordevirajeshs[$i] = Utilidad::where([[$consulta], ['SeriUtil','Separador de virajes en cabecero engranado']
                                                                         ,['UOMUtil', 'hr']])
-                                                                        ->sum('ValoUtil');
+                                                    ->orwhere([[$consulta], ['SeriUtil','Separador de virajes en cabecero engranado']
+                                                                        ,['UOMUtil', 'hr']])
+                                                    ->sum('ValoUtil');
 
                 $horasencultivohs[$i] = Utilidad::where([[$consulta], ['CateUtil','LIKE','%Tiempo en '.$cultivo.'%'], ['UOMUtil','hr']])->sum('ValoUtil');
                 $autotrachs[$i] = Utilidad::where([[$consulta], ['CateUtil','AutoTrac™'], ['SeriUtil','Enc'], ['UOMUtil','hr']])->sum('ValoUtil');
@@ -2378,11 +2408,15 @@ class UtilidadController extends Controller
                 }
 
                 //CONSUMOS DE COMBUSTIBLE SEGUN ESTADO: RALENTI, TRANSPORTE Y TRABAJANDO
-                $ralentilts[$i] = Utilidad::where([[$consulta], ['SeriUtil', 'Ralentí'], ['UOMUtil','l']])->sum('ValoUtil');
+                $ralentilts[$i] = Utilidad::where([[$consulta],['CateUtil','Utilización de máquina'], ['SeriUtil', 'Ralentí con depósito de grano lleno'], ['UOMUtil','l']])
+                                        ->orwhere([[$consulta],['CateUtil','Utilización de la máquina'], ['SeriUtil', 'Ralentí con depósito de grano lleno'], ['UOMUtil','l']])
+                                        ->orwhere([[$consulta],['CateUtil','Utilización de máquina'], ['SeriUtil', 'Ralentí con depósito de grano no lleno'], ['UOMUtil','l']])
+                                        ->orwhere([[$consulta],['CateUtil','Utilización de la máquina'], ['SeriUtil', 'Ralentí con depósito de grano no lleno'], ['UOMUtil','l']])
+                                        ->sum('ValoUtil');
                 $transportelts[$i] = Utilidad::where([[$consulta], ['SeriUtil', 'Transporte'], ['UOMUtil','l']])->sum('ValoUtil');
                 $trabajandolts[$i] = Utilidad::where([[$consulta], ['SeriUtil', 'Trabajando'], ['UOMUtil','l']])->sum('ValoUtil');
-                $ralentillenolts[$i] = Utilidad::where([[$consulta], ['SeriUtil', 'Ralentí con depósito de grano lleno'], ['UOMUtil','l']])->sum('ValoUtil');
-                $ralentivaciolts[$i] = Utilidad::where([[$consulta], ['SeriUtil', 'Ralentí con depósito de grano no lleno'], ['UOMUtil','l']])->sum('ValoUtil');
+                $ralentillenolts[$i] = Utilidad::where([[$consulta],['CateUtil','Utilización de máquina'], ['SeriUtil', 'Ralentí con depósito de grano lleno'], ['UOMUtil','l']])->where([[$consulta],['CateUtil','Utilización de la máquina'], ['SeriUtil', 'Ralentí con depósito de grano lleno'], ['UOMUtil','l']])->sum('ValoUtil');
+                $ralentivaciolts[$i] = Utilidad::where([[$consulta],['CateUtil','Utilización de máquina'], ['SeriUtil', 'Ralentí con depósito de grano no lleno'], ['UOMUtil','l']])->orwhere([[$consulta],['CateUtil','Utilización de la máquina'], ['SeriUtil', 'Ralentí con depósito de grano no lleno'], ['UOMUtil','l']])->sum('ValoUtil');
                 $separadorlts[$i] = Utilidad::where([[$consulta], ['SeriUtil', 'Separador de virajes en cabecero engranado'], ['UOMUtil','l']])->sum('ValoUtil');
                 
 
@@ -2433,15 +2467,22 @@ class UtilidadController extends Controller
             ['FecIUtil','<=',$fechamax->FecIUtil]];
 
             $refralentihs = Utilidad::join('maquinas','utilidads.NumSMaq','=','maquinas.NumSMaq')
-                                    ->where([[$refconsulta], ['SeriUtil','Ralentí'],['UOMUtil', 'hr']])
+                                    ->where([[$refconsulta], ['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno'],['UOMUtil', 'hr']])
+                                    ->orwhere([[$refconsulta], ['CateUtil','Utilización de la máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno'],['UOMUtil', 'hr']])
+                                    ->orwhere([[$refconsulta], ['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano lleno'],['UOMUtil', 'hr']])
+                                    ->orwhere([[$refconsulta], ['CateUtil','Utilización de la máquina'], ['SeriUtil','Ralentí con depósito de grano lleno'],['UOMUtil', 'hr']])
                                     ->inRandomOrder()->take(10)
                                     ->sum('ValoUtil'); 
             $refralentivaciohs = Utilidad::join('maquinas','utilidads.NumSMaq','=','maquinas.NumSMaq')
-                                        ->where([[$refconsulta], ['SeriUtil','Ralentí con depósito de grano no lleno'],
+                                        ->where([[$refconsulta],['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno'],
+                                        ['UOMUtil', 'hr']])
+                                        ->orwhere([[$refconsulta],['CateUtil','Utilización de la máquina'], ['SeriUtil','Ralentí con depósito de grano no lleno'],
                                         ['UOMUtil', 'hr']])
                                         ->inRandomOrder()->take(10)->sum('ValoUtil'); 
             $refralentillenohs = Utilidad::join('maquinas','utilidads.NumSMaq','=','maquinas.NumSMaq')
-                                        ->where([[$refconsulta], ['SeriUtil','Ralentí con depósito de grano lleno'],
+                                        ->where([[$refconsulta],['CateUtil','Utilización de máquina'], ['SeriUtil','Ralentí con depósito de grano lleno'],
+                                        ['UOMUtil', 'hr']])
+                                        ->where([[$refconsulta],['CateUtil','Utilización de la máquina'], ['SeriUtil','Ralentí con depósito de grano lleno'],
                                         ['UOMUtil', 'hr']])
                                         ->inRandomOrder()->take(10)->sum('ValoUtil'); 
             $refseparadordevirajeshs = Utilidad::join('maquinas','utilidads.NumSMaq','=','maquinas.NumSMaq')

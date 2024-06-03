@@ -10,11 +10,12 @@
             <div class="card">
                 <div class="card-header"><h2>Lista de capacitaciones 
                     @can('haveaccess','capacitacion.create')
-                    <a href="{{ route('capacitacion.create') }}" class="btn btn-success float-right"><b>+</b></a>
+                        <a href="{{ route('capacitacion.create') }}" class="btn btn-success float-right"><b>+</b></a>
                     @endcan
                     </h2></div>
                 <div class="card-body">
                 @include('custom.message')
+                <a href="{{ route('capacitacion.create_import') }}" class="btn btn-secondary">Importar Excel</a>
                     <div class="table-responsive-md">
                     <table class="table table-hover">
                         <thead>

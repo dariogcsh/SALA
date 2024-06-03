@@ -7,11 +7,14 @@
             <div class="card">
                 <div class="card-header"><h2>Lista de vehículos
                 @can('haveaccess','vehiculo.create')
-                <a href="{{ route('vehiculo.create') }}" class="btn btn-success float-right"><b>+</b></a>
+                    <a href="{{ route('vehiculo.create') }}" class="btn btn-success float-right"><b>+</b></a>
                 @endcan
                 </h2></div>
                 <div class="card-body">
                 @include('custom.message')
+                <div class="col-sm-2">
+                    <a href="{{ route('poliza.index') }}" class="btn btn-secondary btn-block"><b>PDF Polizas</b></a>
+                </div>
                     @if ($filtro=="")
                     <form class="form-inline float-right">
                         <div class="row">
@@ -25,7 +28,6 @@
                                     <option value="ano">Año</option>
                                     <option value="sucursals.NombSucu">Sucursal</option>
                                     <option value="departamento">Departamento</option>
-
                                 </select>
                                 <input class="form-control py-2" type="text" placeholder="Buscar" name="buscarpor">
                                 <span class="input-group-append">

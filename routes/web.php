@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CosechaController;
+use App\Http\Controllers\CapacitacionController;
 
 
 /*
@@ -260,6 +261,8 @@ Route::get('calendario/files/{id}', 'CalendarioController@files')->name('calenda
 Route::post('calendario/subir', 'CalendarioController@subir')->name('calendario.subir');
 Route::post('calendario/disponibilidad', 'CalendarioController@disponibilidad')->name('calendario.disponibilidad');
 Route::resource('calendario', 'CalendarioController');
+Route::post('/importar_capa', [CapacitacionController::class, 'importar_capa']);
+Route::get('capacitacion/create_import', 'CapacitacionController@create_import')->name('capacitacion.create_import');
 Route::get('capacitacion/index_view/{id}', 'CapacitacionController@index_view')->name('capacitacion.index_view');
 Route::post('capacitacion/editestado', 'CapacitacionController@editestado')->name('capacitacion.editestado');
 Route::resource('capacitacion', 'CapacitacionController');
@@ -290,4 +293,5 @@ Route::resource('cambio_fecha_cx', 'CambioFechaCxController');
 // Definir una ruta POST para importar el archivo Excel
 Route::post('/importar', [CosechaController::class, 'importar']);
 Route::resource('cosecha', 'CosechaController');
+Route::resource('poliza', 'PolizaController');
 

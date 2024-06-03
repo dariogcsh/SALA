@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class capacitacion extends Model
 {
     protected $fillable = [
-        'nombre','codigo','modalidad','fechainicio','fechafin','valoracion','horas','tipo','costo','estado',
+        'nombre','codigo','modalidad','fechainicio','fechafin','horainicio','horafin','ubicacion','valoracion','horas',
+        'costo','created_at','updated_at',
     ];
 
     public function capacitacion_users(){

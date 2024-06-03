@@ -159,8 +159,11 @@ class UsadoController extends Controller
                             ->orderBy('id','desc')->paginate(20);
             $tipo_maquina = 'COSECHADORA';
         }
+        $usuario = User::where('id',auth()->id())->first();
 
-        return view('usado.index', compact('usados','rutavolver','tipo_maquina'));
+        $organizacion = Organizacion::where('id',$usuario->CodiOrga)->first();
+
+        return view('usado.index', compact('usados','rutavolver','tipo_maquina','organizacion'));
     }
 
     /**

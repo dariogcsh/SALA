@@ -12,6 +12,8 @@ use App\interaccion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\CapacitacionRRHH;
 use App\Services\NotificationsService;
 
 class CapacitacionController extends Controller
@@ -27,6 +29,17 @@ class CapacitacionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function importar_capa(Request $request)
+    {
+        // Validar que un archivo ha sido enviado
+        $request->validate([
+            'archivo_excel' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
+        $archivo = $request->file('archivo_excel'); // Asumiendo que has recibido el archivo desde un formulario
+        Excel::import(new CapacitacionRRHH, $archivo);
+        return redirect()->route('capacitacion.index')->with('status_success', 'Datos importados correctamente');
+    }
+
     public function index()
     {
         Gate::authorize('haveaccess','capacitacion.index');
@@ -43,7 +56,7 @@ class CapacitacionController extends Controller
         $rutavolver = route('capacitacion.index');
         $capacitaciones = Capacitacion::select('capacitacions.id','capacitacions.nombre','capacitacions.codigo',
                                             'capacitacions.modalidad','capacitacions.fechainicio','capacitacions.fechafin',
-                                            'capacitacions.valoracion','capacitacions.horas','capacitacions.tipo',
+                                            'capacitacions.valoracion','capacitacions.horas',
                                             'capacitacions.costo','users.name','users.last_name','capacitacion_users.estado',
                                             'users.id as id_user')
                                     ->join('capacitacion_users','capacitacions.id','=','capacitacion_users.id_capacitacion')
@@ -72,6 +85,14 @@ class CapacitacionController extends Controller
                         ->where('organizacions.NombOrga','Sala Hnos')
                         ->orderBy('users.name','asc')->get();
         return view('capacitacion.create',compact('rutavolver','users'));
+    }
+
+    public function create_import()
+    {
+        Gate::authorize('haveaccess','capacitacion.create');
+        Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Capacitaciones']);
+        $rutavolver = route('capacitacion.index');
+        return view('capacitacion.create_import',compact('rutavolver'));
     }
 
     /**

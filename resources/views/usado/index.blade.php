@@ -78,9 +78,11 @@
                             </select>
                         </form>
                     </div>
-                    <div class="form-group col-md-2">
-                        <a class="btn btn-block btn-secondary" href="{{ route('subirpdf.indexusados') }}">Formulario de usados</a>
-                    </div>
+                    @if($organizacion->NombOrga == 'Sala Hnos')
+                        <div class="form-group col-md-2">
+                            <a class="btn btn-block btn-secondary" href="{{ route('subirpdf.indexusados') }}">Formulario de usados</a>
+                        </div>
+                    @endif
                 </div>
                 <br>
                     <div class="table-responsive-md">
@@ -94,9 +96,11 @@
                             <th scope="col">Horas de motor</th>
                             <th scope="col">Horas de trilla</th>
                             <th scope="col">US$</th>
-                            <th scope="col">Ex dueño</th>
-                            <th scope="col">Fecha limite de reserva</th>
-                            <th scope="col">Estado</th>
+                            @if($organizacion->NombOrga == 'Sala Hnos')
+                                <th scope="col">Ex dueño</th>
+                                <th scope="col">Fecha limite de reserva</th>
+                                <th scope="col">Estado</th>
+                            @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -125,6 +129,7 @@
                             <th scope="row">{{ number_format($usado->horasm) }}</th>
                             <th scope="row">{{ number_format($usado->horast) }}</th>
                             <th scope="row">{{ number_format($usado->precio) }}</th>
+                            @if($organizacion->NombOrga == 'Sala Hnos')
                             <th scope="row">Ex {{ $usado->excliente }}</th>
                             @isset($usado->fechahasta)
                                 <th scope="row">{{ date('d/m/Y',strtotime($usado->fechahasta)) }}</th>
@@ -132,19 +137,20 @@
                                 <th></th>
                             @endisset
                             @can('haveaccess','usado.show')
-                                @if ($usado->estado == "Reservado")
-                                    <th><a href="{{ route('usado.show',$usado->id) }}">Unidad reservada</a> </th>
-                                @elseif ($usado->estado == "Vendido")
-                                    <th><a href="{{ route('usado.show',$usado->id) }}">Unidad vendida</a> </th>
-                                @elseif ($usado->estado == "Progreso")
-                                    <th><a class="btn btn-danger" href="{{ route('usado.createUpdate',$usado->id) }}">Registro incompleto</a></th>
-                                    <th>
-                                        <a id="{{$usado->id}}" href="#" class="usado_eliminar btn btn-dark btn-block">Eliminar usado</a>
-                                    </th>
-                                @else
-                                    <th><a href="{{ route('usado.show',$usado->id) }}">Disponible</a> </th>
-                                @endif
+                                    @if ($usado->estado == "Reservado")
+                                        <th><a href="{{ route('usado.show',$usado->id) }}">Unidad reservada</a> </th>
+                                    @elseif ($usado->estado == "Vendido")
+                                        <th><a href="{{ route('usado.show',$usado->id) }}">Unidad vendida</a> </th>
+                                    @elseif ($usado->estado == "Progreso")
+                                        <th><a class="btn btn-danger" href="{{ route('usado.createUpdate',$usado->id) }}">Registro incompleto</a></th>
+                                        <th>
+                                            <a id="{{$usado->id}}" href="#" class="usado_eliminar btn btn-dark btn-block">Eliminar usado</a>
+                                        </th>
+                                    @else
+                                        <th><a href="{{ route('usado.show',$usado->id) }}">Disponible</a> </th>
+                                    @endif
                             @endcan
+                            @endif
                             </tr>
                         @endforeach
                         </tbody>
