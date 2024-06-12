@@ -117,7 +117,7 @@ class CalendarioController extends Controller
 
     $diferencia_en_dias = $currentDate->diffInDays($shippingDate);
 
-    for ($i=0; $i <= $diferencia_en_dias ; $i++) { 
+    for ($i=0; $i <= $diferencia_en_dias ; $i++) {
 
         $finicio = date("Y-m-d",strtotime($fechainicio."+ ".$i." days"));
 
@@ -221,7 +221,7 @@ class CalendarioController extends Controller
     return view('calendario.edit', compact('calendario','rutavolver','eventos','sucursales','users',
                                             'calendario_users_dis', 'calendario_users_par'));
   }
-
+ 
   /**
    * Update the specified resource in storage.
    *

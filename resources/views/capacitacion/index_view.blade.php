@@ -12,6 +12,22 @@
                 <div class="card-body">
                 @include('custom.message')
                 <input id="id_capacitacion" type="text" hidden name="id_capacitacion" value="{{ $id_capacitacion }}">
+                <div class="row">
+                    @can('haveaccess','contacto.show')
+                    <div class="col-6 col-sm-6 col-md-3 col-lg-2">
+                        <button id="guardarcambios" class="btn btn-success btn-block" disabled><b>Guardar cambios</b></button>
+                    </div>
+                    <div class="col-6 col-sm-6 col-md-3 col-lg-2">
+                        <a href="{{ route('capacitacion.show',$id_capacitacion) }}" class="btn btn-warning btn-block" title="Editar capacitación">Editar capacitación</a> 
+                    </div>
+                    <div class="col-0 col-sm-0 col-md-3 col-lg-4">
+                    </div>
+                    <div class="col-0 col-sm-0 col-md-3 col-lg-4">
+                    </div>
+                    @endcan
+                </div>
+                <br>
+                <!--
                 <div class="form-group row float-right">
                     <label for="finalizar" class="col-md-7">{{ __('Finalizar todos') }}</label>
 
@@ -21,17 +37,14 @@
                             <span class="slider round"></span>
                         </label>
                     </div>
-                </div>
-                @can('haveaccess','contacto.show')
-                <button id="guardarcambios" class="btn btn-success float-left" disabled><b>Guardar cambios</b></button>
-                @endcan   
+                </div>   
+            -->
                 <div class="table-responsive-md">
                     <table class="table table-hover">
                         <thead>
                             <tr>
                             <th scope="col">Código</th>
                             <th scope="col">Capacitación</th>
-                            <th scope="col">Tipo</th>
                             <th scope="col">Modalidad</th>
                             <th scope="col">Fecha inicio</th>
                             <th scope="col">Fecha fin</th>
@@ -47,13 +60,14 @@
                             <tr>
                             <th scope="row">{{ $capacitacion->codigo }}</th>
                             <th scope="row">{{ $capacitacion->nombre }}</th>
-                            <th scope="row">{{ $capacitacion->tipo }}</th>
                             <th scope="row">{{ $capacitacion->modalidad }}</th>
                             <th scope="row">{{  date('d/m/Y',strtotime($capacitacion->fechainicio)) }}</th>
                             <th scope="row">{{  date('d/m/Y',strtotime($capacitacion->fechafin)) }}</th>
                             <th scope="row">{{ $capacitacion->horas }}</th>
                             <th scope="row">US$ {{ $capacitacion->costo }}</th>
                             <th scope="row">{{ $capacitacion->name }} {{ $capacitacion->last_name }}</th>
+                            <th scope="row">{{ $capacitacion->estado }}</th>
+                            <!--
                             <th scope="row" onclick="javascript:cambiocheck({{ $capacitacion->id_user }});">
                                 <div class="col-md-2">
                                     <label class="switch">
@@ -66,8 +80,9 @@
                                     </label>
                                 </div>
                             </th>
+                            -->
                             @can('haveaccess','capacitacion.show')
-                                <th><a href="{{ route('capacitacion.show',$capacitacion->id) }}" title="Detalle"><img src="{{ asset('/imagenes/config.png') }}"  height="20"></a> </th>
+                                <th><a href="{{ route('capacitacion_user.show',$capacitacion->id_cap_user) }}" title="Detalle"><img src="{{ asset('/imagenes/config.png') }}"  height="20"></a> </th>
                             @endcan
                             </tr>
                         @endforeach
@@ -83,7 +98,7 @@
     </div>
 </div>
 <script type="application/javascript">
-
+/*
 function cambiocheck(check){
     chkbox = document.getElementById('chk'+check);
     $('#guardarcambios').attr('disabled', false);
@@ -94,7 +109,7 @@ function cambiocheck(check){
         chkbox.checked='true';
     }
 }
-
+*/
 $(document).ready(function(){
     $('#finalizarclass').change(function(){
         chkid = $(this).attr('id');

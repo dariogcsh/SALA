@@ -14,7 +14,6 @@
                                 @enderror
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <label for="codigo" class="col-md-4 col-form-label text-md-right">{{ __('Codigo') }} *</label>
 
@@ -28,7 +27,7 @@
                                 @enderror
                             </div>
                         </div>
-
+<!--
                         <div class="form-group row">
                             <label for="tipo" class="col-md-4 col-form-label text-md-right">{{ __('Tipo') }}</label>
 
@@ -52,7 +51,7 @@
                                 @enderror
                             </div>
                         </div>
-
+                    -->
                         <div class="form-group row">
                             <label for="modalidad" class="col-md-4 col-form-label text-md-right">{{ __('Modalidad') }}</label>
 
@@ -63,112 +62,11 @@
                                     @else
                                         <option value="">Seleccionar modalidad</option>
                                     @endisset
-                                    <option value="Aula de aprendizaje a distancia">Aula de aprendizaje a distancia</option>
-                                    <option value="Formacion basada en la Web">Formacion basada en la Web</option>
-                                    <option value="Formacion con CDI">Formacion con CDI</option>
-                                    <option value="Aprendizaje informal">Aprendizaje informal </option>
-                                    <option value="Classroom">Classroom</option>
-                                    <option value="Evaluaciones">Evaluaciones</option>
+                                    <option value="WBT">WBT (web)</option>
+                                    <option value="DLC">DLC (En línea con profesor)</option>
+                                    <option value="Presencial">Presencial</option>
                                 </select>
                                 @error('modalidad')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="valoracion" class="col-md-4 col-form-label text-md-right">{{ __('Valoración') }} </label>
-
-                            <div class="col-md-6">
-                                <textarea rows="7" id="valoracion" class="form-control-textarea @error('valoracion') is-invalid @enderror" name="valoracion" value="{{ old('valoracion') }}" autocomplete="valoracion" autofocus>@isset($capacitacion->valoracion){{ $capacitacion->valoracion }}@endisset</textarea>
-
-                                @error('valoracion')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="fechainicio" class="col-md-4 col-form-label text-md-right">{{ __('Fecha de inicio') }} *</label>
-
-                            <div class="col-md-6">
-                                <input id="fechainicio" type="date" class="form-control @error('fechainicio') is-invalid @enderror" name="fechainicio" value="{{ isset($capacitacion->fechainicio)?$capacitacion->fechainicio:old('fechainicio') }}" onchange="javascript:nodispo();" required>
-
-                                @error('fechainicio')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="horainicio" class="col-md-4 col-form-label text-md-right">{{ __('Hora de inicio') }} </label>
-
-                            <div class="col-md-6">
-                                <input id="horainicio" type="time" class="form-control @error('horainicio') is-invalid @enderror" name="horainicio" value="{{ isset($horarios->horainicio)?$horarios->horainicio:old('horainicio') }}" autocomplete="horainicio" autofocus>
-
-                                @error('horainicio')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="fechafin" class="col-md-4 col-form-label text-md-right">{{ __('Fecha de finalización') }} *</label>
-
-                            <div class="col-md-6">
-                                <input id="fechafin" type="date" class="form-control @error('fechafin') is-invalid @enderror" name="fechafin" value="{{ isset($capacitacion->fechafin)?$capacitacion->fechafin:old('fechafin') }}" onchange="javascript:nodispo();" required>
-
-                                @error('fechafin')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="horafin" class="col-md-4 col-form-label text-md-right">{{ __('Hora de finalización') }} </label>
-
-                            <div class="col-md-6">
-                                <input id="horafin" type="time" class="form-control @error('horafin') is-invalid @enderror" name="horafin" value="{{ isset($horarios->horafin)?$horarios->horafin:old('horafin') }}" autocomplete="horafin" autofocus>
-
-                                @error('horafin')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="horas" class="col-md-4 col-form-label text-md-right">{{ __('Cantidad de horas') }} *</label>
-
-                            <div class="col-md-6">
-                                <input id="horas" type="number" class="form-control @error('horas') is-invalid @enderror" name="horas" value="{{ isset($capacitacion->horas)?$capacitacion->horas:old('horas') }}" autocomplete="horas" autofocus>
-
-                                @error('horas')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="costo" class="col-md-4 col-form-label text-md-right">{{ __('Costo US$') }} *</label>
-
-                            <div class="col-md-6">
-                                <input id="costo" type="number" step="0.01" class="form-control @error('costo') is-invalid @enderror" name="costo" value="{{ isset($capacitacion->costo)?$capacitacion->costo:old('costo') }}" autocomplete="costo" autofocus>
-
-                                @error('costo')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -263,6 +161,104 @@
                                     @endisset
                                 </select>
                                 @error('id_userpar')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="valoracion" class="col-md-4 col-form-label text-md-right">{{ __('Valoración') }} </label>
+
+                            <div class="col-md-6">
+                                <textarea rows="7" id="valoracion" class="form-control-textarea @error('valoracion') is-invalid @enderror" name="valoracion" value="{{ old('valoracion') }}" autocomplete="valoracion" autofocus placeholder="Opcional">@isset($capacitacion->valoracion){{ $capacitacion->valoracion }}@endisset</textarea>
+
+                                @error('valoracion')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="fechainicio" class="col-md-4 col-form-label text-md-right">{{ __('Fecha de inicio') }} *</label>
+
+                            <div class="col-md-6">
+                                <input id="fechainicio" type="date" class="form-control @error('fechainicio') is-invalid @enderror" name="fechainicio" value="{{ isset($capacitacion->fechainicio)?$capacitacion->fechainicio:old('fechainicio') }}" onchange="javascript:nodispo();" required>
+
+                                @error('fechainicio')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="horainicio" class="col-md-4 col-form-label text-md-right">{{ __('Hora de inicio') }} </label>
+
+                            <div class="col-md-6">
+                                <input id="horainicio" type="time" class="form-control @error('horainicio') is-invalid @enderror" name="horainicio" value="{{ isset($horarios->horainicio)?$horarios->horainicio:old('horainicio') }}" autocomplete="horainicio" autofocus>
+
+                                @error('horainicio')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="fechafin" class="col-md-4 col-form-label text-md-right">{{ __('Fecha de finalización') }} *</label>
+
+                            <div class="col-md-6">
+                                <input id="fechafin" type="date" class="form-control @error('fechafin') is-invalid @enderror" name="fechafin" value="{{ isset($capacitacion->fechafin)?$capacitacion->fechafin:old('fechafin') }}" onchange="javascript:nodispo();" required>
+
+                                @error('fechafin')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="horafin" class="col-md-4 col-form-label text-md-right">{{ __('Hora de finalización') }} </label>
+
+                            <div class="col-md-6">
+                                <input id="horafin" type="time" class="form-control @error('horafin') is-invalid @enderror" name="horafin" value="{{ isset($horarios->horafin)?$horarios->horafin:old('horafin') }}" autocomplete="horafin" autofocus>
+
+                                @error('horafin')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="horas" class="col-md-4 col-form-label text-md-right">{{ __('Cantidad de horas') }} *</label>
+
+                            <div class="col-md-6">
+                                <input id="horas" type="number" class="form-control @error('horas') is-invalid @enderror" name="horas" value="{{ isset($capacitacion->horas)?$capacitacion->horas:old('horas') }}" autocomplete="horas" autofocus>
+
+                                @error('horas')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="costo" class="col-md-4 col-form-label text-md-right">{{ __('Costo US$') }} *</label>
+
+                            <div class="col-md-6">
+                                <input id="costo" type="number" step="0.01" class="form-control @error('costo') is-invalid @enderror" name="costo" value="{{ isset($capacitacion->costo)?$capacitacion->costo:old('costo') }}" autocomplete="costo" autofocus>
+
+                                @error('costo')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

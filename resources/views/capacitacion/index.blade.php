@@ -16,13 +16,14 @@
                 <div class="card-body">
                 @include('custom.message')
                 <a href="{{ route('capacitacion.create_import') }}" class="btn btn-secondary">Importar Excel</a>
+                <br>
+                <br>
                     <div class="table-responsive-md">
                     <table class="table table-hover">
                         <thead>
                             <tr>
                             <th scope="col">Código</th>
                             <th scope="col">Capacitación</th>
-                            <th scope="col">Tipo</th>
                             <th scope="col">Modalidad</th>
                             <th scope="col">Fecha inicio</th>
                             <th scope="col">Fecha fin</th>
@@ -41,7 +42,6 @@
                             @endcan
                             <th scope="row">{{ $capacitacion->codigo }}</th>
                             <th scope="row">{{ $capacitacion->nombre }}</th>
-                            <th scope="row">{{ $capacitacion->tipo }}</th>
                             <th scope="row">{{ $capacitacion->modalidad }}</th>
                             <th scope="row">{{  date('d/m/Y',strtotime($capacitacion->fechainicio)) }}</th>
                             <th scope="row">{{  date('d/m/Y',strtotime($capacitacion->fechafin)) }}</th>

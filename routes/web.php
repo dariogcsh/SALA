@@ -3,6 +3,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CosechaController;
 use App\Http\Controllers\CapacitacionController;
+use App\Http\Controllers\ReclamoController;
 
 
 /*
@@ -286,6 +287,7 @@ Route::resource('interaccion', 'InteraccionController');
 Route::get('monitoreo/index_pendientes', 'MonitoreoController@index_pendientes')->name('monitoreo.index_pendientes');
 Route::resource('monitoreo', 'MonitoreoController');
 Route::resource('conectividad', 'ConectividadController');
+Route::get('export', [ReclamoController::class, 'export']);
 Route::resource('reclamo', 'ReclamoController');
 Route::post('noticia/like_noticia', 'NoticiaController@like_noticia')->name('noticia.like_noticia');
 Route::resource('noticia', 'NoticiaController');
@@ -294,4 +296,6 @@ Route::resource('cambio_fecha_cx', 'CambioFechaCxController');
 Route::post('/importar', [CosechaController::class, 'importar']);
 Route::resource('cosecha', 'CosechaController');
 Route::resource('poliza', 'PolizaController');
+Route::resource('ensayo', 'EnsayoController');
+Route::resource('capacitacion_user', 'CapacitacionUserController');
 

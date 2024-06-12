@@ -13,6 +13,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Services\NotificationsService;
+use App\Exports\TuModeloExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReclamoController extends Controller
 {
@@ -21,6 +23,11 @@ class ReclamoController extends Controller
     {
         $this->notificationsService = $notificationsService;
         $this->middleware('auth');
+    }
+
+    public function export()
+    {
+        return Excel::download(new TuModeloExport, 'Oportunidades de mejora.xlsx');
     }
     /**
      * Display a listing of the resource.

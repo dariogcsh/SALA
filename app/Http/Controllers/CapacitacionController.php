@@ -19,6 +19,7 @@ use App\Services\NotificationsService;
 class CapacitacionController extends Controller
 {
 
+    protected $notificationsService;
     public function __construct(NotificationsService $notificationsService)
     {
         $this->notificationsService = $notificationsService;
@@ -36,7 +37,7 @@ class CapacitacionController extends Controller
             'archivo_excel' => 'required|file|mimes:xlsx,xls,csv',
         ]);
         $archivo = $request->file('archivo_excel'); // Asumiendo que has recibido el archivo desde un formulario
-        Excel::import(new CapacitacionRRHH, $archivo);
+        Excel::import(new CapacitacionRRHH($this->notificationsService),$archivo);
         return redirect()->route('capacitacion.index')->with('status_success', 'Datos importados correctamente');
     }
 
@@ -58,9 +59,9 @@ class CapacitacionController extends Controller
                                             'capacitacions.modalidad','capacitacions.fechainicio','capacitacions.fechafin',
                                             'capacitacions.valoracion','capacitacions.horas',
                                             'capacitacions.costo','users.name','users.last_name','capacitacion_users.estado',
-                                            'users.id as id_user')
-                                    ->join('capacitacion_users','capacitacions.id','=','capacitacion_users.id_capacitacion')
-                                    ->join('users','capacitacion_users.id_user','=','users.id')
+                                            'users.id as id_user','capacitacion_users.id as id_cap_user')
+                                    ->leftjoin('capacitacion_users','capacitacions.id','=','capacitacion_users.id_capacitacion')
+                                    ->leftjoin('users','capacitacion_users.id_user','=','users.id')
                                     ->where('capacitacions.id',$id)
                                     ->orderBy('id','desc')->paginate(20);
         $id_capacitacion = $id;

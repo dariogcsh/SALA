@@ -107,10 +107,17 @@ echo($enlace);
                             <hr>
                             <br>
                         </div>
-
+<!--
                         <div class="col-6 col-md-3">
                             <a href="{{ route('usado.index') }}"><img src="/imagenes/usados.png" class="img-fluid"  title="Beneficios"></a>
                             <h4 class="d-flex justify-content-center" style="text-align: center;">Usados</h3>
+                            <hr>
+                            <br>
+                        </div>
+                    -->
+                        <div class="col-6 col-md-3">
+                            <a href="{{ route('ensayo.index') }}"><img src="/imagenes/ensayos.png" class="img-fluid"  title="Red de ensayos"></a>
+                            <h4 class="d-flex justify-content-center" style="text-align: center;">Red de ensayos</h3>
                             <hr>
                             <br>
                         </div>

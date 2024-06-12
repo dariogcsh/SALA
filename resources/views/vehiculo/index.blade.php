@@ -15,6 +15,7 @@
                 <div class="col-sm-2">
                     <a href="{{ route('poliza.index') }}" class="btn btn-secondary btn-block"><b>PDF Polizas</b></a>
                 </div>
+                <br>
                     @if ($filtro=="")
                     <form class="form-inline float-right">
                         <div class="row">

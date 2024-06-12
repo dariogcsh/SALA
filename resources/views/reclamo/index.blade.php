@@ -12,6 +12,9 @@
                 </h2></div>
                 <div class="card-body">
                 @include('custom.message')
+                <a href="{{ url('/export') }}" class="btn btn-secondary"><b>XLSX</b></a>
+                <br>
+                <br>
                     <div class="table-responsive-md">
                     <table class="table table-hover">
                         <thead>
