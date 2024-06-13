@@ -34,7 +34,7 @@ class RegisterController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
-
+    protected $notificationsService;
     /**
      * Create a new controller instance.
      *
@@ -49,7 +49,7 @@ class RegisterController extends Controller
 
      protected function showRegistrationForm(){
         $sucursals = Sucursal::where('NombSucu','<>','Otra')
-                            ->orderBy('id', 'asc')->get();
+                            ->orderBy('NombSucu', 'asc')->get();
         return view('auth.register', compact('sucursals'));
      }
 
@@ -78,13 +78,7 @@ class RegisterController extends Controller
      * @return \App\User
      */
     protected function create(array $data)
-    {
-        $usersends = User::select('users.id')
-                    ->join('role_user','users.id','=','role_user.user_id')
-                    ->join('roles','role_user.role_id','=','roles.id')
-                    ->where([['roles.name','Admin'], ['users.TokenNotificacion','<>','']])
-                    ->get();
-                    
+    {               
         //Envio de notificacion
         $newuser = User::create([
             'name' => $data['name'],
@@ -92,15 +86,34 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'TeleUser' => $data['TeleUser'],
             'CodiSucu' => $data['CodiSucu'],
+            'nacimiento' => $data['nacimiento'],
             'password' => Hash::make($data['password']),
             'TokenNotificacion' => $data['notification-token'],
         ]);
+
+        $sucursalid = $data['CodiSucu'];
+
+        $usersends = User::select('users.id')
+                    ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
+                    ->join('role_user','users.id','=','role_user.user_id')
+                    ->join('roles','role_user.role_id','=','roles.id')
+                    //->orWhere($matchTheseAdministrativo)
+                    //->orWhere($matchTheseGerente)
+                    ->Where('roles.name','Admin')
+                    ->orWhere(function($q) use ($sucursalid) {
+                        $q->where('puesto_empleados.NombPuEm', 'Especialista AMS')
+                          ->orWhere(function($query) use ($sucursalid) {
+                              $query->where('puesto_empleados.NombPuEm', 'Analista de soluciones integrales')
+                                    ->where('users.CodiSucu', $sucursalid);
+                          });
+                    })
+                    ->get();
 
         if (isset($usersends)){
             foreach($usersends as $usersend){
                 
                 $notificationData = [
-                    'title' => 'Sala Hnos.',
+                    'title' => 'SALA',
                     'body' => 'Nuevo usuario registrado',
                     'path' => '/user',
                 ];

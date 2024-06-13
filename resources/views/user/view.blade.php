@@ -66,6 +66,20 @@
                             </div>
 
                             <div class="form-group row">
+                                <label for="nacimiento" class="col-md-4 col-form-label text-md-right">{{ __('Fecha de nacimiento') }}</label>
+    
+                                <div class="col-md-6">
+                                    <input id="nacimiento" type="date" class="form-control @error('nacimiento') is-invalid @enderror" name="nacimiento" value="{{ old('nacimiento',$user->nacimiento) }}" disabled>
+    
+                                    @error('nacimiento')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <label for="CodiPuEm" class="col-md-4 col-form-label text-md-right">{{ __('NombPuEm') }}</label>
                                 <div class="col-md-6">
                                     <select name="CodiPuEm" id="CodiPuEm" class="form-control" disabled>

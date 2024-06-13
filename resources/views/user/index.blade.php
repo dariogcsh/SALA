@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header"><h2>Lista de usuarios</h2></div>
                 <div class="card-body">
@@ -18,6 +18,7 @@
                                     <option value="">Buscar por</option>
                                     <option value="name">Nombre</option>
                                     <option value="last_name">Apellido</option>
+                                    <option value="nacimiento">Fecha de nacimiento</option>
                                     <option value="email">Correo</option>
                                     <option value="organizacions.NombOrga">Organizacion</option>
                                     <option value="sucursals.NombSucu">Sucursal</option>
@@ -49,6 +50,7 @@
                             <th scope="col">#</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Apellido</th>
+                            <th scope="col">Fecha de nacimiento</th>
                             <th scope="col">Organizacion</th>
                             <th scope="col">Sucursal</th>
                             <th scope="col">Logueado en la App</th>
@@ -65,6 +67,11 @@
                             <th scope="row">{{ $user->id }}</th>
                             <th scope="row">{{ $user->name }}</th>
                             <th scope="row">{{ $user->last_name }}</th>
+                            <th scope="row">
+                                @isset($user->nacimiento)
+                                    {{ date("d/m/Y", strtotime($user->nacimiento)) }}
+                                @endisset
+                            </th>
                             <th scope="row">
                                 @isset($user->organizacions->NombOrga)
                                     {{ $user->organizacions->NombOrga }}

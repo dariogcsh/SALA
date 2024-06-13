@@ -22,18 +22,22 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->date('nacimiento');
             $table->string('TokenNotificacion',255)->nullable();
+            $table->unsignedBigInteger('CodiOrga')->nullable();
+            $table->unsignedBigInteger('CodiPuEm')->nullable();
+            $table->unsignedBigInteger('CodiSucu')->nullable();
             $table->timestamps();
 
-            $table->unsignedBigInteger('CodiOrga')->nullable();
+            
             $table->foreign('CodiOrga')
                   ->references('id')
                   ->on('organizacions');
-            $table->unsignedBigInteger('CodiPuEm')->nullable();
+            
             $table->foreign('CodiPuEm')
                   ->references('id')
                   ->on('puesto_empleados');
-            $table->unsignedBigInteger('CodiSucu')->nullable();
+            
             $table->foreign('CodiSucu')
                   ->references('id')
                   ->on('sucursals');

@@ -18,7 +18,6 @@ class EnsayoController extends Controller
     public function index()
     {
         //
-        Gate::authorize('haveaccess','ensayo.index');
         Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Ensayos']);
         $rutavolver = route('home');
         $ensayos = Ensayo::orderBy('id','desc')->paginate(20);
@@ -69,7 +68,6 @@ class EnsayoController extends Controller
     public function show(ensayo $ensayo)
     {
         //
-        Gate::authorize('haveaccess','ensayo.show');
         Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Ensayos']);
         $rutavolver = route('ensayo.index');
         return view('ensayo.view', compact('ensayo','rutavolver'));

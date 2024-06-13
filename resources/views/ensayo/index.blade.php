@@ -42,9 +42,7 @@
                                 <br>
                                 <div class="row">
                                     <div class="col-12 col-md-6" style="margin-bottom:5px;">
-                                        @can('haveaccess','ensayo.show')
-                                            <a href="{{asset('/pdfjs/web/viewer.html?file=').asset('/pdf/ensayos/'.$ensayo->ruta)}}" class="btn btn-success btn-block">Ver ensayo</a>
-                                        @endcan
+                                        <a href="{{asset('/pdfjs/web/viewer.html?file=').asset('/pdf/ensayos/'.$ensayo->ruta)}}" class="btn btn-success btn-block">Ver ensayo</a>
                                     </div>
                                     <div class="col-12 col-md-6" style="margin-bottom:5px;">
                                         @can('haveaccess','ensayo.destroy')

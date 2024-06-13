@@ -20,7 +20,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'last_name', 'email', 'TeleUser', 'TokenNotificacion','password','CodiOrga','CodiSucu','CodiPuEm', 'doble_check'
+        'name', 'last_name', 'email', 'TeleUser', 'TokenNotificacion','password','CodiOrga',
+        'CodiSucu','CodiPuEm', 'doble_check','nacimiento',
     ];
 
     /**
@@ -49,7 +50,7 @@ class User extends Authenticatable
     public function scopeBuscar($query, $tipo, $buscar){
         if (($tipo) && ($buscar)){
             return $query->select('users.id','users.name','users.last_name','organizacions.NombOrga','sucursals.NombSucu',
-                                'users.TokenNotificacion')
+                                'users.TokenNotificacion','users.nacimiento')
                         ->leftjoin('organizacions','users.CodiOrga','=','organizacions.id')
                         ->leftjoin('sucursals','users.CodiSucu','=','sucursals.id')
                         ->where($tipo,'LIKE',"%$buscar%");

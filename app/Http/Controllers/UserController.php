@@ -41,7 +41,7 @@ class UserController extends Controller
                 $users = User::with('organizacions','sucursals')->orderBy('id','desc')->paginate(20);
             } else {
                 $users = User::select('users.id','users.name','users.last_name', 'organizacions.NombOrga','sucursals.NombSucu',
-                                    'users.TokenNotificacion')
+                                    'users.TokenNotificacion','users.nacimiento')
                             ->join('organizacions','users.CodiOrga','=','organizacions.id')
                             ->join('sucursals','users.CodiSucu','=','sucursals.id')
                             ->where('organizacions.NombOrga', $nomborg->NombOrga)

@@ -119,9 +119,9 @@
 
                         
                             <div class="form-group row">
-                                <label for="CodiSucu" class="col-md-4 col-form-label text-md-right">{{ __('Sucursal') }}</label>
+                                <label for="CodiSucu" class="col-md-4 col-form-label text-md-right">{{ __('Sucursal') }} *</label>
                                 <div class="col-md-6">
-                                    <select name="CodiSucu" id="CodiSucu" class="form-control">
+                                    <select name="CodiSucu" id="CodiSucu" class="form-control" required>
                                     <option value="">Seleccionar sucursal</option>
                                         @foreach($sucursals as $sucursal)
                                         <option value="{{ $sucursal->id }}"
@@ -133,6 +133,20 @@
                                         >{{ $sucursal->NombSucu }} </option>
                                         @endforeach
                                     </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="nacimiento" class="col-md-4 col-form-label text-md-right">{{ __('Fecha de nacimiento') }}</label>
+    
+                                <div class="col-md-6">
+                                    <input id="nacimiento" type="date" class="form-control @error('nacimiento') is-invalid @enderror" name="nacimiento" value="{{ old('nacimiento',$user->nacimiento) }}" autocomplete="nacimiento" autofocus>
+    
+                                    @error('nacimiento')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
 
