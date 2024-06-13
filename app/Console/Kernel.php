@@ -61,6 +61,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('notif:combine')->dailyAt('11:40');
         $schedule->command('vencimiento:poliza')->dailyAt('11:00');
         $schedule->command('recordatorio:mensual')->dailyAt('9:30');
+        $schedule->command('sms:birthday')->dailyAt('8:01');
         
         
         //$schedule->command('prueba:sched')->everyMinute();
