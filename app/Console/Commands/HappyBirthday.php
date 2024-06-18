@@ -52,10 +52,29 @@ class HappyBirthday extends Command
                             ->join('organizacions', 'users.CodiOrga', '=', 'organizacions.id')
                             ->where('organizacions.NombOrga', 'Sala Hnos')
                             ->get();
-
+/*
         $usersends = User::select('users.id')
                         ->join('organizacions','users.CodiOrga','=','organizacions.id')
                         ->Where('organizacions.NombOrga','Sala Hnos')
+                        ->get();
+*/
+        $usersends = User::select('users.id')
+                        ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
+                        ->Where('users.last_name','Garcia Campi')
+                        ->orWhere(function($q){
+                            $q->where(function($query){
+                                $query->where('puesto_empleados.NombPuEm','Gerente de RRHH')
+                                    ->where('users.last_name', 'Bonamico');      
+                            })
+                            ->orWhere(function($query){
+                                $query->where('puesto_empleados.NombPuEm', 'Responsable de RRHH')
+                                    ->where('users.last_name', 'Ramilo');
+                            })
+                            ->orWhere(function($query){
+                                $query->where('puesto_empleados.NombPuEm', 'Responsable de Marketing')
+                                    ->where('users.last_name', 'Cortese');
+                            });
+                        })
                         ->get();
 
         foreach($usuariosCumpleHoy as $cumple_colaborador){
