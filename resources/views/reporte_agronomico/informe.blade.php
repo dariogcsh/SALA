@@ -5,16 +5,15 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card">
-                <div class="card-header">{{ __('Informe agronómico - Sala Hnos') }}</div>
+                <div class="card-header">{{ __('Informe agronómico - SALA') }}</div>
                 <div class="card-body">
                   @include('custom.message')
                   <div class="divleft">
                     <h2><b>{{ $organizacion->NombOrga }}</b></h2>
                   </div>
                   <div class="divright">
-                    <h4>{{ $trabajo }} - {{ $año }}</h4>
-                    <input id="CodiOrga" hidden type="text" value="{{ $organizacion->CodiOrga }}">
-                    <input id="trabajo" hidden type="text" value="{{ $trabajo }}">
+                    <h4>Cosecha - {{ $año }}</h4>
+                    <input id="NombOrga" hidden type="text" value="{{ $organizacion->NombOrga }}">
                     <input id="año" hidden type="text" value="{{ $año }}">
                   </div>
                   <br>
@@ -27,7 +26,7 @@
                           <select class="cboagronomico form-control @error('cultivo') is-invalid @enderror" name="cultivo" id="cultivo"  title="Seleccionar cultivo" autofocus> 
                             <option value="">Seleccionar cultivo</option>
                             @foreach($cultivos as $cultivo)
-                                  <option value="{{ $cultivo->CultReAg }}">{{ $cultivo->CultReAg }}</option>
+                                  <option value="{{ $cultivo->cultivo }}">{{ $cultivo->cultivo }}</option>
                             @endforeach
                           </select>
                         </div>
@@ -39,7 +38,7 @@
                           <select class="cboagronomico form-control @error('cliente') is-invalid @enderror" name="cliente" id="cliente"  title="Seleccionar cliente" autofocus> 
                             <option value="">Seleccionar cliente</option>
                             @foreach($clientes as $cliente)
-                                  <option value="{{ $cliente->ClieReAg }}">{{ $cliente->ClieReAg }}</option>
+                                  <option value="{{ $cliente->cliente }}">{{ $cliente->cliente }}</option>
                             @endforeach
                           </select>
                         </div>
@@ -116,15 +115,15 @@
                           @isset($datos)
                             @foreach ($datos as $dato)
                               <tr>
-                                <th scope="row">{{ $dato->ClieReAg }}</th>
-                                <th scope="row">{{ $dato->GranReAg }}</th>
-                                <th scope="row">{{ $dato->CampReAg }}</th>
-                                <th scope="row">{{ $dato->CultReAg }}</th>
-                                <th scope="row">{{ $dato->VariReAg }}</th>
-                                <th scope="row">{{ number_format($dato->SupeReAg,1) }} has</th>
-                                <th scope="row">{{ number_format($dato->HumeReAg,1) }} %</th>
-                                <th scope="row">{{ number_format($dato->ReSMReAg,1) }} t/has</th>
-                                <th scope="row">{{ number_format($dato->ReSTReAg,1) }} t</th>
+                                <th scope="row">{{ $dato->cliente }}</th>
+                                <th scope="row">{{ $dato->granja }}</th>
+                                <th scope="row">{{ $dato->campo }}</th>
+                                <th scope="row">{{ $dato->cultivo }}</th>
+                                <th scope="row">{{ $dato->variedad }}</th>
+                                <th scope="row">{{ number_format($dato->superficie,1) }} has</th>
+                                <th scope="row">{{ number_format($dato->humedad,1) }} %</th>
+                                <th scope="row">{{ number_format($dato->rendimientosm,1) }} t/has</th>
+                                <th scope="row">{{ number_format($dato->rendimiento,1) }} t</th>
                               </tr>
                             @endforeach
                           @endisset
@@ -155,8 +154,7 @@
                 if (($('#cliente').val() != '') && ($('#cultivo').val() != '')){
                           var cliente = $('#cliente').val();
                           var cultivo = $('#cultivo').val();
-                          var CodiOrga = $('#CodiOrga').val();
-                          var trabajo = $('#trabajo').val();
+                          var NombOrga = $('#NombOrga').val();
                           var año = $('#año').val();
                           var _token = $('input[name="_token"]').val();
                           var path = "{{ route('reporte_agronomico.cambioCliente') }}";
@@ -171,7 +169,7 @@
                           $.ajax({
                               url: path,
                               method:"POST",
-                              data:{ _token:_token, cliente:cliente, cultivo:cultivo, CodiOrga:CodiOrga, trabajo:trabajo, año:año},
+                              data:{ _token:_token, cliente:cliente, cultivo:cultivo, NombOrga:NombOrga, año:año},
                               dataType: "JSON",
                               complete:function()
                               {

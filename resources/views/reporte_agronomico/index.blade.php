@@ -13,27 +13,27 @@
                         <p><small> Los campos marcados con * son de caracter obligatorio</small></p> 
 
                         <div class="form-group row">
-                            <label for="CodiOrga" class="col-md-4 col-form-label text-md-right">{{ __('Organizacion') }} *</label>
+                            <label for="NombOrga" class="col-md-4 col-form-label text-md-right">{{ __('Organizacion') }} *</label>
                             <div class="col-md-6">
                                 @if($organizacion->NombOrga == "Sala Hnos")
-                                    <select class="selectpicker form-control @error('CodiOrga') is-invalid @enderror" data-live-search="true" name="CodiOrga" id="CodiOrga" value="{{ old('CodiOrga') }}" title="Seleccionar Organizacion" required autofocus> 
+                                    <select class="selectpicker form-control @error('NombOrga') is-invalid @enderror" data-live-search="true" name="NombOrga" id="NombOrga" value="{{ old('NombOrga') }}" title="Seleccionar Organizacion" required autofocus> 
                                         @foreach($organizaciones as $organ)
-                                            <option value="{{ $organ->CodiOrga }}" data-subtext="{{ $organ->InscOrga == 'SI' ? 'Monitoreado':'' }}"
-                                                @isset($informe->CodiOrga)
-                                                        @if($organ->CodiOrga == $informe->CodiOrga)
+                                            <option value="{{ $organ->NombOrga }}" data-subtext="{{ $organ->InscOrga == 'SI' ? 'Monitoreado':'' }}"
+                                                @isset($informe->NombOrga)
+                                                        @if($organ->NombOrga == $informe->NombOrga)
                                                             selected
                                                         @endif
                                                 @endisset
                                                 >{{ $organ->NombOrga }} </option>
                                         @endforeach
                                 @else
-                                    <select class="selectpicker form-control @error('CodiOrga') is-invalid @enderror" data-live-search="true" name="CodiOrga" id="CodiOrga" value="{{ old('CodiOrga') }}" title="Seleccionar Organizacion" required autofocus> 
-                                            <option value="{{ $organizacion->CodiOrga }}" data-subtext="{{ $organizacion->InscOrga == 'SI' ? 'Monitoreado':'' }}"
+                                    <select class="selectpicker form-control @error('NombOrga') is-invalid @enderror" data-live-search="true" name="NombOrga" id="NombOrga" value="{{ old('NombOrga') }}" title="Seleccionar Organizacion" required autofocus> 
+                                            <option value="{{ $organizacion->NombOrga }}" data-subtext="{{ $organizacion->InscOrga == 'SI' ? 'Monitoreado':'' }}"
                                                 >{{ $organizacion->NombOrga }} </option>
                                 @endif 
                                    
                             </select>
-                                @error('CodiOrga')
+                                @error('NombOrga')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -45,7 +45,6 @@
                             <label for="trabajo" class="col-md-4 col-form-label text-md-right">{{ __('Tipo de trabajo') }} *</label>
                             <div class="col-md-6">
                             <select class="form-control @error('trabajo') is-invalid @enderror" name="trabajo" id="trabajo" value="{{ old('trabajo') }}" required autofocus> 
-                                <option value="">Seleccionar</option>
                                 <option value="Cosecha">Cosecha</option>
                             </select>
                                 @error('trabajo')
@@ -61,8 +60,8 @@
                             <div class="col-md-6">
                             <select class="form-control @error('año') is-invalid @enderror" name="año" id="año" value="{{ old('año') }}" required autofocus> 
                                 <option value="">Seleccionar</option>
-                                <option value="2021">2021</option>
-                                <option value="2022">2022</option>
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
                             </select>
                                 @error('año')
                                     <span class="invalid-feedback" role="alert">

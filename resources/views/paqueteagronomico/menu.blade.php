@@ -14,7 +14,7 @@
                     @endif
                     <div class="row">
                         <div class="col-6">
-                            <a href="{{ route('campo.index') }}"><img src="/imagenes/informe_diario.png" class="img-fluid" title="Informes"></a>
+                            <a href="{{ route('cosecha.index') }}"><img src="/imagenes/informe_diario.png" class="img-fluid" title="Informes"></a>
                             <h3 class="d-flex justify-content-center" style="text-align: center;">Informe diario agronómico</h3>
                             <hr>
                             <br>
