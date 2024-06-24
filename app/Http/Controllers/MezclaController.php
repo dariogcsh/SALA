@@ -20,6 +20,7 @@ class MezclaController extends Controller
      */
     public function index()
     {
+        
         //
         Gate::authorize('haveaccess','mezcla.index');
         Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Insumos']);

@@ -41,6 +41,7 @@ class CosechaController extends Controller
     {
         Gate::authorize('haveaccess','cosecha.index');
         Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Agronomico']);
+        $rutavolver = route('paqueteagronomico.menu');
         $filtro="";
         $busqueda="";
         $organizacion = Organizacion::where('id',auth()->user()->CodiOrga)->first();
@@ -79,7 +80,7 @@ class CosechaController extends Controller
             
         }
         
-        return view('cosecha.index', compact('cosechas','filtro','busqueda','organizacion'));
+        return view('cosecha.index', compact('cosechas','filtro','busqueda','organizacion','rutavolver'));
     }
 
     /**

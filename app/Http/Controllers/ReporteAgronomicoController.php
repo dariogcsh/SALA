@@ -22,7 +22,7 @@ class ReporteAgronomicoController extends Controller
         Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Agronomico']);
         $organizacion = Organizacion::where('id',auth()->user()->CodiOrga)->first();
         $organizaciones = Organizacion::orderby('NombOrga','asc')->get();
-        $rutavolver = route('jdlink.menu');
+        $rutavolver = route('paqueteagronomico.menu');
    
         return view('reporte_agronomico.index', compact('organizaciones', 'organizacion','rutavolver'));
     }
@@ -50,16 +50,19 @@ class ReporteAgronomicoController extends Controller
             'trabajo' => 'required',
             'año' => 'required',
         ]);
-
-        $organizacion = $request->NombOrga;
+        $rutavolver = route('reporte_agronomico.index');
+        $organizacionrq = $request->NombOrga;
         $trabajo = $request->trabajo;
         $año = $request->año;
         $desde = $año.'-01-01';
         $hasta = $año.'-12-31';
-        $query = [['organizacion',$organizacion], ['inicio','>=',$desde], 
-        ['fin','<=',$hasta]];
+        $query = [['organizacion',$organizacionrq], ['inicio','>=',$desde], ['fin','<=',$hasta]];
 
-        $organizacion = Organizacion::where('NombOrga', $organizacion)->first();
+        $organizacion = Organizacion::where('NombOrga', $organizacionrq)->first();
+
+        if(!isset($organizacion)){
+            $organizacion = Organizacion::where('NombOrga','LIKE', '%'.$organizacionrq.'%')->first();
+        }
 
         $clientes = Cosecha::select('cliente')
                                         ->where($query)
@@ -71,12 +74,8 @@ class ReporteAgronomicoController extends Controller
                                         ->groupBy('cultivo')
                                         ->get();
 
-        $datos = Cosecha::where($query)
-                                    ->orderBy('granja','ASC')
-                                    ->get();
-
    
-        return view('reporte_agronomico.informe', compact('clientes','organizacion','año','cultivos','datos'));
+        return view('reporte_agronomico.informe', compact('clientes','organizacion','año','cultivos','rutavolver'));
    
     }
 
@@ -191,7 +190,58 @@ class ReporteAgronomicoController extends Controller
             }
         }  
 
-        echo json_encode(array($array,$variedad));
+// Obtener datos agrupados por campo
+$datos = Cosecha::select(DB::raw('
+    sum(rendimiento) as rendimiento,
+    cliente,
+    granja,
+    campo,
+    sum(superficie) as superficie,
+    cultivo,
+    avg(humedad) as humedad
+'))
+->where($query)
+->groupBy('campo')
+->get();
+
+// Obtener variedades únicas por campo
+$variedades = Cosecha::select('variedad', 'campo')
+    ->where($query)
+    ->distinct()
+    ->get()
+    ->groupBy('campo');
+
+    $i = 0;
+    $datatable = [];
+    
+    if(isset($datos)){
+        foreach($datos as $dato){
+            $datatable[$i][0] = $dato->cliente;
+            $datatable[$i][1] = $dato->granja;
+            $datatable[$i][2] = $dato->campo;
+            $datatable[$i][3] = $dato->cultivo;
+    
+            // Combinar variedades únicas
+            $campo_variedades = $variedades->get($dato->campo);
+            $variedad_list = $campo_variedades ? $campo_variedades->pluck('variedad')->unique()->implode(', ') : '';
+            $datatable[$i][4] = $variedad_list;
+    
+            $datatable[$i][5] = $dato->superficie * 1;
+            $datatable[$i][6] = $dato->humedad;
+            
+            if ((isset($dato->superficie)) && ($dato->superficie != 0)) {
+                $datatable[$i][7] = $dato->rendimiento / $dato->superficie;
+            } else {
+                $datatable[$i][7] = 0;
+            }
+    
+            $datatable[$i][8] = $dato->rendimiento * 1;
+            $i++;
+        }
+    }
+    
+    echo json_encode([$array, $variedad, $datatable]);
+    
     }
 
 

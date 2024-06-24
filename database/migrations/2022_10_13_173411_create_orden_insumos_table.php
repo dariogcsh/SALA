@@ -18,9 +18,19 @@ class CreateOrdenInsumosTable extends Migration
             $table->unsignedbigInteger('id_ordentrabajo');
             $table->string('insumo');
             $table->decimal('unidades',10,2)->nullable();
+            $table->unsignedbigInteger('id_mezcla');
+            $table->decimal('precio',10,2)->nullable();
             $table->decimal('kg',10,2)->nullable();
             $table->decimal('lts',10,2)->nullable();
             $table->timestamps();
+
+            $table->foreign('id_ordentrabajo')
+                  ->references('id')
+                  ->on('ordentrabajos');
+
+            $table->foreign('id_mezcla')
+                  ->references('id')
+                  ->on('mezclas');
         });
     }
 

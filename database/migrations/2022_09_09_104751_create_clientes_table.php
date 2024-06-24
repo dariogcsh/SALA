@@ -19,6 +19,7 @@ class CreateClientesTable extends Migration
             $table->string('nombre');
             $table->timestamps();
 
+            
             $table->foreign('id_organizacion')
                   ->references('id')
                   ->on('organizacions');

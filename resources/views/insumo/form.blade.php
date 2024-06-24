@@ -125,7 +125,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="bultos" class="col-md-4 col-form-label text-md-right">{{ __('Cantidad de bolsas/tanques') }}</label>
+                            <label for="bultos" class="col-md-4 col-form-label text-md-right">{{ __('Cantidad de bolsas') }}</label>
 
                             <div class="col-md-6">
                                 <input id="bultos" type="number" class="form-control @error('bultos') is-invalid @enderror" name="bultos" value="{{ isset($insumo->bultos)?$insumo->bultos:old('bultos') }}" autocomplete="bultos" autofocus>
@@ -139,12 +139,26 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="cantxbulto" class="col-md-4 col-form-label text-md-right">{{ __('Capacidad de bolsa/tanque (Kg/Lts)') }}</label>
+                            <label for="cantxbulto" class="col-md-4 col-form-label text-md-right">{{ __('Capacidad de bolsa') }}</label>
 
                             <div class="col-md-6">
                                 <input id="cantxbulto" type="number" class="form-control @error('cantxbulto') is-invalid @enderror" name="cantxbulto" value="{{ isset($insumo->cantxbulto)?$insumo->cantxbulto:old('cantxbulto') }}" autocomplete="cantxbulto" autofocus>
 
                                 @error('cantxbulto')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="semillas" class="col-md-4 col-form-label text-md-right">{{ __('Semillas') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="semillas" type="number"  class="form-control @error('semillas') is-invalid @enderror" name="semillas" value="{{ isset($insumo->semillas)?$insumo->semillas:old('semillas') }}" autocomplete="semillas" autofocus>
+
+                                @error('semillas')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -173,20 +187,6 @@
                                 <input id="peso" type="number" step="0.01" class="form-control @error('peso') is-invalid @enderror" name="peso" value="{{ isset($insumo->peso)?$insumo->peso:old('peso') }}" autocomplete="peso" autofocus>
 
                                 @error('peso')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="semillas" class="col-md-4 col-form-label text-md-right">{{ __('Semillas') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="semillas" type="number"  class="form-control @error('semillas') is-invalid @enderror" name="semillas" value="{{ isset($insumo->semillas)?$insumo->semillas:old('semillas') }}" autocomplete="semillas" autofocus>
-
-                                @error('semillas')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

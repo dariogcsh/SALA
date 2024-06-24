@@ -103,6 +103,7 @@ class OrdenInsumoController extends Controller
         foreach ($insumos as $insumo) {
             $insumo->delete();
         }  
+        
         return response()->json(["success"=>true,"url"=> route("ordentrabajo.edit",$id_ordendetrabajo)]);
     }
 }

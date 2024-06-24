@@ -24,34 +24,44 @@ class InsumoController extends Controller
         return view('insumo.menu');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         //
         Gate::authorize('haveaccess','insumo.index');
         Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Insumos']);
         $organizacion = Organizacion::where('id',auth()->user()->CodiOrga)->first();
-        if ($organizacion->NombOrga == "Sala Hnos"){
-            
-            $insumos = Insumo::select('marcainsumos.nombre as nombremarca','insumos.nombre','insumos.categoria',
-                                    'insumos.litros','insumos.peso','insumos.id','organizacions.NombOrga','insumos.bultos',
-                                    'insumos.tipo', 'insumos.tipo_grano','insumos.precio','insumos.semillas','insumos.stock_minimo',
-                                    'insumos.unidades_medidas')
-                            ->join('marcainsumos','insumos.id_marcainsumo','=','marcainsumos.id')
-                            ->join('organizacions','insumos.id_organizacion','=','organizacions.id')
-                            ->orderBy('nombre','asc')
-                            ->orderBy('organizacions.NombOrga','asc')->paginate(20);
-        } else {
-            $insumos = Insumo::select('marcainsumos.nombre as nombremarca','insumos.nombre','insumos.categoria',
-                                    'insumos.litros','insumos.peso','insumos.id','insumos.bultos', 'insumos.tipo',
-                                    'insumos.tipo_grano','insumos.precio','insumos.semillas','insumos.stock_minimo',
-                                    'insumos.unidades_medidas')
-                            ->join('marcainsumos','insumos.id_marcainsumo','=','marcainsumos.id')
-                            ->join('organizacions','insumos.id_organizacion','=','organizacions.id')
-                            ->where('insumos.id_organizacion',$organizacion->id)
-                            ->orderBy('nombre','asc')->paginate(20);
+        $filtro="";
+        $busqueda="";
+        if($request->buscarpor AND $request->tipo){
+            $tipo = $request->get('tipo');
+            $busqueda = $request->get('buscarpor');
+            $variablesurl=$request->all();
+            $insumos = Insumo::Buscar($tipo, $busqueda, $organizacion->id)->paginate(20)->appends($variablesurl);
+            $filtro = "SI";
+        } else{
+            if ($organizacion->NombOrga == "Sala Hnos"){
+                
+                $insumos = Insumo::select('marcainsumos.nombre as nombremarca','insumos.nombre','insumos.categoria',
+                                        'insumos.litros','insumos.peso','insumos.id','organizacions.NombOrga','insumos.bultos',
+                                        'insumos.tipo', 'insumos.tipo_grano','insumos.precio','insumos.semillas','insumos.stock_minimo',
+                                        'insumos.unidades_medidas')
+                                ->join('marcainsumos','insumos.id_marcainsumo','=','marcainsumos.id')
+                                ->join('organizacions','insumos.id_organizacion','=','organizacions.id')
+                                ->orderBy('nombre','asc')
+                                ->orderBy('organizacions.NombOrga','asc')->paginate(20);
+            } else {
+                $insumos = Insumo::select('marcainsumos.nombre as nombremarca','insumos.nombre','insumos.categoria',
+                                        'insumos.litros','insumos.peso','insumos.id','insumos.bultos', 'insumos.tipo',
+                                        'insumos.tipo_grano','insumos.precio','insumos.semillas','insumos.stock_minimo',
+                                        'insumos.unidades_medidas')
+                                ->join('marcainsumos','insumos.id_marcainsumo','=','marcainsumos.id')
+                                ->join('organizacions','insumos.id_organizacion','=','organizacions.id')
+                                ->where('insumos.id_organizacion',$organizacion->id)
+                                ->orderBy('nombre','asc')->paginate(20);
+            }
         }
         $rutavolver = route('insumo.menu');
-        return view('insumo.index', compact('insumos','rutavolver'));
+        return view('insumo.index', compact('insumos','rutavolver','busqueda','filtro'));
     }
 
     /**
@@ -102,6 +112,20 @@ class InsumoController extends Controller
             ]);
         }
 
+        //Si al momento de crear un producto, le asignamos cantidades que ya tenemos registradas, se evalúa que tipo de producto es para insertar la unidad de medida correspondiente
+        $lts = $request->get('litros');
+        $kg = $request->get('peso');
+        $unidades = $request->get('semillas');
+        if(($lts <> "") OR ($kg <> "") OR ($unidades <> "")){
+            if($lts <> ""){
+                $unidades_medida = 'lts/ha';
+            }elseif($kg <> ""){
+                $unidades_medida = 'kg/ha';
+            }else{
+                $unidades_medida = "unidades";
+            }
+            $request->request->add(['unidades_medidas' => $unidades_medida]);
+        }
         $insumos = Insumo::create($request->all());
         return redirect()->route('insumo.index')->with('status_success', 'Insumo creado con exito');
     }
@@ -175,6 +199,21 @@ class InsumoController extends Controller
                 'categoria' => 'required',
                 'id_marcainsumo' => 'required',
             ]);
+        }
+
+        //Si al momento de modificar un producto, le asignamos cantidades que ya tenemos registradas, se evalúa que tipo de producto es para insertar la unidad de medida correspondiente
+        $lts = $request->get('litros');
+        $kg = $request->get('peso');
+        $unidades = $request->get('semillas');
+        if(($lts <> "") OR ($kg <> "") OR ($unidades <> "")){
+            if($lts <> ""){
+                $unidades_medida = 'lts/ha';
+            }elseif($kg <> ""){
+                $unidades_medida = 'kg/ha';
+            }else{
+                $unidades_medida = "unidades";
+            }
+            $request->request->add(['unidades_medidas' => $unidades_medida]);
         }
        
         $insumo->update($request->all());

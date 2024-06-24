@@ -39,6 +39,7 @@ class CreateTrabajosTable extends Migration
             $table->foreign('id_usuariotrabajo')
                   ->references('id')
                   ->on('users');
+                  
         });
     }
 

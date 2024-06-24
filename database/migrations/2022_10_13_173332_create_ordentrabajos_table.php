@@ -24,9 +24,11 @@ class CreateOrdentrabajosTable extends Migration
             $table->date('fechafin')->nullable();
             $table->string('estado');
             $table->integer('has');
-            $table->integer('tipo');
+            $table->string('prescripcion')->nullable();
+            $table->string('tipo');
             $table->timestamps();
 
+            
             $table->foreign('id_organizacion')
                   ->references('id')
                   ->on('organizacions');

@@ -20,6 +20,7 @@ class CreateInsumosTable extends Migration
             $table->unsignedBigInteger('id_marcainsumo');
             $table->string('nombre');
             $table->string('tipo')->nullable();
+            $table->string('tipo_grano')->nullable();
             $table->string('principio_activo')->nullable();
             $table->string('concentracion')->nullable();
             $table->integer('bultos')->nullable();
@@ -27,6 +28,8 @@ class CreateInsumosTable extends Migration
             $table->decimal('litros', 10,2)->nullable();
             $table->decimal('peso', 10,2)->nullable();
             $table->integer('semillas')->nullable();
+            $table->integer('stock_minimo')->nullable();
+            $table->string('unidades_medidas')->nullable();
             $table->string('precio')->nullable();
             $table->timestamps();
             

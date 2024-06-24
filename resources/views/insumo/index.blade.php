@@ -12,6 +12,34 @@
                 </h2></div>
                 <div class="card-body">
                 @include('custom.message')
+                <a href="{{ route('insumo_compra.index') }}" class="btn btn-secondary"><b>Órdenes de compra</b></a>
+                @if ($filtro=="")
+                    <form class="form-inline float-right">
+                        <div class="row">
+                            <div class="input-group col-md-12">
+                                <select name="tipo" class="form-control mr-sm-2">
+                                    <option value="">Buscar por</option>
+                                    <option value="insumos.nombre">Nombre producto</option>
+                                    <option value="insumos.categoria">Categoria</option>
+                                </select>
+                                <input class="form-control py-2" type="text" placeholder="Buscar" name="buscarpor">
+                                <span class="input-group-append">
+                                    <button class="btn btn-warning" type="submit">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                @endif
+                @if ($filtro=="SI")
+                    <a class="btn btn-secondary float-right" href="{{ route('insumo.index') }}">
+                        <i class="fa fa-times"> </i>
+                        {{ $busqueda }}
+                    </a>
+                @endif
+                <br>
+                <br>
                     <div class="table-responsive-md">
                     <table class="table table-hover">
                         <thead>
@@ -19,6 +47,8 @@
                             <th scope="col">#</th>
                             <th scope="col">Marca</th>
                             <th scope="col">Variedad/Producto químico</th>
+                            <th scope="col">Bultos</th>
+                            <th scope="col">Semillas</th>
                             <th scope="col">Peso</th>
                             <th scope="col">Litros</th>
                             <th colspan=3></th>
@@ -34,6 +64,12 @@
                             <th scope="row">{{ $insumo->id }}</th>
                             <th scope="row">{{ $insumo->nombremarca }}</th>
                             <th scope="row">{{ $insumo->nombre }}</th>
+                            <th scope="row">{{ $insumo->bultos }}</th>
+                            @isset($insumo->semillas)
+                                <th scope="row">{{ $insumo->semillas }} U</th>
+                            @else
+                                <th scope="row">-</th>
+                            @endisset
                             @isset($insumo->peso)
                                 <th scope="row">{{ $insumo->peso }} Kg</th>
                             @else

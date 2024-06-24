@@ -41,7 +41,7 @@
                             @endif
                             <hr>
                             <div class="row">
-                                <div class="col-sm-6 col-md-6 col-lg-3">
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-3">
                                     <div class="card mb-3 border-dark">
                                         <div class="card-header text-center text-white bg-dark">
                                             <h5> Cant. de lotes</h5>
@@ -51,7 +51,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-md-6 col-lg-3">
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-3">
                                     <div class="card mb-3 border-dark">
                                         <div class="card-header text-center text-white bg-dark">
                                             <h5>Hectáreas</h5>
@@ -61,7 +61,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-md-6 col-lg-3">
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-3">
                                         <div class="card mb-3 border-dark">
                                             <div class="card-header text-center text-white bg-dark">
                                                 <h5>Rinde prom.</h5>
@@ -71,7 +71,7 @@
                                             </div>
                                         </div>
                                 </div>
-                                <div class="col-sm-6 col-md-6 col-lg-3">
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-3">
                                         <div class="card mb-3 border-dark">
                                             <div class="card-header text-center text-white bg-dark">
                                                 <h5>Humedad</h5>
@@ -83,8 +83,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                         
-                                <div class="col-sm-6 col-md-6 col-lg-6">
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                                         <div class="card mb-3 border-dark">
                                             <div class="card-header text-center text-white bg-dark">
                                                 <h5>Rinde total</h5>

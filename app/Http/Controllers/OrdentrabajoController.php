@@ -155,7 +155,7 @@ class OrdentrabajoController extends Controller
                                             ->join('organizacions','ordentrabajos.id_organizacion','=','organizacions.id')
                                             ->join('users','ordentrabajos.id_usuariotrabajo','=','users.id')
                                             ->orderBy('ordentrabajos.id','desc')->paginate(20);
-            $organizaciones = Organizacion::orderBy('NombOrga','asc')->get();
+                $organizaciones = Organizacion::orderBy('NombOrga','asc')->get();
             } else {
                 $ordentrabajos = Ordentrabajo::select('ordentrabajos.id','id_usuariotrabajo','users.name as uname','users.last_name',
                                                     'fechaindicada','fechainicio','fechafin','has','estado','tipo',
@@ -171,9 +171,9 @@ class OrdentrabajoController extends Controller
             }
         }
 
-        
+        $total = 0;
         return view('ordentrabajo.historial', compact('ordentrabajos','rutavolver','organizacion', 'organizaciones','filtro',
-                                                        'busqueda'));
+                                                        'busqueda','total'));
     }
 
     /**
@@ -299,6 +299,7 @@ class OrdentrabajoController extends Controller
                                         ->where('ordentrabajos.id',$id)->first();
         
             foreach ($orden_insumos as $orden_insumo) {
+                
                 if($orden_insumo->unidades>0){
                     $insumo_stock = Insumo::where([['id_organizacion',$orden_trabajo->id_organizacion], ['nombre',$orden_insumo->insumo]])->first();
                     if($orden_insumo->dosis_variable == "SI"){

@@ -15,13 +15,22 @@ class CreateLotesTable extends Migration
     {
         Schema::create('lotes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedbigInteger('id_granja');
-            $table->string('nombre');
+            $table->unsignedbigInteger('id_granja')->nullable();
+            $table->unsignedBigInteger('org_id');
+            $table->string('nombre')->nullable();
+            $table->string('name')->nullable();
+            $table->string('farm')->nullable();
+            $table->string('client')->nullable();
             $table->timestamps();
 
+            
             $table->foreign('id_granja')
                   ->references('id')
                   ->on('granjas');
+
+            $table->foreign('org_id')
+                  ->references('id')
+                  ->on('organizacions');
         });
     }
 

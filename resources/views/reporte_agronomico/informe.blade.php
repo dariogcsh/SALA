@@ -3,10 +3,13 @@
 @section('content')
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <div class="card">
-                <div class="card-header">{{ __('Informe agronómico - SALA') }}</div>
-                <div class="card-body">
+                <div class="card-header">{{ __('Informe agronómico - SALA') }}
+                  <button class="btn btn-success float-right" onclick="printDiv()" >
+                    <i class="fa fa-download"></i></button>
+                </div>
+                <div class="card-body" id="imprimirPDF">
                   @include('custom.message')
                   <div class="divleft">
                     <h2><b>{{ $organizacion->NombOrga }}</b></h2>
@@ -96,39 +99,11 @@
                   <br>
                   <br>
                   <h4>Lotes</h4>
-                  <div class="table-responsive-md">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                              <th scope="col">Cliente</th>
-                              <th scope="col">Granja</th>
-                              <th scope="col">Campo</th>
-                              <th scope="col">Cultivo</th>
-                              <th scope="col">Variedad</th>
-                              <th scope="col">Superficie</th>
-                              <th scope="col">Humedad</th>
-                              <th scope="col">Promedio rendimiento seco</th>
-                              <th scope="col">Rendimiento seco total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                          @isset($datos)
-                            @foreach ($datos as $dato)
-                              <tr>
-                                <th scope="row">{{ $dato->cliente }}</th>
-                                <th scope="row">{{ $dato->granja }}</th>
-                                <th scope="row">{{ $dato->campo }}</th>
-                                <th scope="row">{{ $dato->cultivo }}</th>
-                                <th scope="row">{{ $dato->variedad }}</th>
-                                <th scope="row">{{ number_format($dato->superficie,1) }} has</th>
-                                <th scope="row">{{ number_format($dato->humedad,1) }} %</th>
-                                <th scope="row">{{ number_format($dato->rendimientosm,1) }} t/has</th>
-                                <th scope="row">{{ number_format($dato->rendimiento,1) }} t</th>
-                              </tr>
-                            @endforeach
-                          @endisset
-                        </tbody>
-                      </table>
+                  <div class="row">
+                    <div class="col-12">
+                      <div id="tabladedatos" class="table-responsive-md">
+                      </div>
+                    </div>
                   </div>
                   </div>
                   </div>
@@ -147,6 +122,13 @@
 
       google.charts.load("current", {packages:['corechart']});
       google.charts.setOnLoadCallback(drawChart);
+
+      function printDiv() {
+        document.getElementById('imprimirPDF').style.width='1500px';
+        window.print();
+        //window.cardova.plugins.printer.print('<h1> Prueba PDF </h>');
+        document.getElementById('imprimirPDF').style.width='auto';
+      }
 
       function drawChart() {
           $( document ).ready(function() {
@@ -189,6 +171,7 @@
                                 //Asigno los 2 arrays recibidos a unos nuevos
                                 var data1 = result[0];
                                 var data2 = result[1];
+                                var data3 = result[2];
                                 
                                 var arrSuperficie = [['Month','Has']];
                                 var arrRinde = [['Month','t']];
@@ -291,6 +274,39 @@
                                   var chart = new google.visualization.BarChart(document.getElementById(div_indicadorV));
                                   chart.draw(view, options); 
                                 }
+
+
+                                $('#tabladedatos').html('');
+                                //Se recuperan los datos por JSON en un array y se cargan dentro de una table
+                                var table = $('<table></table>').addClass('table table-hover')
+                                var tit = $('<th>Cliente</th><th>Granja</th><th>Campo</th><th>Cultivo</th><th>Variedad</th><th>Superficie</th><th>Humedad</th><th>Rinde promedio</th><th>Rinde total</th>')
+                                table.append(tit);
+                                 $.each(data3, function (index, value) {
+                                        var row = $('<tr></tr>')
+                                        table.append(row);
+                                        var dato = $('<th><u>Cliente</u></th>').text(data3[index][0]); 
+                                        table.append(dato);
+                                        var dato = $('<th>Granja</th>').text(data3[index][1]); 
+                                        table.append(dato);
+                                        var dato = $('<th>Campo</th>').text(data3[index][2]); 
+                                        table.append(dato);
+                                        var dato = $('<th>Cultivo</th>').text(data3[index][3]); 
+                                        table.append(dato);
+                                        var dato = $('<th>Variedad</th>').text(data3[index][4]); 
+                                        table.append(dato);
+                                        var dato = $('<th>Superficie</th>').text(data3[index][5]+' Has.'); 
+                                        table.append(dato);
+                                        var humedad = parseFloat(data3[index][6]).toFixed(1); // Formatear a un dígito después de la coma
+                                        var dato = $('<th>Humedad</th>').text(humedad+' %');  
+                                        table.append(dato);
+                                        var rindePromedio = parseFloat(data3[index][7]).toFixed(1); // Formatear a un dígito después de la coma
+                                        var dato = $('<th>Rinde promedio</th>').text(rindePromedio+' t/ha'); 
+                                        table.append(dato);
+                                        var dato = $('<th>Rinde total</th>').text(data3[index][8]+' t'); 
+                                        table.append(dato);
+                                  });
+                                    $('#tabladedatos').append(table);
+
                               }
                             });
                           }

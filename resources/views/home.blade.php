@@ -129,7 +129,7 @@ echo($enlace);
                             <br>
                         </div>
 
-                    <!--
+                    
                         <div class="col-6 col-md-3">
                             <a href="{{ route('ordentrabajo.index') }}"><img src="/imagenes/ordentrabajo.png" class="img-fluid"  title="órden de trabajo"></a>
                             <h4 class="d-flex justify-content-center">Órden de trabajo</h3>
@@ -143,7 +143,7 @@ echo($enlace);
                             <hr>
                             <br>
                         </div> 
-                    -->
+                    
                         <div class="col-6 col-md-3">
                             <a href="{{ url('https://sala.portalconcesionario.com/') }}"><img src="/imagenes/sala_portal.png" class="img-fluid"  title="Sala Portal"></a>
                             <h4 class="d-flex justify-content-center" style="text-align: center;">Sala Portal</h3>

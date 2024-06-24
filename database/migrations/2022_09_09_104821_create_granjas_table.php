@@ -19,6 +19,7 @@ class CreateGranjasTable extends Migration
             $table->string('nombre');
             $table->timestamps();
 
+            
             $table->foreign('id_cliente')
                   ->references('id')
                   ->on('clientes');

@@ -16,38 +16,48 @@ class InsumoCompraController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
         Gate::authorize('haveaccess','insumo_compra.index');
         Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Insumos']);
         $rutavolver = route('insumo.index');
         $organizacion = Organizacion::where('id',auth()->user()->CodiOrga)->first();
-        if ($organizacion->NombOrga == "Sala Hnos"){
-            $insumo_compras = Insumo_compra::select('insumo_compras.proveedor','insumo_compras.fecha_compra',
-                                                    'insumo_compras.bultos','insumo_compras.precio','insumos.nombre as nombreinsumo',
-                                                    'insumos.categoria','marcainsumos.nombre as nombremarca','insumo_compras.id',
-                                                    'insumo_compras.litros','insumo_compras.peso','insumo_compras.semillas',
-                                                    'insumo_compras.nfactura')
-                                                    ->join('insumos','insumo_compras.id_insumo','=','insumos.id')
-                                                    ->join('marcainsumos','insumos.id_marcainsumo','=','marcainsumos.id')
-                                                    ->orderBy('id','desc')
-                                                    ->paginate(20);
-        } else {
-            $insumo_compras = Insumo_compra::select('insumo_compras.proveedor','insumo_compras.fecha_compra',
-                                                    'insumo_compras.bultos','insumo_compras.precio','insumos.nombre',
-                                                    'insumos.categoria','marcainsumos.nombre','insumo_compras.id',
-                                                    'insumo_compras.litros','insumo_compras.peso','insumo_compras.semillas',
-                                                    'insumo_compras.nfactura')
-                                                    ->join('insumos','insumo_compras.id_insumo','=','insumos.id')
-                                                    ->join('marcainsumos','insumos.id_marcainsumo','=','marcainsumos.id')
-                                                    ->where('insumos.id_organizacion',$organizacion->id)
-                                                    ->orderBy('id','desc')
-                                                    ->paginate(20);
+        $filtro="";
+        $busqueda="";
+        if($request->buscarpor AND $request->tipo){
+            $tipo = $request->get('tipo');
+            $busqueda = $request->get('buscarpor');
+            $variablesurl=$request->all();
+            $insumo_compras = Insumo_compra::Buscar($tipo, $busqueda, $organizacion->id)->paginate(20)->appends($variablesurl);
+            $filtro = "SI";
+        } else{
+            if ($organizacion->NombOrga == "Sala Hnos"){
+                $insumo_compras = Insumo_compra::select('insumo_compras.proveedor','insumo_compras.fecha_compra',
+                                                        'insumo_compras.bultos','insumo_compras.precio','insumos.nombre as nombreinsumo',
+                                                        'insumos.categoria','marcainsumos.nombre as nombremarca','insumo_compras.id',
+                                                        'insumo_compras.litros','insumo_compras.peso','insumo_compras.semillas',
+                                                        'insumo_compras.nfactura')
+                                                        ->join('insumos','insumo_compras.id_insumo','=','insumos.id')
+                                                        ->join('marcainsumos','insumos.id_marcainsumo','=','marcainsumos.id')
+                                                        ->orderBy('id','desc')
+                                                        ->paginate(20);
+            } else {
+                $insumo_compras = Insumo_compra::select('insumo_compras.proveedor','insumo_compras.fecha_compra',
+                                                        'insumo_compras.bultos','insumo_compras.precio','insumos.nombre as nombreinsumo',
+                                                        'insumos.categoria','marcainsumos.nombre as nombremarca','insumo_compras.id',
+                                                        'insumo_compras.litros','insumo_compras.peso','insumo_compras.semillas',
+                                                        'insumo_compras.nfactura')
+                                                        ->join('insumos','insumo_compras.id_insumo','=','insumos.id')
+                                                        ->join('marcainsumos','insumos.id_marcainsumo','=','marcainsumos.id')
+                                                        ->where('insumos.id_organizacion',$organizacion->id)
+                                                        ->orderBy('id','desc')
+                                                        ->paginate(20);
 
+            }
         }
 
-        return view('insumo_compra.index', compact('insumo_compras','rutavolver'));
+        return view('insumo_compra.index', compact('insumo_compras','rutavolver','filtro','busqueda'));
     }
 
     public function fetch(Request $request)
