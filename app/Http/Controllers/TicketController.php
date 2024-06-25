@@ -6,6 +6,7 @@ use App\ticket;
 use App\organizacion;
 use App\contacto;
 use App\servicioscsc;
+use App\proyecto;
 use App\detalle_ticket;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
@@ -37,17 +38,19 @@ class TicketController extends Controller
         } else{
             
             $tickets = Ticket::select('servicioscscs.nombre','tickets.id','organizacions.NombOrga','tickets.nombreservicio',
-                                        'tickets.estado')
+                                        'tickets.estado','proyectos.titulo')
                             ->join('organizacions','tickets.id_organizacion','=','organizacions.id')
                             ->join('servicioscscs','tickets.id_servicioscsc','=','servicioscscs.id')
+                            ->leftjoin('proyectos','tickets.id_proyecto','=','proyectos.id')
                             ->orderBy('tickets.id','desc')
                             ->where('tickets.estado','<>','Cerrado')
                             ->paginate(9999);
                             
             $tickets_c = Ticket::select('servicioscscs.nombre','tickets.id','organizacions.NombOrga','tickets.nombreservicio',
-                                        'tickets.estado')
+                                        'tickets.estado','proyectos.titulo')
                             ->join('organizacions','tickets.id_organizacion','=','organizacions.id')
                             ->join('servicioscscs','tickets.id_servicioscsc','=','servicioscscs.id')
+                            ->leftjoin('proyectos','tickets.id_proyecto','=','proyectos.id')
                             ->orderBy('tickets.id','desc')
                             ->where('tickets.estado','Cerrado')
                             ->orWhere('tickets.estado',NULL)
@@ -78,7 +81,8 @@ class TicketController extends Controller
         $rutavolver = route('ticket.index');
         $organizaciones = Organizacion::orderBy('NombOrga','asc')->get();
         $servicioscscs = Servicioscsc::orderBy('nombre','asc')->get();
-        return view('ticket.create',compact('rutavolver','organizaciones','servicioscscs'));
+        $proyectos = Proyecto::where('estado',null)->orderBy('titulo','ASC')->get();
+        return view('ticket.create',compact('rutavolver','organizaciones','servicioscscs','proyectos'));
     }
 
     /**
@@ -128,9 +132,11 @@ class TicketController extends Controller
         Gate::authorize('haveaccess','ticket.show');
         Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Ticket']);
         $rutavolver = route('ticket.index');
-        $show_t = Ticket::select('servicioscscs.nombre','tickets.id','organizacions.NombOrga','tickets.nombreservicio')
+        $show_t = Ticket::select('servicioscscs.nombre','tickets.id','organizacions.NombOrga',
+                                'tickets.nombreservicio','proyectos.titulo')
                         ->join('organizacions','tickets.id_organizacion','=','organizacions.id')
                         ->join('servicioscscs','tickets.id_servicioscsc','=','servicioscscs.id')
+                        ->leftjoin('proyectos','tickets.id_proyecto','=','proyectos.id')
                         ->where('tickets.id',$ticket->id)
                         ->orderBy('tickets.id','desc')->first();
         $servicioscscs = Detalle_ticket::select('detalle_tickets.id','detalle_tickets.fecha_inicio',

@@ -16,7 +16,7 @@
                                 <label for="ideaproyecto" class="col-md-4 col-form-label text-md-right">{{ __('ID de propuesta de proyecto') }}</label>
     
                                 <div class="col-md-6">
-                                    <input id="ideaproyecto" type="text" class="form-control-textarea @error('ideaproyecto') is-invalid @enderror" name="NombAnte" value="{{ isset($ideaproyecto->id)?$ideaproyecto->id:old('id') }}" autocomplete="ideaproyecto" disabled autofocus>
+                                    <textarea id="ideaproyecto" type="text" class="form-control-textarea @error('ideaproyecto') is-invalid @enderror" name="NombAnte" value="{{ isset($ideaproyecto->id)?$ideaproyecto->id:old('id') }}" autocomplete="ideaproyecto" disabled autofocus></textarea>
     
                                     @error('ideaproyecto')
                                         <span class="invalid-feedback" role="alert">
@@ -47,12 +47,26 @@
                                     @enderror
                                 </div>
                             </div>
+
+                            <div class="form-group row">
+                                <label for="titulo" class="col-md-4 col-form-label text-md-right">{{ __('Título del proyecto') }} *</label>
+    
+                                <div class="col-md-6">
+                                    <input id="titulo" class="form-control @error('titulo') is-invalid @enderror" rows="6" name="titulo" required autocomplete="titulo" disabled autofocus>{{ isset($proyecto->titulo)?$proyecto->titulo:old('titulo') }}</textarea>
+    
+                                    @error('titulo')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
     
                             <div class="form-group row">
                                 <label for="descripcion" class="col-md-4 col-form-label text-md-right">{{ __('Descripción del proyecto') }} *</label>
     
                                 <div class="col-md-6">
-                                    <textarea id="descripcion" class="form-control @error('descripcion') is-invalid @enderror" rows="6" name="descripcion" required autocomplete="descripcion" disabled autofocus>{{ isset($proyecto->descripcion)?$proyecto->descripcion:old('descripcion') }}</textarea>
+                                    <textarea id="descripcion" class="form-control-textarea @error('descripcion') is-invalid @enderror" rows="6" name="descripcion" required autocomplete="descripcion" disabled autofocus>{{ isset($proyecto->descripcion)?$proyecto->descripcion:old('descripcion') }}</textarea>
     
                                     @error('descripcion')
                                         <span class="invalid-feedback" role="alert">
@@ -141,7 +155,7 @@
                                 <label for="estado" class="col-md-4 col-form-label text-md-right">{{ __('Avance (%)') }}</label>
     
                                 <div class="col-md-6">
-                                    <input id="estado" type="number" class="form-control @error('estado') is-invalid @enderror" value="{{ isset($proyecto->estado)?$proyecto->estado:old('estado') }}" name="estado" autocomplete="estado" disabled autofocus>
+                                    <input id="estado" type="number" class="form-control @error('estado') is-invalid @enderror" value="{{ isset($proyecto->estado)?$proyecto->estado:number_format($avance,1) }}" name="estado" autocomplete="estado" disabled autofocus>
     
                                     @error('estado')
                                         <span class="invalid-feedback" role="alert">

@@ -52,6 +52,25 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label for="id_proyecto" class="col-md-4 col-form-label text-md-right">{{ __('Título del proyecto') }} </label>
+
+                            <div class="col-md-6">
+                                <select class="selectpicker form-control @error('id_proyecto') is-invalid @enderror" data-live-search="true" id="id_proyecto" name="id_proyecto" value="{{ isset($ticket->id_proyecto)?$ticket->id_proyecto:old('id_proyecto') }}" autofocus>
+                                    <option value="">Seleccionar Proyecto</option>
+                                    @foreach ($proyectos as $proyecto)
+                                            <option data-subtext="{{ $proyecto->categoria }}" value="{{ $proyecto->id }}"
+                                                >{{ $proyecto->titulo }} </option>
+                                    @endforeach
+                                </select>
+                                @error('id_proyecto')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
                  
                         <div class="form-group row">
                             <label for="nombreservicio" class="col-md-4 col-form-label text-md-right">{{ __('Detalle de servicio') }}</label>

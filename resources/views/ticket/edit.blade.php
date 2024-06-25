@@ -41,6 +41,20 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="titulo" class="col-md-4 col-form-label text-md-right">{{ __('Detalle de servicio') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="titulo" type="text" class="form-control @error('titulo') is-invalid @enderror" name="titulo" value="{{ isset($ticket->titulo)?$ticket->titulo:old('titulo') }}">
+
+                                @error('titulo')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="servicioscsc" class="col-md-4 col-form-label text-md-right">{{ __('Detalle de servicio') }}</label>
 
                             <div class="col-md-6">

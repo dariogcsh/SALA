@@ -5,7 +5,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
@@ -36,6 +36,7 @@
                                     <option value="users.last_name">Apellido de usuario</option>
                                     <option value="users.name">Nombre de usuario</option>
                                     <option value="servicioscscs.nombre">Tipo de servicio CSC</option>
+                                    <option value="proyectos.titulo">Título de proyecto</option>
                                 </select>
                                 <input class="form-control py-2" type="text" placeholder="Buscar" name="buscarpor">
                                 <span class="input-group-append">
@@ -66,6 +67,7 @@
                                 <th scope="col">Estado</th>
                                 <th scope="col">Participantes</th>
                                 <th scope="col">Tiempo (minutos)</th>
+                                <th scope="col">Proyecto</th>
                                 <th colspan=3></th>
                                 </tr>
                             </thead>
@@ -118,6 +120,7 @@
                                         @else
                                             <th scope="row"></th>
                                         @endisset
+                                        <th scope="row">{{ $ticket->titulo }}</th>
                                         @can('haveaccess','ticket.show')
                                             <th><a href="{{ route('ticket.show',$ticket->id) }}" title="Detalle"><img src="{{ asset('/imagenes/config.png') }}"  height="20"></a> </th>
                                         @endcan
@@ -158,6 +161,7 @@
                                             @else
                                                 <th scope="row"></th>
                                             @endisset
+                                            <th scope="row">{{ $ticket->titulo }}</th>
                                             @can('haveaccess','ticket.show')
                                                 <th><a href="{{ route('ticket.show',$ticket->id) }}" title="Detalle"><img src="{{ asset('/imagenes/config.png') }}"  height="20"></a> </th>
                                             @endcan

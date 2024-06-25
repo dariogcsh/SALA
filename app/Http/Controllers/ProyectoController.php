@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\proyecto;
+use App\ticket;
 use App\ideaproyecto;
 use App\users_proyecto;
 use App\interaccion;
@@ -86,18 +87,20 @@ class ProyectoController extends Controller
                    if($vista == "Soluciones Integrales"){
                        $proyectos = Proyecto::select('proyectos.id','proyectos.descripcion','proyectos.created_at',
                                                        'proyectos.inicio','proyectos.finalizacion','proyectos.horas',
-                                                       'proyectos.presupuesto','proyectos.estado','proyectos.categoria')
+                                                       'proyectos.presupuesto','proyectos.estado','proyectos.categoria',
+                                                       'titulo')
                                             ->where('proyectos.categoria','Soluciones Integrales')
                                             ->groupBy('proyectos.id')
                                             ->orderBy('proyectos.id','desc')->paginate(20);
-                   } elseif(($vista == "App Sala Hnos") OR ($vista == "")){ 
+                   } elseif(($vista == "SALA App/API") OR ($vista == "")){ 
                        $proyectos = Proyecto::select('proyectos.id','proyectos.descripcion','proyectos.created_at',
                                                        'proyectos.inicio','proyectos.finalizacion','proyectos.horas',
-                                                       'proyectos.presupuesto','proyectos.estado','proyectos.categoria')
-                                            ->where('proyectos.categoria','App Sala Hnos')
+                                                       'proyectos.presupuesto','proyectos.estado','proyectos.categoria',
+                                                       'titulo')
+                                            ->where('proyectos.categoria','SALA App/API')
                                             ->groupBy('proyectos.id')
                                             ->orderBy('proyectos.id','desc')->paginate(20);
-                       $vista = "App Sala Hnos";
+                       $vista = "SALA App/API";
                    }
        return view('proyecto.index', compact('proyectos','rutavolver','vista'));
    }
@@ -129,6 +132,7 @@ class ProyectoController extends Controller
    { 
        request()->validate([
             'categoria' => 'required|max:255',
+            'titulo' => 'required',
             'descripcion' => 'required|max:10000',
             'inicio' => 'required',
             'finalizacion' => 'required',
@@ -153,7 +157,7 @@ class ProyectoController extends Controller
             $propuesta->update(['estado' => 'Transferido a proyectos', 'id_proyecto' => $proyecto->id]);
         }
 
-       return redirect()->route('home')->with('status_success', 'Propuesta creada con exito');
+       return redirect()->route('home')->with('status_success', 'Proyecto creado con exito');
    }
 
    /**
@@ -170,8 +174,17 @@ class ProyectoController extends Controller
        $responsables = Users_proyecto::select('users.id','users.name','users.last_name')
                                     ->join('users','users_proyectos.id_user','=','users.id')
                                     ->where('users_proyectos.id_proyecto',$proyecto->id)->get();
-       
-       return view('proyecto.view', compact('proyecto','rutavolver','responsables'));
+        $tiempo = Ticket::join('detalle_tickets','tickets.id','=','detalle_tickets.id_ticket')
+                                    ->where('tickets.id_proyecto', $proyecto->id)
+                                    ->orderBy('detalle_tickets.fecha_fin','DESC')
+                                    ->sum('detalle_tickets.tiempo');
+        $tiempo_horas = $tiempo / 60;
+                if(isset($proyecto->horas) AND ($tiempo_horas > 0)){
+                    $avance = $tiempo_horas / $proyecto->horas * 100;
+                }else{
+                    $avance = $proyecto->estado;
+                }
+       return view('proyecto.view', compact('proyecto','rutavolver','responsables','avance'));
    }
 
    /**
@@ -208,6 +221,7 @@ class ProyectoController extends Controller
    {
        Gate::authorize('haveaccess','proyecto.edit');
        $request->validate([
+        'titulo'          => 'required',
            'descripcion'          => 'required',
        ]);
 

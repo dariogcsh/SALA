@@ -42,7 +42,21 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="servicioscsc" class="col-md-4 col-form-label text-md-right">{{ __('Nombre de servicio') }}</label>
+                                <label for="id_proyecto" class="col-md-4 col-form-label text-md-right">{{ __('Título del proyecto') }}</label>
+    
+                                <div class="col-md-6">
+                                    <input id="id_proyecto" type="text" class="form-control @error('id_proyecto') is-invalid @enderror" name="id_proyecto" value="{{ isset($show_t->titulo)?$show_t->titulo:old('id_proyecto') }}" disabled>
+    
+                                    @error('id_proyecto')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="servicioscsc" class="col-md-4 col-form-label text-md-right">{{ __('Detalle de servicio') }}</label>
     
                                 <div class="col-md-6">
                                     <input id="servicioscsc" type="text" class="form-control @error('servicioscsc') is-invalid @enderror" name="servicioscsc" value="{{ isset($show_t->nombreservicio)?$show_t->nombreservicio:old('servicioscsc') }}" disabled>

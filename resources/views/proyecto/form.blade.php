@@ -27,10 +27,24 @@
                                     <option value="">Seleccionar categoria</option>
                                 @endisset
                                     <option value="Soluciones Integrales">Soluciones Integrales</option>
-                                    <option value="App Sala Hnos">App Sala Hnos</option>
+                                    <option value="SALA App/API">SALA App/API</option>
                             </select>
 
                                 @error('categoria')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="titulo" class="col-md-4 col-form-label text-md-right">{{ __('Título') }} *</label>
+                        
+                            <div class="col-md-6">
+                                <input id="titulo" type="text" class="form-control @error('titulo') is-invalid @enderror" name="titulo" value="{{ isset($proyecto->titulo)?$proyecto->titulo:old('titulo') }}" required autofocus>
+                        
+                                @error('titulo')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
