@@ -233,6 +233,7 @@ Route::get('entrega/indexusado', 'EntregaController@indexusado')->name('entrega.
 Route::post('entrega/subir', 'EntregaController@subir')->name('entrega.subir');
 Route::resource('entrega', 'EntregaController');
 Route::resource('etapa', 'EtapaController');
+Route::post('paso/fetch', 'PasoController@fetch')->name('paso.fetch');
 Route::resource('paso', 'PasoController');
 Route::resource('entrega_paso', 'EntregaPasoController');
 Route::get('ordentrabajo/historial', 'OrdentrabajoController@historial')->name('ordentrabajo.historial');

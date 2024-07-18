@@ -5,7 +5,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
@@ -47,32 +47,41 @@
                             @endif
                             
                             @php
-                                $npasos = Entrega_paso::where('id_entrega',$entrega->id)->count();
                                 $ultimopaso = Entrega_paso::select('pasos.nombre','pasos.orden')
                                                         ->join('pasos','entrega_pasos.id_paso','=','pasos.id')
                                                         ->where('id_entrega',$entrega->id)
                                                         ->orderBy('pasos.orden','desc')->first();
-                                $pasosiguiente = Paso::select('pasos.nombre','puesto_empleados.NombPuEm')
-                                                    ->join('etapas','pasos.id_etapa','=','etapas.id')
-                                                    ->join('puesto_empleados','pasos.id_puesto','=','puesto_empleados.id')
-                                                    ->where([['pasos.orden','>',$ultimopaso->orden], 
-                                                            ['etapas.tipo_unidad', $entrega->tipo_unidad]])
-                                                    ->orderBy('pasos.orden','asc')->first();
-                                $completado = $npasos / $pasostotales * 100;
+                                if(isset($ultimopaso)){
+                                    $pasosiguiente = Paso::select('pasos.nombre','puesto_empleados.NombPuEm')
+                                                        ->join('etapas','pasos.id_etapa','=','etapas.id')
+                                                        ->join('puesto_empleados','pasos.id_puesto','=','puesto_empleados.id')
+                                                        ->where([['pasos.orden','>',$ultimopaso->orden], 
+                                                                ['etapas.tipo_unidad', $entrega->tipo_unidad]])
+                                                        ->orderBy('pasos.orden','asc')->first();
+                                }
+                                $completado = $ultimopaso->orden / $ultimopaso_avance->orden * 100;
                             @endphp
-                            <th scope="row">{{ $ultimopaso->nombre }}</th>
+                            <th scope="row">
+                                @isset($pasosiguiente)
+                                    {{ $ultimopaso->nombre }}
+                                @endisset
+                            </th>
                             <th scope="row">
                                 <div class="progress">
-                                    @if($completado == 100)
+                                @if($ultimopaso->orden == $ultimopaso_avance->orden)
                                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:{{ $completado }}%">{{ number_format($completado,0) }} %</div>
                                 @else
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" style="width:{{ $completado }}%">{{ number_format($completado,0) }} %</div>
+                                    @if($completado >= 80)
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" style="width:{{ $completado }}%">{{ number_format($completado,0) }} %</div>
+                                    @else
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" style="width:{{ $completado }}%">{{ number_format($completado,0) }} %</div>
+                                    @endif
                                 @endif  </div>
                             </th>
                             @isset($pasosiguiente)
                                 <th scope="row">{{ $pasosiguiente->nombre }} - <span style="color: gray; font-size:12px;">{{ $pasosiguiente->NombPuEm }}</span></th>
                             @else
-                            <th scope="row" style="color: green;">Procesos copletados</th>
+                                <th scope="row" style="color: green;">Procesos copletados</th>
                             @endisset
                             
                             @if(!isset($entrega->NombOrga))

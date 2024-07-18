@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <div class="card">
                 <div class="card-header">{{ __('Modificar entrega') }}</div>
 
@@ -28,11 +28,14 @@ $( document ).ready(function() {
         $('input[type=checkbox]').on('change', function() {
             var chk = $(this).attr('id');
             var detalle = document.getElementById("detallediv"+chk);
+            var condicion = document.getElementById("condicion"+chk);
 
             if ($(this).is(':checked') ) {
                 detalle.style.display = "block";
+                condicion.style.display = "block";
             } else {
                 detalle.style.display = "none";
+                condicion.style.display = "none";
             }
         });
 });

@@ -21,3 +21,32 @@
     </div>
 </div>
 @endsection
+@section('script')
+<script type="text/javascript">
+$( document ).ready(function() {
+    
+        $('#id_etapa').change(function(){   
+
+            if ($(this).val() != ''){ 
+                var select = 'id_etapa';
+                var value = $(this).val();           
+                var _token = $('input[name="_token"]').val(); 
+                //var costo = document.getElementById("costo");
+                $.ajax({
+                    url:"{{ route('paso.fetch') }}",
+                    method:"POST",
+                    data:{select:select, value:value, _token:_token},
+                    success:function(result)
+                    {
+                        $('#orden_ultimo').html(result); 
+                    },
+                    error:function(){
+                        alert("Ha ocurrido un error, intentelo más tarde");
+                    }
+                })
+            }
+        });
+
+    });
+</script>
+@endsection

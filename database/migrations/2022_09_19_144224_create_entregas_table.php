@@ -16,13 +16,15 @@ class CreateEntregasTable extends Migration
         Schema::create('entregas', function (Blueprint $table) {
             $table->id();
             $table->unsignedbigInteger('id_organizacion')->nullable();
-            $table->unsignedbigInteger('id_sucursal');
+            $table->unsignedbigInteger('id_sucursal')->nullable();
+            $table->unsignedbigInteger('id_vendedor')->nullable();
             $table->string('tipo');
             $table->string('marca');
             $table->string('modelo');
-            $table->string('pin');
-            $table->string('detalle',9500)->nullable();
+            $table->string('pin')->nullable();
             $table->string('tipo_unidad');
+            $table->string('toma_usado');
+            $table->string('detalle',9500)->nullable();
             $table->timestamps();
 
             $table->foreign('id_organizacion')

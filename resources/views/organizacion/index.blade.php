@@ -4,9 +4,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header"><h2>Lista de organizaciones 
                 @can('haveaccess','organizacion.create')
@@ -23,6 +23,8 @@
                             <div class="input-group col-md-12">
                                 <select name="tipo" class="form-control mr-sm-2">
                                     <option value="">Buscar por</option>
+                                    <option value="CodiOrga">Id Centro de Operaciones</option>
+                                    <option value="CUIT">CUIT</option>
                                     <option value="NombOrga">Organizacion</option>
                                     <option value="InscOrga">Monitoreo</option>
                                     <option value="NombSucu">Sucursal</option>
@@ -50,6 +52,9 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Id Op. Center</th>
+                            <th scope="col">CUIT</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Sucursal</th>
                             <th scope="col">Monitoreado</th>
@@ -64,6 +69,9 @@
                             @else
                             <tr>
                             @endcan
+                            <th scope="row">{{ $organizacion->id }}</th>
+                            <th scope="row">{{ $organizacion->CodiOrga }}</th>
+                            <th scope="row">{{ $organizacion->CUIT }}</th>
                             <th scope="row">{{ $organizacion->NombOrga }}</th>
                             <th scope="row">
                             @isset($organizacion->sucursals->NombSucu)

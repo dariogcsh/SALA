@@ -5,7 +5,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
@@ -29,6 +29,7 @@
                             <th scope="col">Modelo</th>
                             <th scope="col">Pin</th>
                             <th scope="col">Sucursal de entrega</th>
+                            <th scope="col">Toma de usado</th>
                             <th scope="col">Detalle</th>
                             <th colspan=3></th>
                             </tr>
@@ -82,6 +83,7 @@
                             <th scope="row">{{ $entrega->modelo }}</th>
                             <th scope="row">{{ $entrega->pin }}</th>
                             <th scope="row">{{ $entrega->NombSucu }}</th>
+                            <th scope="row">{{ $entrega->toma_usado }}</th>
                             <th scope="row">{{ $entrega->detalle }}</th>
                             @can('haveaccess','entrega.show')
                             <th><a href="{{ route('entrega.show',$entrega->id) }}" title="Detalle"><img src="{{ asset('/imagenes/config.png') }}"  height="20"></a> </th>

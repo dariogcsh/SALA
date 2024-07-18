@@ -8,7 +8,7 @@ class organizacion extends Model
 {
     //
     protected $fillable = [
-        'CodiOrga','NombOrga','CodiSucu','InscOrga',
+        'CodiOrga','NombOrga','CodiSucu','InscOrga','CUIT',
     ];
 
     public function sucursals(){
@@ -62,7 +62,8 @@ class organizacion extends Model
 
     public function scopeBuscar($query, $tipo, $buscar){
         if (($tipo) && ($buscar)){
-            return $query->select('organizacions.id','organizacions.NombOrga','sucursals.NombSucu','organizacions.InscOrga')
+            return $query->select('organizacions.id','organizacions.NombOrga','sucursals.NombSucu','organizacions.InscOrga',
+                                'organizacions.CUIT')
                         ->leftjoin('sucursals','organizacions.CodiSucu','=','sucursals.id')
                         ->where($tipo,'LIKE',"%$buscar%");
         }

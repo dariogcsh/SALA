@@ -21,6 +21,14 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="CUIT" class="col-md-4 col-form-label text-md-right">{{ __('CUIT') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="CUIT" type="number" class="form-control @error('CUIT') is-invalid @enderror" name="CUIT" value="{{ isset($organizacion->CUIT)?$organizacion->CUIT:old('CUIT') }}" disabled autocomplete="CUIT" autofocus>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="NombOrga" class="col-md-4 col-form-label text-md-right">{{ __('Nombre') }}</label>
 
                             <div class="col-md-6">

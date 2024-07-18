@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class entrega_paso extends Model
 {
     protected $fillable = [
-        'id_entrega','id_paso','id_user','detalle',
+        'id_entrega','id_paso','id_user','detalle','valor_condicion',
     ];
 
     public function users(){

@@ -15,6 +15,20 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="CUIT" class="col-md-4 col-form-label text-md-right">{{ __('CUIT') }} *</label>
+
+                            <div class="col-md-6">
+                                <input id="CUIT" type="number" class="form-control @error('CUIT') is-invalid @enderror" name="CUIT" value="{{ isset($organizacion->CUIT)?$organizacion->CUIT:old('CUIT') }}" autocomplete="CUIT" autofocus required placeholder="30542790780">
+
+                                @error('CUIT')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="NombOrga" class="col-md-4 col-form-label text-md-right">{{ __('Nombre') }} *</label>
 
                             <div class="col-md-6">

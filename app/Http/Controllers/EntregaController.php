@@ -29,9 +29,9 @@ class EntregaController extends Controller
         $rutavolver = route('internoentregas');
         $entregas = Entrega::select('entregas.id','entregas.tipo','entregas.marca','entregas.modelo','entregas.pin',
                                     'organizacions.NombOrga','sucursals.NombSucu','entregas.detalle',
-                                    'etapas.nombre as nombreetapa')
+                                    'etapas.nombre as nombreetapa','entregas.toma_usado')
                         ->leftjoin('organizacions','entregas.id_organizacion','=','organizacions.id')
-                        ->join('sucursals','entregas.id_sucursal','=','sucursals.id')
+                        ->leftjoin('sucursals','entregas.id_sucursal','=','sucursals.id')
                         ->join('entrega_pasos','entregas.id','=','entrega_pasos.id_entrega')
                         ->join('pasos','entrega_pasos.id_paso','=','pasos.id')
                         ->join('etapas','pasos.id_etapa','=','etapas.id')
@@ -52,19 +52,22 @@ class EntregaController extends Controller
         $rutavolver = route('internoentregas');
         $entregas = Entrega::select('entregas.id','entregas.tipo','entregas.marca','entregas.modelo','entregas.pin',
                                     'organizacions.NombOrga','sucursals.NombSucu','entregas.detalle',
-                                    'etapas.nombre as nombreetapa')
+                                    'etapas.nombre as nombreetapa','entregas.toma_usado','entregas.tipo_unidad')
                         ->leftjoin('organizacions','entregas.id_organizacion','=','organizacions.id')
-                        ->join('sucursals','entregas.id_sucursal','=','sucursals.id')
+                        ->leftjoin('sucursals','entregas.id_sucursal','=','sucursals.id')
                         ->leftjoin('entrega_pasos','entregas.id','=','entrega_pasos.id_entrega')
                         ->leftjoin('pasos','entrega_pasos.id_paso','=','pasos.id')
                         ->leftjoin('etapas','pasos.id_etapa','=','etapas.id')
                         ->groupBy('entregas.id')
                         ->orderBy('entregas.id','desc')
                         ->where('entregas.tipo_unidad','Usada')->paginate(20);
-        $pasostotales = Paso::select('pasos.id')
+
+        // Para calcular el porcentaje de avance debo seleccionar el primer registro y el ultimo segun el órden en la tabla Paso y calcular ese avance en base al orden actual que se registro.
+        $ultimopaso_avance = Paso::select('pasos.orden')
                             ->join('etapas','pasos.id_etapa','=','etapas.id')
-                            ->where('etapas.tipo_unidad','Usada')->count();
-        return view('entrega.indexusado', compact('entregas','rutavolver','pasostotales'));
+                            ->where('etapas.tipo_unidad','Usada')
+                            ->orderBy('pasos.orden','DESC')->first();
+        return view('entrega.indexusado', compact('entregas','rutavolver','ultimopaso_avance'));
     }
 
     public function files($id)
@@ -131,7 +134,8 @@ class EntregaController extends Controller
                     ->join('role_user','users.id','=','role_user.user_id')
                     ->join('roles','role_user.role_id','=','roles.id')
                     ->where('users.id',auth()->user()->id)->first();
-        return view('entrega.create',compact('rutavolver','pasos','organizacions','sucursals','puesto','rol'));
+        $vendedor = User::where('id',auth()->user()->id)->first();
+        return view('entrega.create',compact('rutavolver','pasos','organizacions','sucursals','puesto','rol','vendedor'));
     }
 
     /**
@@ -143,13 +147,17 @@ class EntregaController extends Controller
     public function store(Request $request)
     {
         $entregas = Entrega::create($request->all()); 
-        $paso = Paso::where('orden','51')->first(); 
+        $paso = Paso::select('pasos.id')
+                    ->join('etapas','pasos.id_etapa','=','etapas.id')
+                    ->where('etapas.tipo_unidad',$entregas->tipo_unidad)
+                    ->orderBy('pasos.orden','ASC')->first();
+
         $entrega_paso = Entrega_paso::create(['id_entrega' => $entregas->id, 'id_paso' => $paso->id, 
-                                                'id_user' => auth()->user()->id]);
+                                                'id_user' => auth()->user()->id, 'valor_condicion' => $entregas->toma_usado]);
         if($request->tipo_unidad == "Nueva"){
-            return redirect()->route('entrega.index')->with('status_success', 'Recepción creada con exito');
+            return redirect()->route('entrega.index')->with('status_success', 'Proceso de venta y entrega iniciado con éxito');
         }else{
-            return redirect()->route('entrega.indexusado')->with('status_success', 'Recepción creada con exito');
+            return redirect()->route('entrega.indexusado')->with('status_success', 'Proceso de venta y entrega iniciado con éxito');
         }
     }
 
@@ -188,13 +196,15 @@ class EntregaController extends Controller
         $rutavolver = route('entrega.index');
         if($entrega->tipo_unidad == "Nueva"){
             $pasos = Paso::select('pasos.id','pasos.id_etapa','pasos.id_puesto','pasos.nombre','pasos.orden',
-                                'pasos.created_at','pasos.updated_at')
+                                'pasos.created_at','pasos.updated_at','condicion','pasos.id_paso_anterior',
+                                'pasos.valor_condicion_anterior')
             ->join('etapas','pasos.id_etapa','=','etapas.id')
             ->where('etapas.tipo_unidad','Nueva')
             ->orderBy('orden','asc')->get();
         }else{
             $pasos = Paso::select('pasos.id','pasos.id_etapa','pasos.id_puesto','pasos.nombre','pasos.orden',
-                                'pasos.created_at','pasos.updated_at')
+                                'pasos.created_at','pasos.updated_at','condicion','pasos.id_paso_anterior',
+                                'pasos.valor_condicion_anterior')
             ->join('etapas','pasos.id_etapa','=','etapas.id')
             ->where('etapas.tipo_unidad','Usada')
             ->orderBy('orden','asc')->get();
@@ -203,6 +213,7 @@ class EntregaController extends Controller
         $organizacions = Organizacion::orderBy('NombOrga','asc')->get();
         $sucursals = Sucursal::orderBy('id','asc')->get();
         $entrega_pasos = Entrega_paso::where('id_entrega', $entrega->id)->get();
+        
         $puesto = User::select('puesto_empleados.NombPuEm','puesto_empleados.id')
                     ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
                     ->where('users.CodiPuEm', auth()->user()->CodiPuEm)->first();
@@ -210,9 +221,9 @@ class EntregaController extends Controller
                     ->join('role_user','users.id','=','role_user.user_id')
                     ->join('roles','role_user.role_id','=','roles.id')
                     ->where('users.id',auth()->user()->id)->first();
+        $vendedor = User::where('id',$entrega->id_vendedor)->first();
 
-        return view('entrega.edit', compact('entrega','rutavolver','organizacions','sucursals','pasos','entrega_pasos',
-                                            'puesto','rol'));
+        return view('entrega.edit',compact('entrega','rutavolver','organizacions','sucursals','pasos','entrega_pasos','puesto','rol','vendedor'));
     }
 
     /**
@@ -232,13 +243,16 @@ class EntregaController extends Controller
         foreach ($pasos as $paso) {
             $variable = $request->get($paso->id);
             $det = 'detalle'.$paso->id;
+            $cond = 'condicion'.$paso->id;
             $detalle = $request->get($det);
+            $condicion = $request->get($cond);
             if ($variable == "on") {
                 $verificacion = 0;
                 $verificacion = Entrega_paso::where([['id_entrega', $entrega->id], ['id_paso', $paso->id]])->count();
                 if ($verificacion == 0) {
                     $entrega_paso = Entrega_paso::create(['id_entrega'=>$entrega->id, 'id_paso'=>$paso->id, 
-                                                'id_user'=>auth()->user()->id,'detalle'=>$detalle]);
+                                                'id_user'=>auth()->user()->id,'detalle'=>$detalle,
+                                                'valor_condicion'=>$condicion]);
                     $etapa = Etapa::select('etapas.orden','etapas.id')
                                     ->join('pasos','etapas.id','=','pasos.id_etapa')
                                     ->where('pasos.id',$paso->id)->first();
@@ -257,9 +271,9 @@ class EntregaController extends Controller
             
         }
         if($request->tipo_unidad == "Nueva"){
-            return redirect()->route('entrega.index')->with('status_success', 'Recepción modificada con exito');
+            return redirect()->route('entrega.index')->with('status_success', 'Proceso modificado con exito');
         }else{
-            return redirect()->route('entrega.indexusado')->with('status_success', 'Recepción modificada con exito');
+            return redirect()->route('entrega.indexusado')->with('status_success', 'Proceso modificado con exito');
         }
         
     }

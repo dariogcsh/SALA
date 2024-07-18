@@ -1,9 +1,12 @@
+@php
+    use App\paso;
+@endphp
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header"><h2>Lista de pasos 
                 @can('haveaccess','paso.create')
@@ -21,6 +24,9 @@
                             <th scope="col">Paso</th>
                             <th scope="col">Tipo Unidad</th>
                             <th scope="col">Orden</th>
+                            <th scope="col">¿Condiciona el siguiente paso?</th>
+                            <th scope="col">¿Condición del paso anterior?</th>
+                            <th scope="col">Valor de la condición de paso anterior</th>
                             <th colspan=3></th>
                             </tr>
                         </thead>
@@ -36,6 +42,17 @@
                             <th scope="row">{{ $paso->nombre }}</th>
                             <th scope="row">{{ $paso->tipo_unidad }}</th>
                             <th scope="row">{{ $paso->orden }}</th>
+                            <th scope="row">{{ $paso->condicion }}</th>
+                            @php
+                                $paso_anterior = Paso::select('nombre')
+                                                    ->where('id',$paso->id_paso_anterior)->first();
+                            @endphp
+                            <th scope="row">
+                                @isset($paso_anterior)
+                                    {{ $paso_anterior->nombre }}
+                                @endisset 
+                            </th>
+                            <th scope="row">{{ $paso->valor_condicion_anterior }}</th>
                             @can('haveaccess','paso.show')
                             <th><a href="{{ route('paso.show',$paso->id) }}" title="Detalle"><img src="{{ asset('/imagenes/config.png') }}"  height="20"></a> </th>
                             @endcan

@@ -24,7 +24,7 @@
                             <br>
                             <div class="row">
                                 <div class="col-xs-12 col-md-2" style="margin-bottom:5px;">
-                                    @can('haveaccess','poliza.show')
+                                    @can('haveaccess','poliza.index')
                                         <a href="{{asset('/pdfjs/web/viewer.html?file=').asset('/pdf/polizas/'.$poliza->ruta)}}" class="btn btn-success btn-block">Ver archivo</a>
                                     @endcan
                                 </div>

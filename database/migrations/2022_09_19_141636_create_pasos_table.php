@@ -19,6 +19,9 @@ class CreatePasosTable extends Migration
             $table->unsignedbigInteger('id_puesto');
             $table->string('nombre');
             $table->integer('orden');
+            $table->unsignedBigInteger('id_paso_anterior')->nullable();
+            $table->string('valor_condicion_anterior')->nullable();
+            $table->string('condicion');
             $table->timestamps();
 
             $table->foreign('id_etapa')

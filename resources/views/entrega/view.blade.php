@@ -46,14 +46,21 @@
                                         @foreach($entrega_pasos as $entrega_paso)
                                             <div class="timeline">
                                                 <div class="timeline-icon"><i class="fa fa-globe"></i></div>
-                                                <span class="year">{{ $entrega_paso->Users->name }} {{ $entrega_paso->Users->last_name[0] }}</span>
+                                                <span class="year">{{ $entrega_paso->pasos->etapas->nombre }}</span>
                                                 <div class="timeline-content">
-                                                    <h5 class="title">{{ $entrega_paso->pasos->nombre }}</h5>
+                                                    <h5 class="title">
+                                                        {{ $entrega_paso->pasos->nombre }}
+                                                        @isset($entrega_paso->valor_condicion)
+                                                            <p class="description">
+                                                                 ({{ $entrega_paso->valor_condicion }})
+                                                            </p>
+                                                        @endisset
+                                                    </h5>
                                                     <p class="description">
-                                                        <u>Fecha:</u> {{ $entrega_paso->created_at }}
+                                                        <u>Fecha:</u> {{ date('d/m/Y H:i',strtotime($entrega_paso->created_at)) }}
                                                     </p>
                                                     <p class="description">
-                                                        <u>Etapa:</u> {{ $entrega_paso->pasos->etapas->nombre }}
+                                                        <u>Usuario:</u> {{ $entrega_paso->Users->name }} {{ $entrega_paso->Users->last_name[0] }}
                                                     </p>
                                                     @isset($entrega_paso->detalle)
                                                         <p class="description">

@@ -18,7 +18,8 @@ class CreateEntregaPasosTable extends Migration
             $table->unsignedbigInteger('id_entrega');
             $table->unsignedbigInteger('id_paso');
             $table->unsignedbigInteger('id_user');
-            $table->date('fecha');
+            $table->string('valor_condicion')->nullable();
+            $table->string('detalle');
             $table->timestamps();
 
             $table->foreign('id_entrega')

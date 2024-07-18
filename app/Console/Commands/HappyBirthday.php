@@ -52,12 +52,12 @@ class HappyBirthday extends Command
                             ->join('organizacions', 'users.CodiOrga', '=', 'organizacions.id')
                             ->where('organizacions.NombOrga', 'Sala Hnos')
                             ->get();
-/*
+
         $usersends = User::select('users.id')
                         ->join('organizacions','users.CodiOrga','=','organizacions.id')
                         ->Where('organizacions.NombOrga','Sala Hnos')
                         ->get();
-*/
+/*
         $usersends = User::select('users.id')
                         ->join('puesto_empleados','users.CodiPuEm','=','puesto_empleados.id')
                         ->Where('users.last_name','Garcia Campi')
@@ -76,7 +76,7 @@ class HappyBirthday extends Command
                             });
                         })
                         ->get();
-
+*/
         foreach($usuariosCumpleHoy as $cumple_colaborador){
                 // Envio de notificacion
                 foreach($usersends as $usersend){

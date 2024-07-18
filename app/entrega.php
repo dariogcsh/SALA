@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class entrega extends Model
 {
     protected $fillable = [
-        'id_organizacion','id_sucursal','tipo','marca','modelo','pin','detalle','tipo_unidad',
+        'id_organizacion','id_sucursal','tipo','marca','modelo','pin','detalle','tipo_unidad','id_vendedor',
+        'toma_usado',
     ];
 
     public function organizacions(){

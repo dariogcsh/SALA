@@ -23,12 +23,30 @@ class PasoController extends Controller
             Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Entrega ideal']);
             $rutavolver = route('internoconfiguracion');
             $pasos = Paso::select('pasos.nombre','pasos.orden','pasos.id','puesto_empleados.NombPuEm',
-                                'etapas.nombre as nombreetapa','etapas.tipo_unidad')
+                                'etapas.nombre as nombreetapa','etapas.tipo_unidad','pasos.condicion',
+                                'pasos.valor_condicion_anterior','pasos.id_paso_anterior')
                         ->join('etapas','pasos.id_etapa','=','etapas.id')
                         ->join('puesto_empleados','pasos.id_puesto','=','puesto_empleados.id')
                         ->orderBy('etapas.tipo_unidad','asc')
                         ->orderBy('pasos.orden','asc')->paginate(20);
             return view('paso.index', compact('pasos','rutavolver'));
+        }
+
+        function fetch(Request $request)
+        {
+            $select = $request->get('select');
+            $value = $request->get('value');
+
+            $data = Paso::select('orden')
+                        ->where($select, $value)
+                        ->orderBy('orden','DESC')->first();
+            if(isset($data)){
+                $output = $data->orden;
+            }else{
+                $output = 'No hay ningun paso definido en esta etapa';
+            }
+            echo $output;
+
         }
     
         /**
@@ -41,9 +59,14 @@ class PasoController extends Controller
             Gate::authorize('haveaccess','paso.create');
             Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Entrega ideal']);
             $rutavolver = route('paso.index');
-            $etapas = Etapa::orderBy('etapas.tipo_unidad','asc')->orderBy('orden','asc')->get();
+            $etapas = Etapa::orderBy('etapas.tipo_unidad','asc')
+                            ->orderBy('tipo_unidad','asc')
+                            ->get();
+            $pasos = Paso::select('pasos.id','pasos.nombre','etapas.tipo_unidad')
+                        ->join('etapas','pasos.id_etapa','=','etapas.id')->get();
+                        
             $puestos = Puesto_empleado::orderBy('NombPuEm','asc')->get();
-            return view('paso.create',compact('rutavolver','etapas','puestos'));
+            return view('paso.create',compact('rutavolver','etapas','puestos','pasos'));
         }
     
         /**
@@ -92,9 +115,13 @@ class PasoController extends Controller
             Gate::authorize('haveaccess','paso.edit');
             Interaccion::create(['id_user' => auth()->id(), 'enlace' => $_SERVER["REQUEST_URI"], 'modulo' => 'Entrega ideal']);
             $rutavolver = route('paso.index');
-            $etapas = Etapa::orderBy('etapas.tipo_unidad','asc')->orderBy('orden','asc')->get();
+            $etapas = Etapa::orderBy('etapas.tipo_unidad','asc')
+                            ->orderBy('orden','asc')
+                            ->get();
+            $pasos = Paso::select('pasos.id','pasos.nombre','etapas.tipo_unidad')
+                        ->join('etapas','pasos.id_etapa','=','etapas.id')->get();
             $puestos = Puesto_empleado::orderBy('NombPuEm','asc')->get();
-            return view('paso.edit',compact('rutavolver','etapas','puestos','paso'));
+            return view('paso.edit',compact('rutavolver','etapas','puestos','paso','pasos'));
         }
     
         /**
