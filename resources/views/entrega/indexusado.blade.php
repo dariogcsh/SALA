@@ -47,23 +47,55 @@
                             @endif
                             
                             @php
-                                $ultimopaso = Entrega_paso::select('pasos.nombre','pasos.orden')
+                            //Generar foreach de los pasoos que se realizan igual euq en la vista form y poner dentro de if !$skip lo que sigue.
+                                $ultimopaso = Entrega_paso::select('pasos.nombre','pasos.orden','pasos.valor_condicion_anterior',
+                                                                'entrega_pasos.id_paso','entrega_pasos.valor_condicion')
                                                         ->join('pasos','entrega_pasos.id_paso','=','pasos.id')
                                                         ->where('id_entrega',$entrega->id)
                                                         ->orderBy('pasos.orden','desc')->first();
                                 if(isset($ultimopaso)){
-                                    $pasosiguiente = Paso::select('pasos.nombre','puesto_empleados.NombPuEm')
-                                                        ->join('etapas','pasos.id_etapa','=','etapas.id')
-                                                        ->join('puesto_empleados','pasos.id_puesto','=','puesto_empleados.id')
-                                                        ->where([['pasos.orden','>',$ultimopaso->orden], 
-                                                                ['etapas.tipo_unidad', $entrega->tipo_unidad]])
-                                                        ->orderBy('pasos.orden','asc')->first();
-                                }
-                                $completado = $ultimopaso->orden / $ultimopaso_avance->orden * 100;
+                                    if($ultimopaso->valor_condicion <> ''){
+                                        
+                                        $prueba = Paso::select('pasos.nombre','pasos.valor_condicion_anterior','pasos.id')
+                                                            ->join('etapas','pasos.id_etapa','=','etapas.id')
+                                                            ->where([['pasos.orden','>',$ultimopaso->orden], 
+                                                                    ['etapas.tipo_unidad', $entrega->tipo_unidad]])
+                                                            ->orderBy('pasos.orden','asc')->first();
+                                           
+                                        if ($prueba->valor_condicion_anterior == '') {
+                                            $pasosiguiente = Paso::select('pasos.nombre')
+                                                            ->join('etapas','pasos.id_etapa','=','etapas.id')
+                                                            ->where([['pasos.orden','>',$ultimopaso->orden], 
+                                                                    ['etapas.tipo_unidad', $entrega->tipo_unidad],
+                                                                    ['pasos.valor_condicion_anterior', null]])
+                                                            ->orderBy('pasos.orden','asc')->first();
+                                            
+                                        }else{
+                                            $pasosiguiente = Paso::select('pasos.nombre')
+                                                                ->join('etapas','pasos.id_etapa','=','etapas.id')
+                                                                ->where([['pasos.orden','>',$ultimopaso->orden], 
+                                                                        ['etapas.tipo_unidad', $entrega->tipo_unidad],
+                                                                        ['pasos.valor_condicion_anterior', $ultimopaso->valor_condicion],
+                                                                        ['pasos.id_paso_anterior',$ultimopaso->id_paso]])
+                                                                ->orderBy('pasos.orden','asc')->first();
+                                        }
+                                    }else{
+                                        $pasosiguiente = Paso::select('pasos.nombre')
+                                                            ->join('etapas','pasos.id_etapa','=','etapas.id')
+                                                            ->where([['pasos.orden','>',$ultimopaso->orden], 
+                                                                    ['etapas.tipo_unidad', $entrega->tipo_unidad],
+                                                                    ['pasos.valor_condicion_anterior', null]])
+                                                            ->orderBy('pasos.orden','asc')->first();
+                                    } 
+                                    $completado = $ultimopaso->orden / $ultimopaso_avance->orden * 100;
+                                } 
                             @endphp
                             <th scope="row">
                                 @isset($pasosiguiente)
-                                    {{ $ultimopaso->nombre }}
+                                    {{ $ultimopaso->nombre }} 
+                                    @isset($ultimopaso->valor_condicion)
+                                        ({{ $ultimopaso->valor_condicion }})
+                                    @endisset
                                 @endisset
                             </th>
                             <th scope="row">

@@ -62,12 +62,21 @@ class EntregaController extends Controller
                         ->orderBy('entregas.id','desc')
                         ->where('entregas.tipo_unidad','Usada')->paginate(20);
 
+        
+        $pasos = Paso::select('pasos.id','pasos.id_etapa','pasos.id_puesto','pasos.nombre','pasos.orden',
+                            'condicion','pasos.id_paso_anterior',
+                            'pasos.valor_condicion_anterior')
+                    ->join('etapas','pasos.id_etapa','=','etapas.id')
+                    ->where('etapas.tipo_unidad','Usada')
+                    ->orderBy('pasos.orden','asc')->get();
+        
+
         // Para calcular el porcentaje de avance debo seleccionar el primer registro y el ultimo segun el órden en la tabla Paso y calcular ese avance en base al orden actual que se registro.
         $ultimopaso_avance = Paso::select('pasos.orden')
                             ->join('etapas','pasos.id_etapa','=','etapas.id')
                             ->where('etapas.tipo_unidad','Usada')
                             ->orderBy('pasos.orden','DESC')->first();
-        return view('entrega.indexusado', compact('entregas','rutavolver','ultimopaso_avance'));
+        return view('entrega.indexusado', compact('entregas','rutavolver','ultimopaso_avance','pasos'));
     }
 
     public function files($id)
@@ -200,14 +209,14 @@ class EntregaController extends Controller
                                 'pasos.valor_condicion_anterior')
             ->join('etapas','pasos.id_etapa','=','etapas.id')
             ->where('etapas.tipo_unidad','Nueva')
-            ->orderBy('orden','asc')->get();
+            ->orderBy('pasos.orden','asc')->get();
         }else{
             $pasos = Paso::select('pasos.id','pasos.id_etapa','pasos.id_puesto','pasos.nombre','pasos.orden',
                                 'pasos.created_at','pasos.updated_at','condicion','pasos.id_paso_anterior',
                                 'pasos.valor_condicion_anterior')
             ->join('etapas','pasos.id_etapa','=','etapas.id')
             ->where('etapas.tipo_unidad','Usada')
-            ->orderBy('orden','asc')->get();
+            ->orderBy('pasos.orden','asc')->get();
         }
         
         $organizacions = Organizacion::orderBy('NombOrga','asc')->get();
