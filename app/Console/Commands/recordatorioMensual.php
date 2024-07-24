@@ -10,6 +10,7 @@ use App\organizacion;
 
 class recordatorioMensual extends Command
 {
+    protected $notificationsService;
     /**
      * The name and signature of the console command.
      *
@@ -79,6 +80,16 @@ class recordatorioMensual extends Command
                                         ->where('CodiOrga',$organizacion->id);
                                 })
                                 ->orWhere(function($query) use ($organizacion) {
+                                    $query->where('users.name', 'Kevin')
+                                        ->where('users.last_name', 'Sobarzo')
+                                        ->where('CodiOrga',$organizacion->id);
+                                })
+                                ->orWhere(function($query) use ($organizacion) {
+                                    $query->where('users.name', 'Julieta')
+                                        ->where('users.last_name', 'Perassi')
+                                        ->where('CodiOrga',$organizacion->id);
+                                })
+                                ->orWhere(function($query) use ($organizacion) {
                                     $query->where('users.name', 'Dario')
                                         ->where('users.last_name', 'Garcia Campi')
                                         ->where('CodiOrga',$organizacion->id);
@@ -89,7 +100,7 @@ class recordatorioMensual extends Command
             // Envio de notificacions
             $notificationData = [
                 'title' => 'PROCESO DE LIQUIDACIÓN DE HABERES –  FECHA LIMITE',
-                'body' => 'Fecha limite para enviar las novedades de su departamento/área al departamento de Personas, cultura y comunidad ',
+                'body' => 'Fecha limite para enviar las novedades de su departamento/área al responsable de liquidación de sueldo y administración de personal (Julieta Perassi).',
                 'path' => '/user_notification/index',
                 ];
                 $this->notificationsService->sendToUser($usersend->id, $notificationData);
@@ -106,13 +117,49 @@ class recordatorioMensual extends Command
             (($fecha == '16-08-2024') AND ($usuario->name == 'Julieta')) OR
             (($fecha == '13-09-2024') AND ($usuario->name == 'Julieta')) OR
             (($fecha == '17-10-2024') AND ($usuario->name == 'Julieta')) OR
-            (($fecha == '13-11-2024') AND ($usuario->name == 'Julieta')) OR
-            (($fecha == '13-12-2024') AND ($usuario->name == 'Julieta')) 
+            (($fecha == '14-11-2024') AND ($usuario->name == 'Julieta')) OR
+            (($fecha == '16-12-2024') AND ($usuario->name == 'Julieta')) 
             ) {
             // Envio de notificacions
             $notificationData = [
                 'title' => 'PROCESO DE LIQUIDACIÓN DE HABERES –  FECHA LIMITE',
-                'body' => 'Fecha limite para enviar las novedades el estudio contable externo',
+                'body' => 'Fecha limite para enviar las novedades sobre liquidación de haberes al Estudio Contable Externo',
+                'path' => '/user_notification/index',
+                ];
+                $this->notificationsService->sendToUser($usuario->id, $notificationData);
+        }
+
+        //Si la fecha actual es igual a la fecha límite, enviar la notificación.
+        if (
+            (($fecha == '21-06-2024') AND ($usuario->name == 'Julieta')) OR 
+            (($fecha == '26-07-2024') AND ($usuario->name == 'Julieta')) OR
+            (($fecha == '28-08-2024') AND ($usuario->name == 'Julieta')) OR
+            (($fecha == '25-09-2024') AND ($usuario->name == 'Julieta')) OR
+            (($fecha == '28-10-2024') AND ($usuario->name == 'Julieta')) OR
+            (($fecha == '27-11-2024') AND ($usuario->name == 'Julieta')) OR
+            (($fecha == '26-12-2024') AND ($usuario->name == 'Julieta')) 
+            ) {
+            // Envio de notificacions
+            $notificationData = [
+                'title' => 'PROCESO DE LIQUIDACIÓN DE HABERES –  FECHA LIMITE',
+                'body' => 'Fecha límite para controla la preventiva de liquidación y enviarla al Departamento de Adm y Finanzas',
+                'path' => '/user_notification/index',
+                ];
+                $this->notificationsService->sendToUser($usuario->id, $notificationData);
+        }
+
+        //Si la fecha actual es igual a la fecha límite, enviar la notificación.
+        if (
+            (($fecha == '29-08-2024') AND ($usuario->name == 'Julieta')) OR
+            (($fecha == '27-09-2024') AND ($usuario->name == 'Julieta')) OR
+            (($fecha == '29-10-2024') AND ($usuario->name == 'Julieta')) OR
+            (($fecha == '28-11-2024') AND ($usuario->name == 'Julieta')) OR
+            (($fecha == '27-12-2024') AND ($usuario->name == 'Julieta')) 
+            ) {
+            // Envio de notificacions
+            $notificationData = [
+                'title' => 'PROCESO DE LIQUIDACIÓN DE HABERES –  FECHA LIMITE',
+                'body' => '-	Fecha limite para corroborar con el responsable del departamento de Administración y Finanzas las cuentas sueldo de cada colaborador',
                 'path' => '/user_notification/index',
                 ];
                 $this->notificationsService->sendToUser($usuario->id, $notificationData);
@@ -127,62 +174,56 @@ class recordatorioMensual extends Command
             (($fecha == '23-08-2024') AND ($usuario->name == 'Martin')) OR
             (($fecha == '19-09-2024') AND ($usuario->name == 'Martin')) OR
             (($fecha == '23-10-2024') AND ($usuario->name == 'Martin')) OR
-            (($fecha == '21-11-2024') AND ($usuario->name == 'Martin')) OR
+            (($fecha == '22-11-2024') AND ($usuario->name == 'Martin')) OR
             (($fecha == '19-12-2024') AND ($usuario->name == 'Martin')) 
             ) {
             // Envio de notificacions
             $notificationData = [
                 'title' => 'PROCESO DE LIQUIDACIÓN DE HABERES –  FECHA LIMITE',
-                'body' => 'Fecha limite para recordar al estudio contable que envíe la preventiva de liquidación de haberes ',
+                'body' => 'Fecha limite para recordar al estudio contable que envíe la preventiva de liquidación de haberes',
                 'path' => '/user_notification/index',
                 ];
                 $this->notificationsService->sendToUser($usuario->id, $notificationData);
         }
 
-        //////////////////// JULIETA PERASSI /////////////////////
-        $usuario = User::where([['name','Julieta'],['last_name','Perassi'],['CodiOrga',$organizacion->id]])->first();
-        //Si la fecha actual es igual a la fecha límite, enviar la notificación.
-        if (
-            (($fecha == '21-06-2024') AND ($usuario->name == 'Julieta')) OR 
-            (($fecha == '26-07-2024') AND ($usuario->name == 'Julieta')) OR
-            (($fecha == '26-08-2024') AND ($usuario->name == 'Julieta')) OR
-            (($fecha == '20-09-2024') AND ($usuario->name == 'Julieta')) OR
-            (($fecha == '25-10-2024') AND ($usuario->name == 'Julieta')) OR
-            (($fecha == '25-11-2024') AND ($usuario->name == 'Julieta')) OR
-            (($fecha == '23-12-2024') AND ($usuario->name == 'Julieta')) 
-            ) {
-            // Envio de notificacions
-            $notificationData = [
-                'title' => 'PROCESO DE LIQUIDACIÓN DE HABERES –  FECHA LIMITE',
-                'body' => 'Fecha limite para , controla la preventiva de liquidación y enviarla al Dpto de Adm y Finanzas',
-                'path' => '/user_notification/index',
-                ];
-                $this->notificationsService->sendToUser($usuario->id, $notificationData);
-        }
+         //////////////////// JOEL CERIONI /////////////////////
+         $usuario = User::where([['name','Joel'],['last_name','Cerioni'],['CodiOrga',$organizacion->id]])->first();
+         //Si la fecha actual es igual a la fecha límite, enviar la notificación.
+         if (
+             (($fecha == '07-08-2024') AND ($usuario->name == 'Joel')) OR
+             (($fecha == '06-09-2024') AND ($usuario->name == 'Joel')) OR
+             (($fecha == '04-10-2024') AND ($usuario->name == 'Joel')) OR
+             (($fecha == '06-11-2024') AND ($usuario->name == 'Joel')) OR
+             (($fecha == '06-12-2024') AND ($usuario->name == 'Joel')) 
+             ) {
+             // Envio de notificacions
+             $notificationData = [
+                 'title' => 'PROCESO DE LIQUIDACIÓN DE HABERES –  FECHA LIMITE',
+                 'body' => 'Fecha limite para enviar el informe de cobranzas a Julieta Perassi y Fernando Sartori ',
+                 'path' => '/user_notification/index',
+                 ];
+                 $this->notificationsService->sendToUser($usuario->id, $notificationData);
+         }
 
-        //////////////////// JOEL CERIONI /////////////////////
-        $usuario = User::where([['name','Joel'],['last_name','Cerioni'],['CodiOrga',$organizacion->id]])->first();
         //Si la fecha actual es igual a la fecha límite, enviar la notificación.
         if (
             (($fecha == '25-06-2024') AND ($usuario->name == 'Joel')) OR 
             (($fecha == '29-07-2024') AND ($usuario->name == 'Joel')) OR
-            (($fecha == '28-08-2024') AND ($usuario->name == 'Joel')) OR
-            (($fecha == '24-09-2024') AND ($usuario->name == 'Joel')) OR
+            (($fecha == '29-08-2024') AND ($usuario->name == 'Joel')) OR
+            (($fecha == '27-09-2024') AND ($usuario->name == 'Joel')) OR
             (($fecha == '29-10-2024') AND ($usuario->name == 'Joel')) OR
-            (($fecha == '27-11-2024') AND ($usuario->name == 'Joel')) OR
+            (($fecha == '28-11-2024') AND ($usuario->name == 'Joel')) OR
             (($fecha == '27-12-2024') AND ($usuario->name == 'Joel')) 
             ) {
             // Envio de notificacions
             $notificationData = [
                 'title' => 'PROCESO DE LIQUIDACIÓN DE HABERES –  FECHA LIMITE',
-                'body' => 'Fecha limite para, organizar y preparar todas las transferencias correspondientes a la liq de haberes',
+                'body' => 'Fecha limite para organizar y preparar todas las transferencias correspondientes a la liquidación de haberes. Corroborar con el responsable de liquidación de sueldo y administración de personal (Julieta Perassi) las cuentas sueldo de cada colaborador para evitar errores',
                 'path' => '/user_notification/index',
                 ];
                 $this->notificationsService->sendToUser($usuario->id, $notificationData);
         }
 
-        //////////////////// JOEL CERIONI /////////////////////
-        $usuario = User::where([['name','Joel'],['last_name','Cerioni'],['CodiOrga',$organizacion->id]])->first();
         //Si la fecha actual es igual a la fecha límite, enviar la notificación.
         if (
             (($fecha == '28-06-2024') AND ($usuario->name == 'Joel')) OR 
@@ -196,12 +237,10 @@ class recordatorioMensual extends Command
             // Envio de notificacions
             $notificationData = [
                 'title' => 'PROCESO DE LIQUIDACIÓN DE HABERES –  FECHA LIMITE',
-                'body' => 'Fecha limite para ejecutar las transferencias',
+                'body' => 'Fecha limite para realizar las transferencias correspondientes a las liquidaciones de haberes',
                 'path' => '/user_notification/index',
                 ];
                 $this->notificationsService->sendToUser($usuario->id, $notificationData);
         }
-
-
     }
 }
