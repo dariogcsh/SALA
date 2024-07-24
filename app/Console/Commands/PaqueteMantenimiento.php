@@ -11,6 +11,7 @@ use App\User;
 
 class PaqueteMantenimiento extends Command
 {
+    protected $notificationsService;
     /**
      * The name and signature of the console command.
      *
@@ -77,6 +78,11 @@ class PaqueteMantenimiento extends Command
                                 ->orWhere(function($query) use ($organizacion) {
                                     $query->where('puesto_empleados.NombPuEm', 'Administrativo de servicio')
                                         ->Where('users.CodiSucu', $organizacion->id);
+                                })
+                                ->orWhere(function($query) use ($organizacion){
+                                    $query->where('puesto_empleados.NombPuEm', 'Coordinador de servicios')
+                                    ->where('roles.name', 'Coordinador de servicios')
+                                    ->Where('users.CodiSucu', $organizacion->id);
                                 })
                                 ->orWhere(function($query) use ($organizacion){
                                     $query->where('puesto_empleados.NombPuEm', 'Gerente de sucursal')
