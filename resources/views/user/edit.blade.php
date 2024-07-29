@@ -79,7 +79,7 @@
                             @endcan
                                 <label for="CodiOrga" class="col-md-4 col-form-label text-md-right">{{ __('Organizacion') }}</label>
                                 <div class="col-md-6">
-                                    <select name="CodiOrga" id="CodiOrga" class="form-control">
+                                    <select name="CodiOrga" id="CodiOrga" class="selectpicker form-control" data-live-search="true">
                                     <option value="">Seleccionar organizacion</option>
                                         @foreach($organizacions as $organizacion)
                                         <option value="{{ $organizacion->id }}"
