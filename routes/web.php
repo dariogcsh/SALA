@@ -299,4 +299,3 @@ Route::resource('cosecha', 'CosechaController');
 Route::resource('poliza', 'PolizaController');
 Route::resource('ensayo', 'EnsayoController');
 Route::resource('capacitacion_user', 'CapacitacionUserController');
-
