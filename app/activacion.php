@@ -16,8 +16,8 @@ class activacion extends Model
             return $query->select('activacions.id','organizacions.NombOrga','antenas.NombAnte','activacions.nserie'
                                 ,'activacions.created_at','activacions.fecha','suscripcions.nombre','activacions.duracion'
                                 ,'activacions.precio','activacions.estado','activacions.nfactura','pantallas.NombPant',
-                                'users.name','users.last_name')
-                        ->leftjoin('users','senals.id_user','=','users.id')
+                                'users.name','users.last_name','activacions.id_user')
+                        ->leftjoin('users','activacions.id_user','=','users.id')
                         ->join('organizacions','activacions.organizacion_id','=','organizacions.id')
                         ->leftjoin('antenas','activacions.id_antena','=','antenas.id')
                         ->leftjoin('pantallas','activacions.pantalla_id','=','pantallas.id')
